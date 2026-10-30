@@ -1,0 +1,277 @@
+\chapter{Type theoretical formulation of self-adaptive robotic systems}
+\label{type}
+
+\begin{abstract}
+Sample Abstract.
+\end{abstract}
+
+\blfootnote{This chapter is a verbatim copy of the paper~\cite{}.
+\begin{itemize}
+    \item Type theoretical formulation of self-adaptive robotic systems. In preparation for a short paper for SEAMS 2025.
+\end{itemize}
+}
+
+\section{Abstract}
+
+\section{Introduction}
+
+\textbf{Research question:} 
+\begin{itemize}
+    \item How to formally define the self-adaptation problem in robotic systems? 
+\end{itemize}
+
+
+common ``parent'' definition of self-adaptive robotic systems that can be specialized for different techniques
+
+clear definition of the SARS problem to prevent ambiguities and facilitate the comparison of different techniques
+
+combination of robotics architecture with self-adaptive robotic systems
+
+composable theory, so one can take only parts
+
+extensible theory, one can increment it
+
+showcases for metacontrol, ROSA, software product lines?
+
+% check garlan paper on 2nd level of adaptation as a reference for "standard" description of adaptation
+
+\section{MAPE-K formulation}
+
+Monitor:
+\begin{gather}
+    SensorInput : Type \\
+    MonitorOutput: Type \\
+    s: SensorInput \vdash monitor(s) : MonitorOutput \\
+\end{gather}
+
+Analyze:
+\begin{gather}
+    AnalyzeOutput: Type \\
+    mo : MonitorOutput \vdash analyze(mo) : \{ ao>AnalyzeOutput \}\\
+\end{gather}
+
+
+Plan:
+\begin{gather}
+    PlanOutput: Type \\
+    ao: AnalyzeOutput \vdash plan(ao) : PlanOutput 
+\end{gather}
+
+Execute:
+\begin{gather}
+    ExecuteOutput : Type \\
+    ao : AnalyzeOutput \vdash execute(rp) : \{ eo>ExecuteOutput \}, 
+\end{gather}
+
+One possible definition of the MAPE-K loop:
+\begin{lstlisting}
+    while true:
+        s = sensor_inputs()
+        mo = monitor(s)
+        ao = analyze(mo)
+        rp = plan(ao)
+        execute(rp)
+\end{lstlisting}
+
+\section{Robotics architecture formulation}
+
+\textbf{Deliberative layer:} Devise task plan. \textbf{Input:} robot's goal. \textbf{Output:} task sequence.
+
+\textbf{Executive layer:} Task execution. \textbf{Input: task}. \textbf{Output:} action sequence.
+
+\textbf{Functional layer (skill layer/behavioral layer):} Realize the robot's functions as components
+
+task planner:
+
+components ...
+
+\begin{gather}
+    Action: Type \\
+    Mode: Type \\
+    Component: Type \\
+    Condition: Type 
+\end{gather}
+
+% \section{Definitions}
+
+% \section{Robot architecture formulation}
+
+\section{Self-adaptative robotic systems formulation}
+
+The skills the robot has are defined as $S = \{S_1, ..., S_n\}$. The actions the robot can perform are defined as $A = {A_1, ..., A_m}$, where each action $A_i$ is defined as a set of skills required to perform it $A_i=\{S_j,..., S_p\}$. The possible modes (i.e., active components or component's parameterizations) of a skill layer with $n$ skills are defined as $\theta = \{\theta_1, ..., \theta_n\}$, where $\theta_i$ is the set of possible modes for a skill $S_i$. The set of conditions for the selection of modes in the skill layer is defined as $\sigma = \{\sigma_1, ..., \sigma_n\}$, where $\sigma_i$ represents the set of conditions for the selection of the $S_i$ modes $\sigma_i = \{ condition_1, ..., condition_k\}$. Conditions can be either specific components of the system (e.g., laser working) or measured values of attributes of the system or environment (e.g., battery consumption below $0.5$).
+
+\begin{gather}
+    A = \{a_1, ..., a_m\} \\
+    F = \{f_1, ..., f_n\} \\
+    Modes = \{m_1, ..., m_k\}\\
+\end{gather}
+
+\section{Type theoretical formulation}
+REPEATED. OLD TEXT NEEDS TO BE RECHECKED
+\begin{gather}
+    Action: Type \\
+    Function: Type \\
+    Mode: Type \\
+    Component: Type \\
+    Condition: Type 
+\end{gather}
+
+\begin{equation}
+    Monitor(PIType) \rightarrow Measure
+\end{equation}
+
+\begin{equation}
+    Analyze(m: Measure, ra: RequiredAction) \rightarrow SystemStatus
+\end{equation}
+
+\begin{equation}
+    Plan(s: SystemStatus) \rightarrow DesiredConfiguration
+\end{equation}
+
+\begin{equation}
+    Execute(c: DesiredConfiguration) \rightarrow \emptyset
+\end{equation}
+
+\begin{equation}
+    TaskExeutor(a: Action) \rightarrow RequiredAction
+\end{equation}
+
+Architectural adaptation:
+\begin{equation}
+    architectural(SystemStatus) -> RequiredComponents 
+\end{equation}
+
+Parameter adaptation:
+\begin{equation}
+    parameter(SystemStatus) -> RequiredComponentParameters 
+\end{equation}
+
+Task-and-architectural co-adaptation: 
+\begin{equation}
+    taca(SystemStatus) -> RequiredActions, RequiredConfiguration 
+\end{equation}
+Also goals as input?
+
+\section{Execute}
+
+\begin{lstlisting}
+execute(fds, c_configs):
+    c_activate, c_deactivate = get_component_adaptation(fds)
+    result_d = deactivate_components(c_deactivate)
+    result_a = deactivate_components(c_activate)
+    system_modes= get_sytem_modes(fds)
+    result_sm = set_system_modes(system_modes)
+    result_pa = execute_param_adaptation(c_configs)
+    kb = update_kb(kb, rd, ra, sn, rpa)
+\end{lstlisting}
+
+\section{ROSA type theoretical formulation}
+Based on the PERA type system proposed in~\cite{}
+
+\subsection{ROSA model:}
+
+Entities:
+\begin{gather}
+    Action: Ent \\
+    Function: Ent \\
+    Component: Ent \\
+    ComponentParameter: Ent \\
+    Measure: Ent \\
+    QualityAttribute: Ent \\
+    QualityAttribute \leq : Measure \\
+    EnvironmentalAttribute: Ent \\
+    EnvironmentalAttribute \leq : Measure  \\
+\end{gather}
+
+Relationships:
+\begin{gather}
+    functional\_requirement : Obj({action, required\_function}) \\
+    action : Itf \\
+    required\_function : Itf \\
+    function\_design : Obj({function, required\_component}) \\
+    function : Itf \\
+    required\_component : Itf \\
+    component\_configuration : Obj({component, parameter}) \\
+    component : Itf \\
+    parameter : Itf \\
+\end{gather}
+
+Attribute Interfaces:
+
+\begin{gather}
+    status : Att(\{status\_owner\}) \\
+    status_owner : Itf \\
+    status \leq \mathbb{S} \\
+    component\_status : Att(\{component\_status\_owner\}) \\
+    component\_status_owner : Itf \\
+    component\_status \leq status \\
+\end{gather}
+
+Interfaces implementation:
+
+\subsection{ROSA loop}
+
+Monitor:
+\begin{gather}
+    SensorInput : Type \\
+    MonitorOutput: Type \\
+    measurement \leq MonitorOutput \\
+    % cs : component\_status(\{c:component\_status_owner\}) \\
+    component\_status \leq MonitorOutput \\
+    s: SensorInput \vdash monitor(s) : MonitorOutput \\
+\end{gather}
+
+Analyze:
+\begin{gather}
+    AnalyzeOutput: Type \\
+    function\_design\_status \leq AnalyzeOutput \\
+    component\_configuration\_status \leq AnalyzeOutput \\
+    action\_status \leq AnalyzeOutput \\
+    mo : MonitorOutput \vdash analyze(mo) : \{ ao>AnalyzeOutput \}\\
+\end{gather}
+
+Should the analyze output be the system status or the functions and components that need to be adapted?
+
+
+Plan:
+\begin{gather}
+    % PlanOutput: Type \\
+    % reconfiguration\_plan : PlanOutput \\
+    ao: AnalyzeOutput \vdash plan(ao) : reconfiguration\_plan 
+\end{gather}
+
+Execute:
+\begin{gather}
+    ExecuteOutput : Type \\
+    component\_active \leq ExecuteOutput \\
+    component\_parameter\_active \leq ExecuteOutput \\
+    component\_process \leq ExecuteOutput \\
+    reconfiguration\_plan\_result \leq ExecuteOutput \\
+    rp : reconfiguration\_plan \vdash execute(rp) : \{ eo>ExecuteOutput \}, 
+\end{gather}
+
+ROSA loop:
+\begin{lstlisting}
+    while true:
+        s = sensor_inputs()
+        mo = monitor(s)
+        insert_kb(mo)
+
+    while true: # not really a loop
+        mo = fetch_kb()
+        ao = analyze(mo)
+        insert_kb(ao)
+    
+    while true: # not really a loop
+        ao = fetch_kb()
+        rp = configuration\_plan(ao)
+
+    while true: # not really a loop
+        rp = fetch_kb()
+        execute(rp)
+
+    while true: # not really a loop
+        ao = fetch_kb()
+        task_plan(ao)
+
+\end{lstlisting}

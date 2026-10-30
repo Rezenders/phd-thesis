@@ -1,0 +1,366 @@
+% vocabulary of PDDL
+\newcommand{\pddlTask}{\ensuremath{\Pi}\xspace}
+\newcommand{\pddlDomain}{\ensuremath{\mathcal{D}}\xspace}
+\newcommand{\pddlInstance}{\ensuremath{\mathcal{P}}\xspace}
+\newcommand{\pddlObjects}{\ensuremath{O}\xspace}
+\newcommand{\pddlInitial}{\ensuremath{I}\xspace}
+\newcommand{\pddlGoal}{\ensuremath{G}\xspace}
+\newcommand{\pddlState}{\ensuremath{S}\xspace}
+
+\newcommand{\pddlPredicates}{\ensuremath{\mathsf{N}_\mathsf{P}}\xspace}
+\newcommand{\pddlActions}{\ensuremath{A}\xspace}
+\newcommand{\pddlDerRules}{\ensuremath{\text{Der}}\xspace}
+
+\newcommand{\pddlPredicatesC}{\ensuremath{P_C}\xspace}
+\newcommand{\pddlPredicatesR}{\ensuremath{P_R}\xspace}
+
+
+
+\newcommand{\pddlActParam}{\ensuremath{\vec{x}}\xspace}
+\DeclareMathOperator{\pddlActName}{name}
+\DeclareMathOperator{\pddlActPre}{pre}
+\DeclareMathOperator{\pddlActAdd}{add}
+\DeclareMathOperator{\pddlActDel}{del}
+\DeclareMathOperator{\pddlActionReq}{actionReqs}
+\DeclareMathOperator{\pddlQReq}{qreq}
+
+% vocabulary of ontology
+\newcommand{\Ont}{\ensuremath{\mathcal{O}}\xspace}
+\newcommand{\SwrlRule}{\ensuremath{s}\xspace}
+
+\newcommand{\N}{\ensuremath{\mathsf{N}}\xspace}
+\newcommand{\NC}{\ensuremath{\mathsf{N}_\mathsf{C}}\xspace}
+\newcommand{\NR}{\ensuremath{\mathsf{N_R}}\xspace}
+\newcommand{\NI}{\ensuremath{\mathsf{N_I}}\xspace}
+
+\newcommand{\NRobject}{\ensuremath{\mathsf{N_R^{object}}}\xspace}
+\newcommand{\NRdata}{\ensuremath{\mathsf{N_R^{data}}}\xspace}
+
+\newcommand{\NIC}{\ensuremath{\mathsf{N_I^{C}}}\xspace}
+\newcommand{\NIR}{\ensuremath{\mathsf{N_I^{R}}}\xspace}
+
+\newcommand{\ALCI}{\ensuremath{\mathcal{ALCI}}\xspace}
+
+\DeclareMathOperator{\antecedent}{antecedent}
+\DeclareMathOperator{\consequent}{consequent}
+
+
+% vocabulary of TOMASys
+\DeclareMathOperator{\FunctionTomasys}{Function}
+\DeclareMathOperator{\FunctionsTomasys}{Functions}
+\DeclareMathOperator{\FunctionDesign}{FunctionDesign}
+\DeclareMathOperator{\FunctionDesigns}{FunctionDesigns}
+\DeclareMathOperator{\Component}{Component}
+\DeclareMathOperator{\QAtype}{QAtype}
+\DeclareMathOperator{\QAvalue}{QAvalue}
+\DeclareMathOperator{\Objective}{Objective}
+\DeclareMathOperator{\Objectives}{Objectives}
+\DeclareMathOperator{\FunctionGrounding}{FunctionGrounding}
+\DeclareMathOperator{\FunctionGroundings}{FunctionGroundings}
+\DeclareMathOperator{\solvesF}{solvesF}
+\DeclareMathOperator{\requiredBy}{requiredBy}
+\DeclareMathOperator{\isQAtype}{isQAtype}
+\DeclareMathOperator{\hasQAestimation}{hasQAestimation}
+\DeclareMathOperator{\hasNFR}{hasNFR}
+\DeclareMathOperator{\typeF}{typeF}
+\DeclareMathOperator{\typedFD}{typedFD}
+\DeclareMathOperator{\solvesO}{solvesO}
+\DeclareMathOperator{\typeFD}{typeFD}
+\DeclareMathOperator{\hasQAvalue}{hasQAvalue}
+\DeclareMathOperator{\requiresO}{requiresO}
+\DeclareMathOperator{\cStatus}{c\_status}
+
+\DeclareMathOperator{\fdRealisability}{fd\_realisability}
+
+\DeclareMathOperator{\hasValue}{hasValue}
+\DeclareMathOperator{\qaHasValue}{qa\_has\_value}
+\DeclareMathOperator{\qaComparisonOperator}{qa\_comparison\_operator}
+\DeclareMathOperator{\qaCritical}{qa\_critical}
+\DeclareMathOperator{\fdEfficacy}{fd\_efficacy}
+\DeclareMathOperator{\fgStatus}{fg\_status}
+\DeclareMathOperator{\oImprove}{o\_always\_improve}
+\DeclareMathOperator{\oStatus}{o\_status}
+\DeclareMathOperator{\oUpdatable}{o\_updatable}
+\DeclareMathOperator{\fdSpiralHigh}{fd\_spiral\_high}
+\DeclareMathOperator{\fGenerateSearchPath}{f\_generate\_search\_path}
+
+%vocabulary new tomasys
+\DeclareMathOperator{\Action}{Action}
+\DeclareMathOperator{\fdBetterUtility}{fdBetterUtility}
+\DeclareMathOperator{\functionGrounding}{functionGrounding}
+\DeclareMathOperator{\requiresC}{requiresC}
+\DeclareMathOperator{\requiresF}{requiresF}
+\DeclareMathOperator{\fActive}{f\_active}
+\DeclareMathOperator{\fdUtility}{fd\_utility}
+
+
+\DeclareMathOperator{\Domain}{Domain}
+\DeclareMathOperator{\Range}{Range}
+
+\DeclareMathOperator{\varC}{?c}
+\DeclareMathOperator{\varFD}{?fd}
+\DeclareMathOperator{\varFDtwo}{?fd2}
+\DeclareMathOperator{\varFDbetter}{?fd\_better}
+\DeclareMathOperator{\varF}{?f}
+\DeclareMathOperator{\varU}{?u}
+\DeclareMathOperator{\varUtwo}{?u2}
+\DeclareMathOperator{\varUbetter}{?u\_better}
+\DeclareMathOperator{\varQA}{?qa}
+\DeclareMathOperator{\varQAvalue}{?qav}
+
+\DeclareMathOperator{\fdUnground}{fd\_unground}
+
+\DeclareMathOperator{\instanceFD}{fd}
+\DeclareMathOperator{\instanceF}{f}
+\DeclareMathOperator{\instanceA}{a}
+
+\DeclareMathOperator{\instanceTrue}{true}
+\DeclareMathOperator{\instanceFalse}{false}
+
+% vocabulary for TACA transformation
+\DeclareMathOperator{\bestFD}{bestFD}
+\DeclareMathOperator{\validAndBest}{valid}
+\DeclareMathOperator{\functionalReq}{functionalReq}
+
+% PlanSys algorithms
+\DeclareMathOperator{\algE}{E}
+\DeclareMathOperator{\algEff}{Eff}
+\DeclareMathOperator{\algDerive}{Derive}
+\DeclareMathOperator{\algGraph}{Graph}
+\DeclareMathOperator{\algRoots}{Roots}
+\DeclareMathOperator{\algS}{S}
+\DeclareMathOperator{\algC}{C}
+\DeclareMathOperator{\algP}{P}
+\DeclareMathOperator{\algNodes}{Nodes}
+\DeclareMathOperator{\algSCC}{SCC}
+\DeclareMathOperator{\algSCCs}{SCCs}
+
+
+
+
+% some useful comments
+\newcommand{\hide}[1]{}
+
+
+% \newcommand\red[1]{{\color{red}#1}}
+
+\newcommand{\RQ}[1]{\textbf{RQ#1}}
+
+\newcommand\owltopddl{Owl2PDDL\xspace}
+\newcommand\planta{PLANTA\xspace}
+\newcommand{\CamaraApproach}{\textsc{Camara}\xspace}
+\newcommand\plansys{PlanSys2\xspace}
+\newcommand\tomasys{TOMASys\xspace}
+\newcommand\pddltomasys{PDDL-TOMASys\xspace}
+
+% suave uncertainties
+\newcommand{\Uone}{\emph{U1}\xspace}
+\newcommand{\Utwo}{\emph{U2}\xspace}
+\newcommand{\Uthree}{\emph{U3}\xspace}
+
+
+% define the colors to use. This is also the order how preferred they are
+\definecolor{MidnightBlue}{HTML}{006795}
+\definecolor{OliveGreen}{HTML}{3C8031}
+\definecolor{BrickRed}{HTML}{B6321C}
+\definecolor{Purple}{HTML}{800080}
+\newcommand{\greenColor}{OliveGreen} 	% encodes PLANTA
+\newcommand{\blueColor}{MidnightBlue}	% encodes Camara et al
+\newcommand{\redColor}{BrickRed}
+\newcommand{\purpleColor}{Purple}
+% \newcommand{\whiteColor}{white}
+% \newcommand\white[1]{{\color{white}#1}}
+
+% tikz styles
+\tikzstyle{lineDefault} = [
+    line width=0.75pt
+]
+
+\tikzstyle{artifact} = [
+lineDefault,
+draw=black,
+inner sep=3pt,
+minimum width=1cm,
+minimum height=0.5cm,
+font=\sffamily,
+fill=white!20
+]
+
+\tikzstyle{artifact_transparent} = [
+lineDefault,
+draw=black,
+inner sep=3pt,
+minimum width=1cm,
+minimum height=0.5cm,
+font=\sffamily,
+]
+
+\tikzstyle{process} = [
+artifact,
+rounded corners=0.2cm,
+minimum height=0.3cm,
+fill=black!5
+]
+
+\tikzstyle{tool} = [
+    process,
+    fill=\greenColor!20,
+    draw=\greenColor
+]
+
+\tikzstyle{tool_3rd_party} = [
+    process,
+    fill=\blueColor!20,
+    draw=\blueColor
+]
+
+\tikzstyle{system} = [
+    process,
+    fill=\purpleColor!5,
+    draw=\purpleColor
+]
+
+\tikzstyle{runtime} = [
+    artifact,
+    fill=\blueColor!20,
+    draw=\blueColor
+]
+
+\tikzstyle{arrow} = [
+    line width=1pt,
+    -Latex
+]
+
+\tikzstyle{arrow_dashed} = [
+    line width=1pt,
+    dashed,
+    -Latex
+]
+
+\tikzstyle{bubble} = [
+    ellipse,
+    line width=1pt,
+    draw
+]
+
+\tikzstyle{bubblePurple} = [
+    bubble,
+    fill=\purpleColor!20,
+    draw=\purpleColor
+]
+
+\tikzstyle{bubbleGreen} = [
+    bubble,
+    fill=\greenColor!20,
+    draw=\greenColor
+]
+
+\tikzstyle{bubbleBlue} = [
+bubble,
+fill=\blueColor!20,
+draw=\blueColor
+]
+
+\newcommand{\gridNodeSize}{3pt}
+\newcommand{\gridNodeLine}{0.75pt}	% should be grid size +2pt
+\newcommand{\gridNodeSizePlus}{\gridNodeSize+\gridNodeLine+\gridNodeLine}
+
+\tikzstyle{gridNode} = [
+    minimum height=\gridNodeSize,
+    minimum width=\gridNodeSize,
+    inner sep=2.5pt,
+    draw=black!70,
+    line width=\gridNodeLine,
+    fill=white,
+    shape=circle
+]
+
+\tikzstyle{corridor} = [
+    line width=\gridNodeLine,
+    double,
+    double distance=\gridNodeSize,
+    draw=black!70
+]
+
+
+\tikzstyle{unsafe} = [
+    decorate=true,
+    decoration=snake,
+    line cap=round  
+]
+
+\tikzstyle{dark} = [
+    draw=black!80!\blueColor!60!white
+]
+
+\tikzstyle{corridorDark} = [
+    line width=\gridNodeSizePlus,
+    dark
+]
+
+\tikzstyle{corridorUnsafe} = [
+    unsafe,
+    corridor
+]
+
+\tikzstyle{corridorDarkUnsafe} = [
+    unsafe,
+    line width=\gridNodeSizePlus,
+    dark
+]
+
+\tikzstyle{goal} = [
+    fill=\greenColor,
+    text=white,
+    shape=circle,
+    draw=black!70,
+    line width=\gridNodeLine
+]
+\tikzstyle{start} = [
+    fill=\greenColor,
+    text=white,
+    shape=circle,
+    draw=black!70,
+    line width=\gridNodeLine
+]
+
+\tikzstyle{hideNode} = [
+    fill=white,
+    minimum height=\gridNodeSize+\gridNodeLine+7pt,
+    minimum width=\gridNodeSize+\gridNodeLine+7pt,
+    shape=circle
+]
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+% pgf stuff for box-plots
+\makeatletter
+\pgfplotsset{
+    boxplot prepared from table/.code={
+        \def\tikz@plot@handler{\pgfplotsplothandlerboxplotprepared}%
+        \pgfplotsset{
+            /pgfplots/boxplot prepared from table/.cd,
+            #1,
+        }
+    },
+    /pgfplots/boxplot prepared from table/.cd,
+    table/.code={\pgfplotstablecopy{#1}\to\boxplot@datatable},
+    row/.initial=0,
+    make style readable from table/.style={
+        #1/.code={
+            \pgfplotstablegetelem{\pgfkeysvalueof{/pgfplots/boxplot prepared from table/row}}{##1}\of\boxplot@datatable
+            \pgfplotsset{boxplot/#1/.expand once={\pgfplotsretval}}
+        }
+    },
+    make style readable from table=lower whisker,
+    make style readable from table=upper whisker,
+    make style readable from table=lower quartile,
+    make style readable from table=upper quartile,
+    make style readable from table=median,
+    make style readable from table=lower notch,
+    make style readable from table=upper notch
+}
+\makeatother

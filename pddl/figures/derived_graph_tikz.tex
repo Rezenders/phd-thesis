@@ -1,0 +1,45 @@
+\begin{tikzpicture}[font=\sffamily]
+    
+    \coordinate (origin) at (0,0);
+    \draw (origin) node[bubbleBlue] (predicateA) {predicateA\strut};
+    
+    \draw ($(predicateA) + (5,0)$) node[bubbleBlue] (predicateB) {predicateB\strut};
+    
+    \draw ($(predicateA) + (0,-1.7)$) node[bubbleGreen] (inferredA) {inferredA\strut};
+    \draw ($(predicateB) + (0,-1.7)$) node[bubbleGreen] (inferredB) {inferredB\strut};
+    
+    \draw ($(inferredA) + (0,-1.5)$) node[bubbleGreen] (inferredAA) {inferredAA\strut};
+    \draw ($(inferredA) + (2.5,-1.5)$) node[bubbleGreen] (inferredAB) {inferredAB\strut};
+    \draw ($(inferredB) + (0,-1.5)$) node[bubbleGreen] (inferredBB) {inferredBB\strut};
+    
+    \phantom{\draw ($(inferredAA) + (0,-1.7)$) node[bubblePurple] (action1) {action1\strut};} % phantom for alignment with other figure
+    
+    \draw[arrow] (predicateA) -- (inferredA);
+    \draw[arrow] (predicateB) -- (inferredB);
+    
+    \draw[arrow] (inferredA) -- (inferredAA);
+    \draw[arrow] (inferredA) -- (inferredAB);
+    \draw[arrow] (inferredB) -- (inferredAB);
+    \draw[arrow] (inferredB) -- (inferredBB);
+    
+    \draw[arrow] (inferredAB) to [bend left] (inferredB);
+    
+    % labels
+    \draw ($(predicateA) + (-2.2,0)$) node (topLabel) {\begin{tabular}{c}
+            predicates/\\
+            functions/\\
+            instances
+    \end{tabular}};
+
+    \draw ($(topLabel) + (0,-1.2)$) node (botLabel) {\begin{tabular}{c}
+            derived\\
+            predicates
+    \end{tabular}};
+    
+    % dotted line
+    \draw[loosely dotted,
+        draw=black, 
+        line width=1.5pt] ($(topLabel) + (-0.7,-0.7)$) -- ++ (9,0);
+    
+    
+\end{tikzpicture}

@@ -2,6 +2,9 @@
 %\documentclass[print]{dissertation}
 %\documentclass[print,draft]{dissertation}
 
+\usepackage{amsmath,amssymb,amsfonts}
+
+
 \hyphenation{TestRoots WatchDog proj-ect proj-ects Ec-lipse two-fold clie-nts Mo-cki-to wide-spread}
 \newcommand{\sparkline}[1]{$\vcenter{\hbox{\includegraphics[scale=0.04]{#1}}}$}
 
@@ -14,12 +17,233 @@
 
 \input{abbreviations}
 
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+\usepackage{subfig}
+\usepackage{xspace}
+\usepackage{tcolorbox}
+
+\definecolor{runtimecolor}{HTML}{8A3F80}
+\definecolor{entitycolor}{HTML}{5B78A1}
+\definecolor{relationcolor}{HTML}{FFF6E3}
+\definecolor{attributecolor}{HTML}{82B366}
+
+%% Define the TU Delft house style colors.
+\definecolor{tudelft-cyan}{cmyk}{1,0,0,0}
+\definecolor{tudelft-black}{cmyk}{0,0,0,1}
+\definecolor{tudelft-white}{cmyk}{0,0,0,0}
+\definecolor{tudelft-sea-green}{cmyk}{0.54,0,0.32,0}
+\definecolor{tudelft-green}{cmyk}{1,0.15,0.4,0}
+\definecolor{tudelft-dark-blue}{cmyk}{1,0.66,0,0.4}
+\definecolor{tudelft-purple}{cmyk}{0.98,1,0,0.35}
+\definecolor{tudelft-turquoise}{cmyk}{0.82,0,0.21,0.08}
+\definecolor{tudelft-sky-blue}{cmyk}{0.45,0,0.06,0.06}
+\definecolor{tudelft-lavendel}{cmyk}{0.45,0.2,0,0.07}
+\definecolor{tudelft-orange}{cmyk}{0.02,0.56,0.84,0}
+\definecolor{tudelft-warm-purple}{cmyk}{0.58,1,0,0.02}
+\definecolor{tudelft-fuchsia}{cmyk}{0.19,1,0,0.19}
+\definecolor{tudelft-bright-green}{cmyk}{0.36,0,1,0}
+\definecolor{tudelft-yellow}{cmyk}{0.02,0,0.54,0}
+
+
+\newcommand\runtime[1]{{\color{runtimecolor}#1}}
+\newcommand\runtimefont{\runtime{purple font\xspace}\xspace}
+
+
+\newcommand\definition[1]{\emph{#1}}
+\newcommand\requirement[1]{\textbf{#1}}
+
+\newcommand\entity[1]{\texttt{{\small{#1}}}}
+\newcommand\instance[1]{\textit{{#1}}}
+\newcommand\relationship[1]{\texttt{{\small{#1}}}}
+\newcommand\attribute[1]{\texttt{{\small{#1}}}}
+
+\newtheorem{assumption}{Assumption}
+
+\newcommand\red[1]{{\color{red}#1}}
+
+\lstset{escapeinside={<@}{@>}}
+
+\lstdefinelanguage{PDDL}
+{
+  sensitive=false,    % not case-sensitive
+  morecomment=[l]{;}, % line comment
+  alsoletter={:,-,?},   % consider extra characters
+  keywords=[1]{
+    define,domain,problem,when,forall,exists,either,
+    :domain,:requirements,:types,:objects,:constants,
+    :predicates,:action,:parameters,:precondition,:effect,
+    :fluents,:primary-effect,:side-effect,:init,:goal,
+    :strips,:adl,:equality,:typing,:conditional-effects,
+    :negative-preconditions,:disjunctive-preconditions,
+    :existential-preconditions,:universal-preconditions,:quantified-preconditions,
+    :functions,assign,increase,decrease,scale-up,scale-down,
+    :metric,minimize,maximize,
+    :durative-actions,:duration-inequalities,:continuous-effects,
+    :durative-action,:duration,:condition,
+  }
+  keywordstyle=[1]\color{purple},
+  keywords=[2]{and, or, over,all, at, end, not},
+  keywordstyle=[2]\color{teal},
+  keywordsprefix=?
+}
+
+\lstdefinelanguage{TypeQL}
+{
+  sensitive=yes,    % not case-sensitive
+  morecomment=[l]{\#}, % line comment
+  alsoletter={:},   % consider extra characters
+  keywords=[1]{
+    entity, attribute, relation, 
+  },
+  keywordstyle=[1]\color{teal},
+  keywords=[2]{@key},
+  keywordstyle=[2]\color{orange},
+  keywords=[3]{
+    sub, abstract, owns, value, relates, plays,
+    rule, when, not, has, then, isa, \},\{,
+    fetch, match, insert, define, :,
+  },
+  keywordstyle=[3]\color{purple},
+  morestring=[b]{'},
+  % morekeywords=[4]{\$}, % Treat $ as a standalone keyword
+  % keywordstyle=[4]\color{red},
+  keywordsprefix=\$
+}
+
+%% PDDL paper
+\input{pddl/preamble}
+\input{pddl/macros}
+% \newcommand{\RQ}[1]{\textbf{RQ#1}}
+
+% \newcommand\owltopddl{Owl2PDDL\xspace}
+% \newcommand\acronym{\red{APPROACH}\xspace}
+% \newcommand\plansys{PlanSys2\xspace}
+% \newcommand\tomasys{TOMASys\xspace}
+% \newcommand\pddltomasys{\red{PDDL-TOMASys}\xspace}
+
+% % vocabulary of PDDL
+% \newcommand{\pddlTask}{\ensuremath{\Pi}\xspace}
+% \newcommand{\pddlDomain}{\ensuremath{\mathcal{D}}\xspace}
+% \newcommand{\pddlInstance}{\ensuremath{\mathcal{I}}\xspace}
+% \newcommand{\pddlObjects}{\ensuremath{O}\xspace}
+% \newcommand{\pddlInitial}{\ensuremath{I}\xspace}
+% \newcommand{\pddlGoal}{\ensuremath{G}\xspace}
+
+% \newcommand{\pddlPredicates}{\ensuremath{\mathsf{N}_\mathsf{P}}\xspace}
+% \newcommand{\pddlActions}{\ensuremath{A}\xspace}
+% \newcommand{\pddlDerRules}{\ensuremath{\text{Der}}\xspace}
+
+% \newcommand{\pddlPredicatesC}{\ensuremath{P_C}\xspace}
+% \newcommand{\pddlPredicatesR}{\ensuremath{P_R}\xspace}
+
+
+
+% \newcommand{\pddlActParam}{\ensuremath{\vec{x}}\xspace}
+% \DeclareMathOperator{\pddlActPre}{pre}
+% \DeclareMathOperator{\pddlActAdd}{add}
+% \DeclareMathOperator{\pddlActDel}{del}
+
+% % vocabulary of ontology
+% \newcommand{\Ont}{\ensuremath{\mathcal{O}}\xspace}
+% \newcommand{\SwrlRule}{\ensuremath{s}\xspace}
+
+% \newcommand{\N}{\ensuremath{\mathsf{N}}\xspace}
+% \newcommand{\NC}{\ensuremath{\mathsf{N}_\mathsf{C}}\xspace}
+% \newcommand{\NR}{\ensuremath{\mathsf{N_R}}\xspace}
+% \newcommand{\NI}{\ensuremath{\mathsf{N_I}}\xspace}
+
+% \newcommand{\NRobject}{\ensuremath{\mathsf{N_R^{object}}}\xspace}
+% \newcommand{\NRdata}{\ensuremath{\mathsf{N_R^{data}}}\xspace}
+
+% \newcommand{\NIC}{\ensuremath{\mathsf{N_I^{C}}}\xspace}
+% \newcommand{\NIR}{\ensuremath{\mathsf{N_I^{R}}}\xspace}
+
+% \newcommand{\ALCI}{\ensuremath{\mathcal{ALCI}}\xspace}
+
+% \DeclareMathOperator{\antecedent}{antecedent}
+% \DeclareMathOperator{\consequent}{consequent}
+
+
+% % vocabulary of TOMASys
+% \DeclareMathOperator{\FunctionTomasys}{Function}
+% \DeclareMathOperator{\FunctionsTomasys}{Functions}
+% \DeclareMathOperator{\FunctionDesign}{FunctionDesign}
+% \DeclareMathOperator{\FunctionDesigns}{FunctionDesigns}
+% \DeclareMathOperator{\Component}{Component}
+% \DeclareMathOperator{\QAtype}{QAtype}
+% \DeclareMathOperator{\QAvalue}{QAvalue}
+% \DeclareMathOperator{\Objective}{Objective}
+% \DeclareMathOperator{\Objectives}{Objectives}
+% \DeclareMathOperator{\FunctionGrounding}{FunctionGrounding}
+% \DeclareMathOperator{\FunctionGroundings}{FunctionGroundings}
+% \DeclareMathOperator{\solvesF}{solvesF}
+% \DeclareMathOperator{\requiredBy}{requiredBy}
+% \DeclareMathOperator{\isQAtype}{isQAtype}
+% \DeclareMathOperator{\hasQAestimation}{hasQAestimation}
+% \DeclareMathOperator{\hasNFR}{hasNFR}
+% \DeclareMathOperator{\typeF}{typeF}
+% \DeclareMathOperator{\typedFD}{typedFD}
+% \DeclareMathOperator{\solvesO}{solvesO}
+% \DeclareMathOperator{\typeFD}{typeFD}
+% \DeclareMathOperator{\hasQAvalue}{hasQAvalue}
+% \DeclareMathOperator{\requiresO}{requiresO}
+% \DeclareMathOperator{\cStatus}{c\_status}
+
+% \DeclareMathOperator{\fdRealisability}{fd\_realisability}
+
+% \DeclareMathOperator{\hasValue}{hasValue}
+% \DeclareMathOperator{\qaComparisonOperator}{qa\_comparison\_operator}
+% \DeclareMathOperator{\qaCritical}{qa\_critical}
+% \DeclareMathOperator{\fdEfficacy}{fd\_efficacy}
+% \DeclareMathOperator{\fgStatus}{fg\_status}
+% \DeclareMathOperator{\oImprove}{o\_always\_improve}
+% \DeclareMathOperator{\oStatus}{o\_status}
+% \DeclareMathOperator{\oUpdatable}{o\_updatable}
+% \DeclareMathOperator{\fdSpiralHigh}{fd\_spiral\_high}
+% \DeclareMathOperator{\fGenerateSearchPath}{f\_generate\_search\_path}
+
+% %vocabulary new tomasys
+% \DeclareMathOperator{\Action}{Action}
+% \DeclareMathOperator{\fdBetterUtility}{fdBetterUtility}
+% \DeclareMathOperator{\functionGrounding}{functionGrounding}
+% \DeclareMathOperator{\requiresC}{requiresC}
+% \DeclareMathOperator{\requiresF}{requiresF}
+% \DeclareMathOperator{\fActive}{f\_active}
+% \DeclareMathOperator{\fdUtility}{fd\_utility}
+
+
+% \DeclareMathOperator{\Domain}{Domain}
+% \DeclareMathOperator{\Range}{Range}
+
+% \DeclareMathOperator{\varC}{?c}
+% \DeclareMathOperator{\varFD}{?fd}
+% \DeclareMathOperator{\varFDtwo}{?fd2}
+% \DeclareMathOperator{\varFDbetter}{?fd\_better}
+% \DeclareMathOperator{\varF}{?f}
+% \DeclareMathOperator{\varU}{?u}
+% \DeclareMathOperator{\varUtwo}{?u2}
+% \DeclareMathOperator{\varUbetter}{?u\_better}
+% \DeclareMathOperator{\varQA}{?qa}
+% \DeclareMathOperator{\varQAvalue}{?qav}
+
+% \DeclareMathOperator{\fdUnground}{fd\_unground}
+	
+
+% % vocabulary for TACA transformation
+% \DeclareMathOperator{\bestFD}{bestFD}
+% \DeclareMathOperator{\validAndBest}{valid}
+% %%%%
+
 \begin{document}
+
+\newcommand\kw[1]{\texttt{{\small{#1}}}}
 
 %% Specify the title and author of the thesis. This information will be used on
 %% the title page (in title/title.tex) and in the metadata of the final PDF.
-\title{An Empirical Evaluation of Feedback-Driven Software Development}
-\author{Moritz Marc}{Beller}
+\title{Knowledge-based Self-adaptive Robotic Systems}
+\author{Gustavo}{Rezende Silva}
 
 %% Use Roman numerals for the page numbers of the title pages and table of
 %% contents.
@@ -29,10 +253,8 @@
 
 %% The (optional) dedication can be used to thank someone or display a
 %% significant quotation.
-\dedication{\epigraph{I [...] like to give the maximum in everything I do. The maximum I have. The
-    maximum I can give. I am not perfect. But if I do something, I do it [as best I can].
-    %And many people are not made like this. There are only few. But I like these few.
-  }{Reinhold Messner}}
+\dedication{\epigraph{dedication
+  }{Humanity}}
 
 \tableofcontents
 
@@ -46,6 +268,11 @@
 \thumbtrue
 
 \include{introduction/introduction}
+\include{suave/suave}
+\include{rosa/rosa}
+\include{pddl/pddl}
+% \include{type/type}
+\include{cognitive_architecture/cognitive_architecture}
 \include{conclusion/conclusion}
 
 %% Use letters for the chapter numbers of the appendices.
@@ -76,7 +303,7 @@ to this timestamped version.
 
 \include{cv/cv}
 \include{publications/publications}
-\include{ipa/ipadissertations_2018}
+% \include{ipa/ipadissertations_2018}
 
 \end{document}
 

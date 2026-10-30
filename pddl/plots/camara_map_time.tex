@@ -1,0 +1,65 @@
+\begin{tikzpicture}
+    \begin{axis}[
+        boxplot/draw direction=y,
+        ylabel={Value},
+        ymode=log,
+        ymin=0.5, ymax=30,
+        xmin=0, xmax=3,
+     	ytick={1, 10},
+     	extra y ticks={0.5, 30},
+        extra y tick labels={0.5, 30},
+        xtick={1,2},
+        xticklabels={\CamaraApproach, \planta, something},
+        title={},
+      	ylabel={Planning time [s]},
+        ymajorgrids=true,
+        width=\textwidth,
+        height=0.75\textwidth,
+        %ylabel style={yshift=-10pt},
+        ]
+        
+    
+        
+       
+        \addplot+[boxplot={box extend=0.2},
+        draw=\blueColor,
+        fill=\blueColor!30,
+        line width=0.75pt,
+        mark=o,
+        mark options={
+            fill=\blueColor,
+            draw=\blueColor,
+            opacity=0.2,
+            line width=0.5pt
+        },
+        ]
+        table [y=time, col sep=comma] {data/camara_map_prism_experiment.csv}
+        node[left, text=\blueColor] at
+        (boxplot box cs: \boxplotvalue{median},0)
+        {\pgfmathprintnumber{\boxplotvalue{median}}}
+        ; 
+        
+        \addplot+[
+        boxplot={box extend=0.2},,
+        draw=\greenColor,
+        fill=\greenColor!30,
+        line width=0.75pt,
+        mark=o,
+        mark options={
+            fill=\greenColor,
+            draw=\greenColor,
+            opacity=0.2,
+            line width=0.5pt
+        },
+        ]
+        table [y=time, col sep=comma] {data/camara_map_pddl_experiment.csv}
+        node[left, text=\greenColor] at
+        (boxplot box cs: \boxplotvalue{median},0)
+        {\pgfmathprintnumber{\boxplotvalue{median}}}
+        ; 
+        
+        
+ 
+        
+    \end{axis}
+\end{tikzpicture}

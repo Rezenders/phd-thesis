@@ -1,0 +1,48 @@
+\chapter{A Tactical Retreat}
+\label{rosa_eval}
+
+\begin{abstract}
+Sample Abstract.
+\end{abstract}
+
+\blfootnote{This chapter is a verbatim copy of the paper~\cite{}.
+\begin{itemize}
+    \item ReBeT-MC: A tactical retreat. In the research execution phase, it will be prepared and submitted to a journal TBD.
+\end{itemize}
+}
+
+\newpage
+
+\section{Abstract}
+
+\section{Introduction}
+
+\textbf{Idea:} Model-based self adapative system. We created DSLs to capture the: "context model", "variability model", "resolution model", and "requirement models". We reuse the "ROS system model" from Nadia. Furtheremore, we created meta-models that are implemented with TypeDB to capture what is defined in the DSLs. The DSLs are automatically translated into TypeQL and are used at runtime for reasoning about the adapatation.
+
+We are still deciding how we will formulate the exact contribution of the paper. It will depend on the venue we submit it to.
+
+We have 3 evaluations planned/in progress:
+
+\begin{itemize}
+    \item Evaluate the approach using SUAVE (chapter 2) and using the use case from Elvin's previous paper. The idea is to demonstrate that we can solve other scenarios from the literature
+    \item Evaluate the approach with the real Mirte. The idea is to demonstrate it works in a real robot and to showcase all the ``features'' of our approach
+    \item Evaluate with SAM-XL's real robot. The idea is to demonstrate that we can solve real scenarios from the industry and not only self-fabricated scenarios
+\end{itemize}
+
+This is a shared paper with Elvin being the main author and me the second author. For sure Elvin is doing more work but we talked about it and we agreed that probably I'm doing 40\% of the work. My contributions are: designing the runtime meta-models as well as the code for manipulating the knowledge base, and designing the conceptual approach in general, Elvin and I are talking a lot and we made many decisions together as a result of endless discussions/conversations.
+
+% \textbf{Idea:} Demonstrate how ROSA can be extended and used to enable self-adaptation in combination with cognitive architectures for robotic systems. For example, with the cognitive architecture created in the CoreSense project, or with BDI agents. 
+
+% % I still need to refine the plan for this research questions. My plan was to do that as soon as I am done with the ROSA paper. I want to synchronize with Alex so I can do something connected to what he/CoreSense is doing.
+
+% Possible directions:
+
+% \begin{itemize}
+%     \item Combine world knowledge (e.g., scene graphs) with ROSA to enable a proactive adaptation, similar to what is done in the paper: Cámara, Javier, Bradley Schmerl, and David Garlan. "Software architecture and task plan co-adaptation for mobile service robots." Proceedings of the IEEE/ACM 15th International Symposium on Software Engineering for Adaptive and Self-Managing Systems. 2020.
+%     \item Use BDI agents for the task decision layer of ROSA, and demonstrate how active perception (a cognitive ability) can used to perceive knowledge required for adaptation
+% \end{itemize}
+
+% Planned evaluation:
+% \begin{itemize}
+%     \item Deploy ROSA in the Mirte\footnote{\url{https://mirte.org/}} and Albert\footnote{\url{https://tud-hummus.github.io/}} robots for a scenario based on the RoboCup@Home\footnote{\url{https://athome.robocup.org/}} scenario.
+% \end{itemize}

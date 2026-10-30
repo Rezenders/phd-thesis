@@ -1,0 +1,61 @@
+\begin{tikzpicture}
+    \begin{axis}[
+        boxplot/draw direction=y,
+        ylabel={Value},
+        ymode=log,
+        ymin=5, ymax=10000,
+        xmin=0, xmax=3,
+        ytick={10, 100, 1000, 10000},
+        xtick={1,2},
+        xticklabels={\CamaraApproach, \planta},
+        title={},
+        ylabel={Peak Memory [MB]},
+        ymajorgrids=true,
+        width=\textwidth,
+        height=0.75\textwidth,
+        %ylabel style={yshift=-10pt},
+        ]
+        
+       
+        
+         \addplot+[boxplot={box extend=0.2},,
+        draw=\blueColor,
+        fill=\blueColor!30,
+        line width=0.75pt,
+        mark=o,
+        mark options={
+            fill=\blueColor,
+            draw=\blueColor,
+            opacity=0.2,
+            line width=0.5pt
+        },
+        ]
+        table [y= peak_memory, col sep=comma] {data/camara_map_prism_experiment.csv}
+         node[left, text=\blueColor] at
+         (boxplot box cs: \boxplotvalue{median},0)
+         {\pgfmathprintnumber{\boxplotvalue{median}}}
+         ; 
+        
+        \addplot+[
+        boxplot={box extend=0.2},,
+        draw=\greenColor,
+        fill=\greenColor!30,
+        line width=0.75pt,
+        mark=o,
+        mark options={
+            fill=\greenColor,
+            draw=\greenColor,
+            opacity=0.2,
+            line width=0.5pt
+        },
+        ]
+        table [y= peak_memory, col sep=comma] {data/camara_map_pddl_experiment.csv}
+        node[left, text=\greenColor] at
+        (boxplot box cs: \boxplotvalue{median},0)
+        {\pgfmathprintnumber{\boxplotvalue{median}}}
+        ; 
+        
+        
+        
+    \end{axis}
+\end{tikzpicture}

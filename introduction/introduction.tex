@@ -1,53 +1,127 @@
 \chapter{Introduction}
 \label{introduction}
 
-\begin{abstract}
-Sample Abstract.
-\end{abstract}
+% \begin{abstract}
+% Sample Abstract.
+% \end{abstract}
 
-\blfootnote{This chapter is partly based on \faFileTextO~\emph{M. Beller. Toward an
-    Empirical Theory of Feedback-Driven Development, ICSE'18 (Student Research Competition)}~\cite{BellerSRC2018}.
-}
+% \blfootnote{This chapter is partly based on \faFileTextO~\emph{M. Beller. Toward an
+%     Empirical Theory of Feedback-Driven Development, ICSE'18 (Student Research Competition)}~\cite{BellerSRC2018}.
+% }
 
 
 \newpage
 
-\dropcap{T}his is a introductory page.
+\dropcap{T}his chapter provides an introduction to this thesis by describing the motivation for proposing a systematic solution for designing robotic systems as self-adaptive systems, the motivation behind choosing knowledge representation techniques for this end, background information about the methods used in this thesis, the research questions this thesis aims to answer, and its core contributions.
 
-\section{Background \& Context}
-In this thesis, you can reference pictures~\Cref{fig:devmodel} using Cleverref and circles \circled{5}.
+\section{Motivation}\label{sec:intro:motivation}
 
-\begin{figure}[htb]
-	\centering
-	\includegraphics[width=0.65\columnwidth]{development_model_without_papers}
-	\caption{The stages of the FDD model and their relationship to other
-          Software Engineering concepts.}
-	\label{fig:devmodel}
-\end{figure}
+% \textbf{First paragraph:} A high-level introduction stating why having autonomous robots is interesting/meaningful, and pointing out to high-level challenges (related to this thesis) for designing fully autonomous robots, such as robots operating in changing environments/contexts and the difficulties of developing software and hardware that doesn't fail (here it would be nice to cite papers to support that these are real challenges, an interesting paper about software failure is the best demo paper from RSS 2023)(make this paragraph more general than the first paragraph of the ROSA paper but still reuse some of the stuff there, I like that paragraph)
 
-We also have lists:
+With the advancement of technology, autonomous robots are expected to operate in an increasing number of domains to either aid or replace humans, such as in healthcare, agriculture, manufacturing, space and ocean exploration, among many other applications. However, there are still several challenges in deploying autonomous robots to the real world. Two of these challenges are designing reliable software architectures and task decision-making algorithms that enable robots to autonomously perform multiple tasks in diverse environments while handling internal and environmental uncertainties. These challenges stem from the fact that different contexts may demand distinct task logic and architectural configurations, while also introducing unique uncertainties. Furthermore, these challenges are exacerbated by the fact that robotics architectures often require multiple hardware and software components to be running at the same time for an extended period of time, which even if the individual parts have low failure rates, when combined, the failure rates can become significant~\cite{bajracharya2024demonstrating}. To address these challenges, this thesis investigates how to design and implement robotics architectures and task decision-making algorithms that are able to self-adapt at runtime to different contexts, mitigate uncertainties, and overcome component failures.
 
-\begin{enumerate}
-  \item Static Analysis~\circled{3} examines program artifacts or
-    their source code without executing them~\cite{wichmann1995industrial}, while
- \item Dynamic Analysis~\circled{4} relies on information gathered from their
-   execution~\cite{cornelissen2009systematic}.
-\end{enumerate}
+% With the advancement of technology, autonomous robots are expected to operate in an increasing number of domains to either aid or replace humans, such as in healthcare \red{(cite papers)}, agriculture \red{(cite papers)}, manufacturing \red{(cite papers)}, space and ocean exploration \red{(cite papers)}, among many other applications \red{(cite papers)}. However, there are still several challenges in deploying autonomous robots to the real world~\red{(cite papers)}. Two of these challenges are designing reliable software architectures and task decision-making algorithms that enable robots to autonomously perform multiple tasks in diverse environments while handling internal and environmental uncertainties. These challenges stem from the fact that different contexts may demand distinct task logic and architectural configurations, while also introducing unique uncertainties. Furthermore, these challenges are exacerbated by the fact that robotics architectures often require multiple hardware and software components to be running at the same time for an extended period of time, which even if the individual parts have low failure rates, when combined, the failure rates can become significant~\cite{bajracharya2024demonstrating}. To address these challenges, this thesis investigates how to design and implement robotics architectures and task decision-making algorithms that are able to self-adapt at runtime to different contexts, mitigate uncertainties, and overcome component failures.
 
-Or boxes:
+% \textbf{Second paragraph:} Like my other papers, say that an approach to address the aforementioned challenges is to design robotic systems as self-adaptive systems instead of trying to design single solutions that can handle everything. Say that there is already relevant work in the SAS literature for non-robotic systems, then say there are some relevant works on self-adaptive robotic systems (cite elvin's mapping study), then say that there is still a gap in relation to the existence of systematic methods that can be reused in different robotic systems, especially when talking about practical aspects (like having reusable software available).
 
-\begin{framed}
-This thesis is concerned with the empirical assessment of the state of the art of how developers
-drive software development with the help of feedback loops.
-\end{framed}
+The software engineering community has already performed a significant amount of research on how to define and engineer~\cite{10.1145/1516533.1516538, krupitzer2015survey, 10.1145/3487921} self-adaptive software systems that can handle software failures and uncertainties. A common approach to enable self-adaptation in software systems is to design them as two-layered systems containing a managing and managed subsystem~\citep{weyns2020introduction}, where the managing subsystem monitors and reconfigures the managed subsystem, and the managed subsystem is responsible for the domain logic. This design facilitates the development and maintenance of the system by creating a clear separation between the adaptation and the domain logic. In the context of robotic systems, there are several works that either address architectural adaptation~\cite{peldszus2023softwarereconfigurationrobotics, ALBERTS2025112258} or task execution adaptation~\citep{carreno2021situation, hamilton2022towards}, while there are some works that partially address the combination of architectural and task execution adaptation~\cite{park2012task, runtime_variability_lotz, rra_nico, temoto}, only few works fully address this combination~\citep{braberman2018extended, task_co_adapt_camara_garlan}. 
+More critically, to the best of our knowledge, the existing solutions for task-and-architecture co-adaptation~(TACA) require a significant and complex re-programming of the adaptation logic for each different use case, including the creation of multiple models based on different domain specific languages (DSLs)~\citep{task_co_adapt_camara_garlan} or implementing the managing subsystem itself~\citep{braberman2018extended}, hindering the adoption of SAS methods in robotics.
 
-Or code:
-\begin{lstlisting}[caption={\textsc{TrinityCore}},label={lst:e1}]
- x += other.x;
- y += other.y;
- z += other.y;
-\end{lstlisting}
+% \textbf{Third paragraph:} Motivate why knowledge representation methods are interesting for designing systematic solutions for robotic self-adaptation. 
+
+To address the limitations of current SAS methods in robotics, this thesis aims to design and engineer a reusable solution for task and architecture co-adaptation for robotic systems. More concretely, it investigates: (i) whether knowledge representation and reasoning~(KR\&R) techniques can be leveraged to promote the reusability of solutions for self-adaptive robotic systems; (ii) how to architect robotic systems to enable knowledge-based task-and-architecture co-adaptation; and (iii) how to systematically evaluate alternative approaches to robot self-adaptation. This thesis's research questions can be summarized as:
+
+\begin{tcolorbox}[colframe=tudelft-cyan, colback=white, title=Research questions]
+\noindent\textbf{How to design and engineer a reusable solution for task and architecture co-adaptation for robotic systems?}
+\begin{itemize}[label={}]
+  \item[\textbf{RQ1.1}] To what extent can KR\&R techniques promote reusability in self-adaptive robotic systems?
+  \item[\textbf{RQ1.2}] How to architect robotic systems to enable knowledge-based task and architecture co-adaptation?
+  \item[\textbf{RQ1.3}] How to systematically evaluate alternative approaches to robot self-adaptation?
+\end{itemize}
+\end{tcolorbox}
+
+% To address the limitations of SAS methods for TACA, this paper proposes to extend traditional robotics architectures with a novel knowledge-based managing subsystem for RObot Self-Adaptation~(\acronym) that promotes reusability, composability, and extensibility. The main novelty of \acronym is its knowledge base~(KB) which captures 
+% knowledge about the actions the robot can perform, the robot's architecture, the relationship between both, and their requirements to answer questions such as ``What actions can the robot perform in situation X?'' and  ``What is the best configuration available for each action in situation Y?'', for example, ``Can the robot perform an inspection action when the battery level is lower than 50\%?'' or ``What is the best software configuration for the inspection action when the visibility is low?''. 
+% This results in a reusable solution for TACA in which all application-specific aspects of the adaptation logic are captured in its KB.
 
 
-I hope this helps you get started!
-Moritz
+% \textbf{Fourth paragraph:} Explain that this thesis explored, proposed, and evaluated different knowledge-based approaches for designing a systematic solution for self-adaptive robotic systems.  
+
+
+% \section{Thesis scope}
+
+% \textbf{Scope:} There are many relevant aspects in self-adaptive robotic systems, such as monitoring, analyzing, planning, executing, representing knowledge, guaranteeing properties, reflection, finding optimal configurations, different adaptation types etc. (check/cite a couple of taxonomy papers to highlight the extent of things that can be researched). In this thesis we focus on: designing a reusable and extensible solution/architecture that can be customized to include extra/different aspects (e.g. allows for other plan components to be used etc.)
+
+% \section{Background}
+
+% \subsection{Knowledge representation}
+
+% \subsection{Planning}
+
+% \subsection{Self-adaptive systems}
+
+% \cite{krupitzer2015survey} propose a taxonomy for self-adaptive systems~(SAS) by integrating existing views on SAS, and they survey existing methods for engineering SASs.
+
+
+% Generative AI for Self-Adaptive Systems: State of the Art and Research Roadmap
+
+\section{Contributions and Outline}
+
+This thesis focuses on addressing the research questions presented in~\Cref{sec:intro:motivation}, and therefore, its main contributions are possible answers to these questions. More specifically: 
+
+\begin{itemize}
+    \item \textbf{\Cref{suave}} proposes SUAVE~\cite{suave} as an exemplar for evaluating self-adaptive robotic systems, providing a partial answer to \textbf{RQ1.3}. SUAVE consists of an underwater vehicle that performs a pipeline inspection mission while being subject to thruster failures and water visibility changes;
+    \item \textbf{\Cref{rosa}} proposes ROSA~\cite{silva2025rosa} as a knowledge-based solution for robot self-adaptation, providing a partial answer to \textbf{RQ1.1} and \textbf{RQ1.2}. ROSA has a modular architecture based on the MAPE-K loop~\cite{kephart03computer} that promotes reusability, composability, and extensibility. Furthermore, it leverages TypeDB\cite{dorn2023type}, a type theoretical database, for KR\&R. This chapter evaluates how ROSA performs when applied to the SUAVE exemplar, and it shows how ROSA can be applied to an autonomous ground vehicle and to an unmanned aerial vehicle;
+    \item \textbf{\Cref{pddl}} proposes an ontology-mediated planning approach for robot self-adaptation~\cite{silva2025planyour}, providing a partial answer to \textbf{RQ1.1} and \textbf{RQ1.2}. Which consists of translating a modified version of the TOMASys~\cite{corbato2013model} ontology from the Ontology Web Language~(OWL)~\cite{Antoniou2004} format to a Planning Domain Definition Language~(PDDL)~\cite{pddl} model, then use the planning model for task and architecture planning at runtime. This chapter evaluates how this approach performs when applied to the SUAVE exemplar, and it compares it to a model-checking-based solution~\cite{camara_software_2020} for robot self-adaptation;
+    \item \textbf{\Cref{rosa_eval}} extends ROSA, applies it to a more realistic robotic scenario with a real robot, and performs a thorough evaluation of ROSA. The main goal of this chapter is to contribute to \textbf{RQ1.3}.
+\end{itemize}
+
+% main contributions of this thesis are 
+
+% This thesis addresses the research questions presented in \Cref{sec:intro:motivation} 
+
+% A systematic approach for enabling task execution and software architecture runtime adaptation in robotic systems, a comparison between different approaches for task and architecture co-adaptation, a system to evaluate self-adaptive robotic systems, and an approach that leverages the knowledge used to enable task and architecture co-adaptation to improve task decision-making.
+
+% \subsection{Evaluating self-adaptive robotic systems}
+
+% \section{Statement of contributions}
+
+
+
+% \section{Background \& Context}
+% In this thesis, you can reference pictures~\Cref{fig:devmodel} using Cleverref and circles \circled{5}.
+
+% \begin{figure}[htb]
+% 	\centering
+% 	\includegraphics[width=0.65\columnwidth]{development_model_without_papers}
+% 	\caption{The stages of the FDD model and their relationship to other
+%           Software Engineering concepts.}
+% 	\label{fig:devmodel}
+% \end{figure}
+
+% We also have lists:
+
+% \begin{enumerate}
+%   \item Static Analysis~\circled{3} examines program artifacts or
+%     their source code without executing them~\cite{wichmann1995industrial}, while
+%  \item Dynamic Analysis~\circled{4} relies on information gathered from their
+%    execution~\cite{cornelissen2009systematic}.
+% \end{enumerate}
+
+% Or boxes:
+
+% \begin{framed}
+% This thesis is concerned with the empirical assessment of the state of the art of how developers
+% drive software development with the help of feedback loops.
+% \end{framed}
+
+% Or code:
+% \begin{lstlisting}[caption={\textsc{TrinityCore}},label={lst:e1}]
+%  x += other.x;
+%  y += other.y;
+%  z += other.y;
+% \end{lstlisting}
+
+
+% I hope this helps you get started!
+% Moritz

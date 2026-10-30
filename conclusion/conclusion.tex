@@ -1,4 +1,20 @@
 \chapter{Conclusion}
 \label{conclusion}
 
-The conclusions of your thesis.
+This thesis investigated how knowledge representation techniques can be used to design self-adaptive robotic systems that promote reusability, composability, and extensibility. Furthermore, this work evaluated how different methods for robot self-adaption compare and showed that the main method proposed in this work, ROSA, can be applied to different use cases.
+
+% \subsection{Conclusions}
+
+\section{Future works}
+
+% \emph{Future works:} 
+We envision multiple different directions to further improve and extend ROSA, some of the possible directions are:
+\begin{itemize}
+    \item Self-adaptation aspects: ROSA can be extended to cover more aspects required for self-adaptive robotic systems, such as task and configuration repair, transitions between adaptations, pro-active adaptation, and self-reflection;
+    \item Task planning: ROSA's knowledge model can be extended to capture additional knowledge relevant to task planning, such as action's preconditions, effects, and duration. This would allow for more elaborated task planning algorithms to be used for TACA. Furthermore, ROSA implementation can be extended to provide interfaces for additional deliberation techniques commonly used in robotics.
+    % , such as planning. 
+    % Currently, we have ongoing work on integrating ROSA with PDDL planning~\cite{fox2003pddl2} with the PlanSys2 package~\cite{plansys2};
+    \item Learning: ROSA can be extended with learning techniques to learn and update at runtime the \entity{Quality Attribute} and \entity{Environmental Attribute} estimations and constraints \attribute{values}. A more elaborated possibility is learning that constraints and estimations exist without prior knowledge, i.e., learning that the relationship itself should be modeled. The proposed implementation of ROSA provides interfaces to manipulate the captured knowledge at runtime, which could be exploited for this end;
+    \item Formal verification: The proposed knowledge model can be formalized to enable the use of formal methods techniques to verify properties of the modeled scenarios;
+    \item KR\&R: different knowledge representation and reasoning techniques can be compared to analyze the advantages and disadvantages of each one, such as reasoning time, reasoning completeness, decidability, representation limitations, and scalability.
+\end{itemize}
