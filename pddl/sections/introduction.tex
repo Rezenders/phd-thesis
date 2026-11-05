@@ -1,0 +1,47 @@
+\section{Introduction}
+
+Autonomous robots are required to operate reliably in increasingly complex environments and to perform a larger number of tasks with distinct functional and quality requirements, potentially requiring different architectural configurations to satisfy them. A key challenge in designing such systems is ensuring that the robot continues to meet its requirements throughout mission execution, particularly under uncertainty, such as sensor failures or environmental disturbances~\cite{Correll-2017, Krotkov-2018}. For example, an underwater robot might require different sensor configurations depending on the water visibility, or it might need to navigate through different paths depending on water currents. Addressing these challenges requires coordinating task execution and architectural adaptation while accounting for their interdependencies.
+
+Task and architecture co-adaptation (TACA)~\cite{CAMARASoftwareArchitectureTask2020} addresses the interdependencies between task execution and architectural adaptation. Reactive TACA approaches such as ROSA~\cite{rosa} select a configuration for each action only when that action begins executing, without accounting for how the choice constrains the rest of the mission. However, selecting a suitable configuration for the current action alone does not establish whether subsequent actions can be performed under the conditions anticipated along the mission. Considering these dependencies during mission planning allows configuration requirements to influence the task plan before execution begins, so that each configuration choice is made with its downstream task consequences in view. To the best of our knowledge, the approach by Cámara et al.~\cite{CAMARASoftwareArchitectureTask2020} is the only approach that jointly plans task actions and reconfiguration actions and produces a complete plan ahead of execution. Their approach, however, requires substantial planning time and memory and relies on domain models expressed across multiple specification languages with manually developed integration code, increasing modeling effort and the potential for errors. Furthermore, their approach requires modeling probabilities to enable optimal planning, although these probabilities can be difficult to estimate accurately.
+
+To address these limitations, this paper proposes \acronym, an ontology-mediated approach that formulates task and architecture co-adaptation as a single planning problem by automatically integrating task and architectural knowledge. \acronym uses a Web Ontology Language (OWL) ontology~\cite{aguado2024survey} to represent the functional requirements of robot actions, the architectural alternatives that realize those requirements, and the quality attributes and requirements used to assess the applicability and utility of each alternative. The Planning Domain Definition Language (PDDL)~\cite{karpas2020automated} describes task actions, the current system state, and mission goals. % chktex 12
+Architectural knowledge is automatically translated into PDDL and integrated with the task model, allowing task actions and architectural reconfiguration actions to be considered within the same search space. This integration preserves a separation between task modeling and architectural knowledge modeling. The resulting problem can be solved by standard PDDL planners. To support timely runtime adaptation, \acronym favors satisficing planning over guaranteed mission-level optimality. Rather than explicitly modeling uncertainty and its probabilities, it plans from the currently observed state and handles changes during execution through replanning when monitored conditions invalidate the current plan. By relying on two established modeling languages and automating their integration, \acronym aims to reduce modeling effort.
+
+\begin{figure}[tbp]
+	\centering
+        \resizebox{\textwidth}{!}{
+            \input{pddl/figures/framework.tex}
+        }
+		\caption{\acronym framework, organized into design time, deployment time, and runtime, separated by dashed vertical lines. Some \plansys nodes are omitted for clarity, and the Planner and Plan Execution components shown were extended as part of this work.}%
+	\label{planta:fig:architecture}
+\Description{Left-to-right diagram of the \acronym workflow. At design time, a PDDL domain and
+problem and a \pddltomasys ontology are specified. At deployment time, \owltopddl
+combines the ontology TBox with the domain and the ABox with the problem. The TACA
+transformation then modifies the domain. At runtime, the resulting domain and problem
+populate the \plansys PDDL knowledge base, which supplies the planner and plan execution
+component. The planner sends a plan to plan execution, which sends task and
+reconfiguration actions to the robotic system. Monitoring feeds observations from the
+robot back to the knowledge base. Solid arrows denote data flow and dashed arrows denote
+ROS interfaces.}
+\end{figure}
+
+\Cref{planta:fig:architecture} depicts the \acronym framework across design time, deployment time, and runtime. At design time, the system architecture is modeled using the \pddltomasys ontology, and the task problem is modeled in PDDL\@. At deployment time, \owltopddl translates the ontology into PDDL, combines it with the planning problem, and incorporates their mutual dependencies, i.e., TACA concerns. At runtime, the planning system, based on \plansys, jointly plans and executes task and reconfiguration actions. \pddltomasys builds upon the Teleological and Ontological Metamodel for Autonomous Systems~(\tomasys)~\cite{aguado2021functional,corbato2013model} and draws inspiration from the ROSA model~\cite{rosa}. % chktex 12
+
+\acronym is evaluated with respect to feasibility, performance efficiency, and scalability on two use cases: an autonomous underwater vehicle~(AUV) scenario from the SUAVE exemplar~\cite{suave}, and an autonomous ground vehicle~(AGV) scenario adapted from~\cite{CAMARASoftwareArchitectureTask2020}. These dimensions are formulated as research questions RQ1--RQ3 in \Cref{planta:sec:evaluation}.
+Feasibility (RQ1) is addressed by implementing \acronym and integrating it with \plansys, an existing planning system for robotics. This required extending \plansys with derived predicates and existential preconditions~\cite{edelkamp2004pddl2}, PDDL constructs that the models generated by \owltopddl rely on.
+The results of running \acronym on the ROS~2-based SUAVE exemplar support the feasibility of applying it to robotic systems.
+Performance efficiency (RQ2) is assessed on the AGV use case, where \acronym is, at the median, $3.00$ times faster than the approach by Cámara et al.~\cite{CAMARASoftwareArchitectureTask2020} and its peak memory usage is $6.84$ times smaller, while both approaches produce plans with near-identical path length and estimated remaining battery at the end of the mission.
+In the AGV use case, scalability (RQ3) is assessed by varying the map size, the number of architectural configurations, the number of quality requirements, and the number of mission-level PDDL action schemas, independently and in combination. The results show that satisficing planning remains tractable in scenarios where optimal planning becomes impractical, supporting the use of \acronym in robotic applications that require online task-level replanning.
+
+The main contributions of this paper are:
+\begin{enumerate}
+    \item an ontology-mediated planning approach for mission-wide task and architecture co-adaptation that combines task and reconfiguration actions in a single PDDL formulation and supports satisficing planning with runtime replanning.
+    \item an open-source implementation of the proposed approach, designed for integration with ROS~2-based robotic systems, including an extension of the \plansys framework to support derived predicates and existential preconditions in PDDL\@.
+    \item a systematic evaluation of the proposed approach, including a comparison with the state-of-the-art approach by Cámara et al.~\cite{CAMARASoftwareArchitectureTask2020} and a scalability analysis that demonstrates the feasibility of satisficing planning in regimes where optimal planning becomes impractical.
+\end{enumerate}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

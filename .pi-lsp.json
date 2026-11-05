@@ -1,0 +1,11 @@
+{
+  "autoStart": [
+    "latex"
+  ],
+  "servers": {
+    "latex": {
+      "command": "/usr/bin/texlab",
+      "args": []
+    }
+  }
+}

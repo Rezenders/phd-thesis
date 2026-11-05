@@ -1,0 +1,7 @@
+# Two-space indentation
+defaultIndent: '  '
+
+# Remove trailing whitespace
+removeTrailingWhitespace:
+  beforeProcessing: 1
+  afterProcessing: 1

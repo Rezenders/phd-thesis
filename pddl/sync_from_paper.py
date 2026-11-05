@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+"""Copy the PLANTA paper sources into this chapter (pddl/).
+
+The chapter is a verbatim copy of the paper. This script copies the paper's
+sources and applies only mechanical, non-textual transformations so that they
+compile inside the thesis:
+
+  1. Asset paths are prefixed with ``pddl/`` (figures/, tables/,
+     navigation_experiment/), because the thesis compiles from its own root.
+  2. Every label and cross-reference key is prefixed with ``planta:`` so that it
+     cannot collide with labels of other chapters. The paper's xr-hyper
+     prefixes are kept as namespaces, because the supplement reuses some of
+     the manuscript's label names: supplement labels become ``planta:S-<key>``
+     and manuscript labels ``planta:<key>``.
+  3. Citation keys listed in CITE_KEY_MAP are renamed to the key that the
+     thesis bibliography already uses for the same reference.
+  4. The body of the electronic supplement (between ``\\maketitle`` and the
+     bibliography) is written to sections/supplement.tex.
+
+Everything under the managed directories (sections/, config/, figures/,
+tables/, navigation_experiment/) is replaced on every run. The chapter wrapper
+pddl/pddl.tex is not touched by this script.
+
+Usage: python3 pddl/sync_from_paper.py [PAPER_DIR]
+"""
+
+import re
+import shutil
+import sys
+from pathlib import Path
+
+DEFAULT_PAPER = Path.home() / "ros_workspaces/planta_ws/src/planta_paper_overleaf"
+CHAPTER = Path(__file__).resolve().parent
+PREFIX_DIR = "pddl"
+LABEL_PREFIX = "planta:"
+
+MANAGED = ["sections", "config", "figures", "tables", "navigation_experiment"]
+
+REF_CMDS = (
+    "label|ref|Cref|cref|Crefrange|crefrange|autoref|eqref|pageref|nameref|"
+    "subref|cpageref|Cpageref|labelcref|namecref|nameCref|vref|Vref"
+)
+REF_RE = re.compile(r"\\(" + REF_CMDS + r")(\*?)\{([^{}]*)\}")
+RANGE_RE = re.compile(r"\\([cC]refrange|[cC]pagerefrange)(\*?)\{([^{}]*)\}\{([^{}]*)\}")
+LST_LABEL_RE = re.compile(r"(\blabel=)(\{[^{}]*\}|[^,\]\s]+)")
+PATH_RE = re.compile(r"\{(\s*)(navigation_experiment|figures|tables)/")
+# Paper citation keys that already exist in dissertation.bib under another
+# spelling (BibTeX keys are case-insensitive, so both cannot coexist).
+CITE_KEY_MAP = {"PlanSys2": "plansys2"}
+CITE_RE = re.compile(r"(\\cite[a-zA-Z]*\*?(?:\[[^\]]*\])*\{)([^{}]*)\}")
+DATA_RE = re.compile(r"pddl/(navigation_experiment/data/[^}\s]+)")
+
+
+def prefix_key(key: str, supplement: bool = False) -> str:
+    """Map a paper label key to its thesis key (idempotent).
+
+    In the manuscript, ``S-x`` refers to supplement label ``x``; in the
+    supplement, ``M-x`` refers to manuscript label ``x``.
+    """
+    key = key.strip()
+    if not key or key.startswith(LABEL_PREFIX):
+        return key
+    if supplement:
+        key = key[2:] if key.startswith("M-") else "S-" + key
+    return LABEL_PREFIX + key
+
+
+def rewrite_labels(text: str, supplement: bool = False) -> str:
+    def prefix_keys(arg: str) -> str:
+        return ",".join(prefix_key(k, supplement) for k in arg.split(","))
+
+    def prefix_key1(key: str) -> str:
+        return prefix_key(key, supplement)
+
+    text = REF_RE.sub(
+        lambda m: f"\\{m.group(1)}{m.group(2)}{{{prefix_keys(m.group(3))}}}", text
+    )
+
+    # second argument of range commands (prefix_key is idempotent)
+    text = RANGE_RE.sub(
+        lambda m: f"\\{m.group(1)}{m.group(2)}"
+        f"{{{prefix_keys(m.group(3))}}}{{{prefix_keys(m.group(4))}}}",
+        text,
+    )
+
+    # label=... inside lstlisting options
+    def lst(line: str) -> str:
+        if "lstlisting" not in line and "lstinputlisting" not in line:
+            return line
+
+        def sub(m):
+            val = m.group(2)
+            if val.startswith("{"):
+                return f"{m.group(1)}{{{prefix_key1(val[1:-1])}}}"
+            return m.group(1) + prefix_key1(val)
+
+        return LST_LABEL_RE.sub(sub, line)
+
+    return "".join(lst(line) for line in text.splitlines(keepends=True))
+
+
+def rewrite_paths(text: str) -> str:
+    return PATH_RE.sub(lambda m: f"{{{m.group(1)}{PREFIX_DIR}/{m.group(2)}/", text)
+
+
+def rewrite_cites(text: str) -> str:
+    def sub(m):
+        keys = [CITE_KEY_MAP.get(k.strip(), k) for k in m.group(2).split(",")]
+        return m.group(1) + ",".join(keys) + "}"
+
+    return CITE_RE.sub(sub, text)
+
+
+def transform(path: Path, labels: bool = True) -> None:
+    text = path.read_text(encoding="utf-8")
+    text = rewrite_paths(text)
+    text = rewrite_cites(text)
+    if labels:
+        text = rewrite_labels(text, supplement=path.name == "supplement.tex")
+    path.write_text(text, encoding="utf-8")
+
+
+def supplement_body(paper: Path) -> str:
+    text = (paper / "supplement-acm.tex").read_text(encoding="utf-8")
+    start = text.index("\\maketitle") + len("\\maketitle")
+    end = text.index("\\bibliographystyle")
+    header = (
+        "% Body of supplement-acm.tex (electronic supplement), generated by\n"
+        "% pddl/sync_from_paper.py. Do not edit; edit the paper and re-sync.\n"
+    )
+    return header + text[start:end].strip("\n") + "\n"
+
+
+def main() -> None:
+    paper = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_PAPER
+    paper = paper.resolve()
+    if not (paper / "main-acm.tex").exists():
+        sys.exit(f"Not a paper directory: {paper}")
+
+    for d in MANAGED:
+        shutil.rmtree(CHAPTER / d, ignore_errors=True)
+
+    shutil.copytree(paper / "sections", CHAPTER / "sections")
+    (CHAPTER / "config").mkdir()
+    for f in ["preamble.tex", "macros.tex"]:
+        shutil.copy2(paper / "config" / f, CHAPTER / "config" / f)
+    shutil.copytree(paper / "figures", CHAPTER / "figures")
+    shutil.copytree(paper / "tables", CHAPTER / "tables")
+    nav = CHAPTER / "navigation_experiment"
+    for sub in ["plots", "tables"]:
+        shutil.copytree(paper / "navigation_experiment" / sub, nav / sub)
+
+    (CHAPTER / "sections" / "supplement.tex").write_text(
+        supplement_body(paper), encoding="utf-8"
+    )
+
+    tex_files = [p for d in MANAGED for p in (CHAPTER / d).rglob("*.tex")]
+    for p in tex_files:
+        # config/macros.tex redefines \label inside \inputtablebody; keep it intact
+        transform(p, labels=p.parent.name != "config")
+
+    # Copy only the experiment data files that the plots and tables reference
+    data = set()
+    for p in tex_files + list((nav).rglob("*.tex")):
+        data.update(DATA_RE.findall(p.read_text(encoding="utf-8")))
+    for rel in sorted(data):
+        src = paper / rel
+        dst = CHAPTER / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+        if dst.suffix == ".tex":
+            transform(dst)
+
+    print(f"Synced from {paper} ({len(data)} data files)")
+
+
+if __name__ == "__main__":
+    main()

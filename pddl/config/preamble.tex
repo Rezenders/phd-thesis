@@ -72,7 +72,8 @@
     keywordstyle=\color{black}\ttfamily\bfseries,
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{olive},
-    basicstyle=\sffamily\normalsize,
+    basicstyle=\sffamily\footnotesize,
+    columns=fullflexible,
     numberstyle=\tiny,
     breakatwhitespace=false,         
     breaklines=true,                 
@@ -98,23 +99,22 @@
   keywords=[2]{and, or, over,all, at, end, not},
   keywords=[3]{
       define,domain,problem,when,forall,exists,either,
-      :domain,:requirements,:types,:objects,:constants,
-      :predicates,:action,:parameters,:precondition,:effect,
-      :fluents,:primary-effect,:side-effect,:init,:goal,
-      :strips,:adl,:equality,:typing,:conditional-effects,
-      :negative-preconditions,:disjunctive-preconditions,
-      :existential-preconditions,:universal-preconditions,:quantified-preconditions,
-      :functions,assign,increase,decrease,scale-up,scale-down,
-      :metric,minimize,maximize,
-      :durative-actions,:duration-inequalities,:continuous-effects,
-      :durative-action,:duration,:condition,
-      :derived,
+      :domain,:requirements,:types,:objects,:constants, % chktex 26 -- literal PDDL syntax
+      :predicates,:action,:parameters,:precondition,:effect, % chktex 26 -- literal PDDL syntax
+      :fluents,:primary-effect,:side-effect,:init,:goal, % chktex 26 -- literal PDDL syntax
+      :strips,:adl,:equality,:typing,:conditional-effects, % chktex 26 -- literal PDDL syntax
+      :negative-preconditions,:disjunctive-preconditions, % chktex 26 -- literal PDDL syntax
+      :existential-preconditions,:universal-preconditions,:quantified-preconditions, % chktex 26 -- literal PDDL syntax
+      :functions,assign,increase,decrease,scale-up,scale-down, % chktex 26 -- literal PDDL syntax
+      :metric,minimize,maximize, % chktex 26 -- literal PDDL syntax
+      :durative-actions,:duration-inequalities,:continuous-effects, % chktex 26 -- literal PDDL syntax
+      :durative-action,:duration,:condition, % chktex 26 -- literal PDDL syntax
+      :derived, % chktex 26 -- literal PDDL syntax
   },
   keywordstyle=[2]\color{\blueColor}\bfseries,
   keywordstyle=[3]\color{\greenColor}\bfseries,
   keywordsprefix=?
 }
 
-\usepackage[table]{xcolor}
 \definecolor{pvalue_green}{RGB}{210,245,210} % very light green
 \definecolor{pvalue_blue}{RGB}{220,230,245}  % very light blue, color-blind safe

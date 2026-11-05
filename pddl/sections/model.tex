@@ -1,0 +1,63 @@
+\section{\pddltomasys}\label{planta:sec:tomasys_pddl}
+
+This work proposes the \pddltomasys ontology to enable TACA solely through ontology-mediated planning. \pddltomasys builds upon the \tomasys ontology~\cite{aguado2021functional,corbato2013model}, but \tomasys cannot be reused for this purpose without modification. It offers no representation of robot actions, and no representation of the relation between an action and the functionalities it requires, i.e., the action's functional requirements. It was also designed under assumptions about the organization of planning and reasoning that do not hold for \acronym. % chktex 12 -- sentence starts with a macro
+
+The first limitation is that \tomasys gives the planner no way to determine which configuration must be active for a given action to be executable. In SUAVE, for example, the \texttt{search\_pipeline} action requires the \emph{generate search path} and \emph{maintain motion} functionalities. A suitable $\FunctionDesign$ must therefore remain grounded for each functionality throughout the action's execution. To address this limitation, \pddltomasys introduces an explicit representation of action functional requirements, defined below. \acronym combines these explicitly modeled functional requirements with \acronym's runtime precondition monitoring (see \Cref{planta:sec:bg_plansys}). If a constraint violation renders a grounded $\FunctionDesign$ unrealizable, the resulting execution failure prompts the \acronym controller to request replanning. % chktex 12 -- sentence starts with a macro
+
+The second limitation concerns two assumptions under which \tomasys and the Metacontrol managing system were designed. First, it assumes a separation of responsibilities between task and configuration planning: an external component, without direct access to the knowledge base, is responsible for selecting the robot's actions (task planning), while an internal component within the managing subsystem, with direct access to the knowledge base, handles the architectural configuration (configuration planning). The second assumption is that a monotonic reasoner, driven by an additional procedural component, writes all inferred facts permanently into the knowledge base. In contrast, \acronym tightly integrates task and configuration planning within a single component that has direct access to the knowledge base, and it applies virtualized monotonic reasoning, in which inferred facts exist only transiently during the reasoning cycle and are not written into the knowledge base.
+
+These differences call for a modeling strategy that diverges from \tomasys in three respects: (i) modeling which functionalities of the system must be managed at runtime, (ii) modeling the runtime state of the system, and (iii) defining the inference rules accordingly. Concretely, \pddltomasys removes the $\Objective$ and $\FunctionGrounding$ classes together with their runtime relations, redefines $\functionGrounding$ as an object property, and introduces the $\Action$ class and the $\requiresF$ relation to connect actions to the functionalities they need. The remainder of this section formalizes \pddltomasys using description logic.
+
+\paragraph{Classes and relations} \pddltomasys's classes $\NC$ and relations $\NR = \NRobject \cup \NRdata$ are defined as follows:
+
+
+\[
+\NC = \left\lbrace \begin{array}{l}
+	\Action, \FunctionTomasys, \FunctionDesign,
+	\Component, \QAtype, \QAvalue
+\end{array}\right\rbrace
+\]
+
+\[
+\NRobject = \left\lbrace\begin{array}{l}
+	\requiresF, \solvesF, \requiresC,
+	\functionGrounding, \isQAtype,
+        \hasQAestimation, \fdBetterUtility
+\end{array}\right\rbrace
+\]
+
+
+\[
+\NRdata = \left\lbrace\begin{array}{l}
+	\fActive, \fdUtility, \fdRealisability,
+        \cStatus, \qaHasValue
+\end{array}\right\rbrace
+\]
+
+To represent the functional requirements of actions and support TACA, this work introduces the class $\Action$ and the object property $\requiresF$ into the ontology. The $\requiresF$ relation specifies the $\FunctionsTomasys$ necessary to perform each action, thereby informing the planner which functionalities must be managed and activated to enable the execution of a given action, e.g., $\requiresF(\aSearchPipelineOwl, \fGenerateSearchPath)$.
+
+To capture which configuration (i.e., $\FunctionDesign$) solves a $\FunctionTomasys$ at runtime and whether it is active, the ontology includes the $\functionGrounding$ relationship\footnote{Formerly a class in \tomasys} that relates a $\FunctionTomasys$ to the $\FunctionDesign$ that solves it, e.g., $\functionGrounding(\fGenerateSearchPath, \fdSpiralHigh)$. Additionally, this work introduces a data property $\fActive$ to indicate whether a $\FunctionTomasys$ is currently activated, i.e., whether a $\functionGrounding$ exists between it and a $\FunctionDesign$ other than $\fdUnground$.
+
+To support the inference of the most suitable $\FunctionDesign$ based on utility, this work introduces the $\fdBetterUtility$ relation, which relates a higher-utility $\FunctionDesign$ to one with lower utility, e.g., $\fdBetterUtility(\fdSpiralHigh, \fdSpiralMed)$. This relationship is inferred at runtime by the planner, enabling \acronym to reason about TACA solely through ontology-mediated planning.
+
+To represent that a $\FunctionTomasys$ should be deactivated, the base ABox includes one additional individual, $\fdUnground$, asserted to be a $\FunctionDesign$ through $\FunctionDesign(\fdUnground)$. Grounding a $\FunctionTomasys$ with $\fdUnground$ denotes that no configuration is currently active for it. The relations $\solvesF(\fdUnground, \varF)$ that let $\fdUnground$ ground any $\FunctionTomasys$ $\varF$ are inferred by the SWRL rule $\FunctionTomasys(\varF) \wedge \FunctionDesign(\fdUnground) \implies \solvesF(\fdUnground, \varF)$ rather than asserted in the ABox. To deactivate a $\FunctionTomasys$ $\varF$, \acronym asserts $\functionGrounding(\varF, \fdUnground)$, e.g., $\functionGrounding(\fGenerateSearchPath, \fdUnground)$.
+
+\paragraph{SWRL rules}
+To infer the system status, the following SWRL rules are added to the ontology.\footnote{OWL data properties are binary, relating a class individual to a typed literal value. For example, \texttt{fd\_realisability(?fd, false)} asserts that the \texttt{fd\_realisability} of \texttt{?fd} is \texttt{false}.} % chktex 36 -- literal SWRL predicate syntax
+They infer, in order, that a $\FunctionDesign$ $\varFD$ is not realizable when a required component fails, that a $\FunctionTomasys$ $\varF$ is active when it is grounded with a $\FunctionDesign$ other than $\fdUnground$, which of two $\FunctionDesigns$ solving the same $\FunctionTomasys$ has the better utility, and the utility of a $\FunctionDesign$ from its performance QA estimation. The last rule is generic and can be replaced by application-specific rules.
+\begin{align*}
+    &\FunctionDesign(\varFD) \wedge \Component(\varC) \wedge \requiresC(\varFD, \varC) \wedge {} \\
+    &\quad \cStatus(\varC, \text{ERROR}) \implies \fdRealisability(\varFD, \text{false}) \tag*{(realizability)}\\
+    &\FunctionTomasys(\varF) \wedge \FunctionDesign(\varFD) \wedge \solvesF(\varFD, \varF) \wedge \functionGrounding(\varF, \varFD) \wedge (\varFD \neq \fdUnground) \\
+    &\quad \implies \fActive(\varF, \text{true}) \tag*{(activation)}\\
+    &\FunctionDesign(\varFD) \wedge \FunctionDesign(\varFDtwo) \wedge \FunctionTomasys(\varF) \wedge \solvesF(\varFD, \varF) \wedge \solvesF(\varFDtwo, \varF) \wedge {} \\
+    &\quad \fdUtility(\varFD, \varU) \wedge \fdUtility(\varFDtwo, \varUtwo) \wedge (\varU < \varUtwo) \implies \fdBetterUtility(\varFDtwo, \varFD) \tag*{(better utility)}\\
+    &\FunctionTomasys(\varF) \wedge \FunctionDesign(\varFD) \wedge \solvesF(\varFD, \varF) \wedge \hasQAestimation(\varFD, \varQA) \wedge {} \\
+    &\quad \isQAtype(\varQA, \text{performance}) \wedge \qaHasValue(\varQA, \varQAvalue) \implies \fdUtility(\varFD, \varQAvalue) \tag*{(utility)}
+\end{align*}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

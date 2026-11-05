@@ -95,7 +95,7 @@
   morecomment=[l]{\#}, % line comment
   alsoletter={:},   % consider extra characters
   keywords=[1]{
-    entity, attribute, relation, 
+    entity, attribute, relation,
   },
   keywordstyle=[1]\color{teal},
   keywords=[2]{@key},
@@ -112,9 +112,22 @@
   keywordsprefix=\$
 }
 
-%% PDDL paper
-\input{pddl/preamble}
-\input{pddl/macros}
+%% PDDL paper (pddl/config/ is copied verbatim from the paper, see pddl/sync_from_paper.py)
+\let\red\relax % redefined identically in pddl/config/macros
+\input{pddl/config/preamble}
+\input{pddl/config/macros}
+\input{pddl/navigation_experiment/plots/paper_support}
+\providecommand{\Description}[2][]{} % acmart figure descriptions (not typeset)
+% dissertation.cls loads subfig before subcaption, so subcaption does not define
+% the subfigure/subtable environments and caption rejects subfig's counters.
+% Register those counters as caption subtypes and define the environments as
+% subcaption blocks.
+\makeatletter
+\caption@l@addto@list\caption@subtypelist{subfigure}
+\caption@l@addto@list\caption@subtypelist{subtable}
+\@ifundefined{subfigure}{\newenvironment{subfigure}{\subcaptionblock}{\endsubcaptionblock}}{}
+\@ifundefined{subtable}{\newenvironment{subtable}{\subcaptionblock}{\endsubcaptionblock}}{}
+\makeatother
 % \newcommand{\RQ}[1]{\textbf{RQ#1}}
 
 % \newcommand\owltopddl{Owl2PDDL\xspace}
@@ -229,7 +242,7 @@
 % \DeclareMathOperator{\varQAvalue}{?qav}
 
 % \DeclareMathOperator{\fdUnground}{fd\_unground}
-	
+
 
 % % vocabulary for TACA transformation
 % \DeclareMathOperator{\bestFD}{bestFD}

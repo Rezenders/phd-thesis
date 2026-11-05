@@ -1,0 +1,21 @@
+\begin{table}[tb]
+\centering
+\caption{p-values from one-sided Mann-Whitney U tests for the \emph{pipeline search time} and \emph{pipeline distance inspected} metrics in SUAVE experiment 3. Each cell reports the p-value for the comparison between the managing subsystem in the row and the one in the column. ``MC'' stands for Metacontrol. Cells with a green background indicate that the alternative hypothesis was favored, and cells with a blue background indicate that the null hypothesis cannot be rejected in favor of the alternative hypothesis.}
+\label{planta:tab:suave_pairwise_p_values_exp3}
+\renewcommand{\arraystretch}{1.2} % Row height for better readability
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{1.65cm}|*{6}{p{1.15cm}}|*{6}{p{1.15cm}}}
+\hline
+\multirow{2}{1.7cm}{\raggedright \textbf{Managing subsystem}} & \multicolumn{6}{c|}{\textbf{Pipeline search time}} & \multicolumn{6}{c}{\textbf{Pipeline distance inspected}} \\ \cline{2-13}
+ & \textbf{None} & \textbf{Random} & \textbf{BT} & \textbf{MC} & \textbf{ROSA} & \textbf{PLANTA} & \textbf{None} & \textbf{Random} & \textbf{BT} & \textbf{MC} & \textbf{ROSA} & \textbf{PLANTA} \\
+\hline
+\textbf{None} & - & \cellcolor{pvalue_blue}0.893 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 \\
+\textbf{Random} & \cellcolor{pvalue_blue}0.110 & - & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}0.999 & \cellcolor{pvalue_blue}0.997 & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 \\
+\textbf{BT} & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.000 & - & \cellcolor{pvalue_blue}0.515 & \cellcolor{pvalue_blue}0.094 & \cellcolor{pvalue_green}0.030 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.000 & - & \cellcolor{pvalue_blue}0.855 & \cellcolor{pvalue_blue}0.731 & \cellcolor{pvalue_green}0.000 \\
+\textbf{MC} & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_blue}0.491 & - & \cellcolor{pvalue_blue}0.050 & \cellcolor{pvalue_green}0.020 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_blue}0.148 & - & \cellcolor{pvalue_blue}0.323 & \cellcolor{pvalue_green}0.000 \\
+\textbf{ROSA} & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.001 & \cellcolor{pvalue_blue}0.909 & \cellcolor{pvalue_blue}0.951 & - & \cellcolor{pvalue_blue}0.277 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_blue}0.274 & \cellcolor{pvalue_blue}0.682 & - & \cellcolor{pvalue_green}0.000 \\
+\textbf{PLANTA} & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.003 & \cellcolor{pvalue_blue}0.971 & \cellcolor{pvalue_blue}0.981 & \cellcolor{pvalue_blue}0.728 & - & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_green}0.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & - \\
+\hline
+\end{tabular}
+}
+\end{table}

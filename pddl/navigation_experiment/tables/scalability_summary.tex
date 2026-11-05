@@ -1,0 +1,21 @@
+\begin{table}[tb]
+\centering
+\caption{Scalability experiment results at the maximum tested parameter value for each experiment (\Sone: 900 nodes, \Stwo: 15 architectural configurations, \Sthree: 4 corridor types, \Sfour: 5 mission-level actions, and \Sfive: 90 nodes).}\label{planta:tab:scalability_summary}
+\resizebox{.75\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+\multirow{3}{*}{\textbf{Exp.}} & \multicolumn{4}{c}{\textbf{A*}} & \multicolumn{4}{c}{\textbf{Eager greedy}} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & \multicolumn{2}{c}{\textbf{Planning time (s)}} & \multicolumn{2}{c}{\textbf{Plan length}} & \multicolumn{2}{c}{\textbf{Planning time (s)}} & \multicolumn{2}{c}{\textbf{Plan length}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+ & \textbf{Mean} & \textbf{Std.} & \textbf{Mean} & \textbf{Std.} & \textbf{Mean} & \textbf{Std.} & \textbf{Mean} & \textbf{Std.} \\
+\midrule
+\Sone & 0.92 & 0.02 & 47.20 & 7.74 & 0.95 & 0.03 & 47.20 & 7.74 \\
+\Stwo & 0.30 & 0.00 & 20.70 & 1.42 & 0.30 & 0.02 & 20.70 & 1.42 \\
+\Sthree & 0.20 & 0.00 & 20.30 & 2.26 & 0.20 & 0.00 & 20.30 & 2.26 \\
+\Sfour & 15.45 & 1.24 & 46.00 & 5.52 & 1.05 & 0.30 & 46.80 & 6.21 \\
+\Sfive & 188.96 & 20.43 & 48.10 & 3.73 & 13.73 & 3.66 & 51.60 & 5.64 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

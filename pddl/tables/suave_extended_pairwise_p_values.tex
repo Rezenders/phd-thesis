@@ -1,0 +1,18 @@
+\begin{table}[tb]
+\centering
+\caption{p-values from one-sided Mann-Whitney U tests for the \emph{pipeline search time} and \emph{pipeline distance inspected} metrics in SUAVE extended experiment 3.}
+\label{planta:tab:suave_extended_pairwise_p_values}
+\renewcommand{\arraystretch}{1.2} % Row height for better readability
+\resizebox{0.7\textwidth}{!}{%
+\begin{tabular}{p{1.65cm}|*{3}{p{1.15cm}}|*{3}{p{1.15cm}}}
+\hline
+\multirow{2}{1.65cm}{\raggedright \textbf{Managing subsystem}} & \multicolumn{3}{c|}{\textbf{Pipeline search time}} & \multicolumn{3}{c}{\textbf{Pipeline distance inspected}} \\ \cline{2-7}
+ & \textbf{BT} & \textbf{ROSA} & \textbf{PLANTA} & \textbf{BT} & \textbf{ROSA} & \textbf{PLANTA} \\
+\hline
+\textbf{BT} & - & \cellcolor{pvalue_blue}0.063 & \cellcolor{pvalue_green}0.012 & - & \cellcolor{pvalue_blue}0.071 & \cellcolor{pvalue_green}0.001 \\
+\textbf{ROSA} & \cellcolor{pvalue_blue}0.938 & - & \cellcolor{pvalue_blue}0.234 & \cellcolor{pvalue_blue}0.931 & - & \cellcolor{pvalue_green}0.002 \\
+\textbf{PLANTA} & \cellcolor{pvalue_blue}0.989 & \cellcolor{pvalue_blue}0.771 & - & \cellcolor{pvalue_blue}0.999 & \cellcolor{pvalue_blue}0.998 & - \\
+\hline
+\end{tabular}
+}
+\end{table}

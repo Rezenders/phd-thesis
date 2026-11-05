@@ -1,19 +1,19 @@
 \begin{tikzpicture}[font=\sffamily]
-    
+
     \coordinate (origin) at (0,0);
     \draw (origin) node (design_time) {\textbf{Design Time}};
-    
+
     \draw ($(design_time) + (0, -1.1)$) node[artifact] (domain)
     {\begin{tabular}{c}
         PDDL\\
         domain
     \end{tabular}};
-    
+
     \draw ($(domain) + (0.0, -1.1)$) node (ontology) {PDDL-TOMASys};
 
     \draw ($(ontology) + (0.0, -0.7)$) node[artifact] (tbox) {TBox\strut};
     \draw ($(tbox) + (0.0, -0.8)$) node[artifact] (abox) {ABox\strut};
-    
+
     % outline of ontology
     \coordinate (bottom_point_ontology) at (abox.south -| ontology.east);
     \draw[artifact_transparent] ($(ontology.north west) + (-0.1, 0.1)$) rectangle ($(bottom_point_ontology) + (0.1, -0.1)$);
@@ -26,11 +26,11 @@
 
      % OWL2PDDL
     \coordinate (domain1_north_ontology_east) at (domain.north -| ontology.east);
-    \draw ($(domain1_north_ontology_east) + (1.6, 0)$) node[minimum width=2.3cm] (owlTool) {OWL2PDDL};
+    \draw ($(domain1_north_ontology_east) + (1.6, 0)$) node[minimum width=2.3cm] (owlTool) {\owltopddl};
     \begin{pgfonlayer}{background}
         % \coordinate (help2) at ($(combine2.south) + (0, -0.2)$);
         \coordinate (bottom_owl2pddl) at (problem.south -| owlTool.east);
-        \draw[tool] (owlTool.north west) rectangle ($(bottom_owl2pddl)$);    
+        \draw[tool] (owlTool.north west) rectangle ($(bottom_owl2pddl)$);
     \end{pgfonlayer}
 
     \draw (owlTool |- tbox) node[process] (combine_domain) {combine} ;
@@ -55,7 +55,7 @@
     \draw[arrow] (combine_domain) -- (domain2);
     \draw[arrow] (combine_problem) -- (combine_problem -| problem2.west);
 
-    \draw ($(domain2) + (2.7, 0)$) node[tool] (taca) 
+    \draw ($(domain2) + (2.7, 0)$) node[tool] (taca)
     {\begin{tabular}{c}
         TACA\\
         transformation
@@ -74,36 +74,41 @@
 
      % PlanSys2
     \coordinate (domain1_north_domain3_east) at (domain3.north -| domain3.east);
-    \draw ($(domain1_north_domain3_east) + (2.5, 0.2)$) node[minimum width=4.3cm] (plansys) {PlanSys2};
+    \draw ($(domain1_north_domain3_east) + (3.25, 0.2)$) node[minimum width=5.5cm] (plansys) {PlanSys2};
     \begin{pgfonlayer}{background}
         % \coordinate (help2) at ($(combine2.south) + (0, -0.2)$);
         \coordinate (bottom_plansys) at (problem.south -| plansys.east);
-        \draw[system] (plansys.north west) rectangle ($(bottom_plansys)$);    
+        \draw[system] (plansys.north west) rectangle ($(bottom_plansys)$);
     \end{pgfonlayer}
 
-    \draw ($(domain3) + (2.4, 0.0)$) node[tool_3rd_party] (pddl_kb){PDDL KB\strut};
+    \draw ($(domain3) + (2.6, 0.0)$) node[tool_3rd_party] (pddl_kb){PDDL KB\strut};
     \draw[arrow] (domain3) -- (pddl_kb);
     \coordinate (problem2_pddl_kb_in) at (pddl_kb.south -| pddl_kb);
     \draw[arrow] (problem2) -| ($(pddl_kb.south -| pddl_kb) + (-0.3, 0)$);
-    
-    \draw ($(pddl_kb) + (1.8, 0.0)$) node[tool_3rd_party] (planner){Planner\strut};
-    \draw[arrow_dashed] (pddl_kb) -- (planner);
 
-    \draw ($(planner) + (0.0, -1.5)$) node[tool_3rd_party] (plan_exec){Plan Execution\strut};
-    \draw[arrow_dashed] (planner) -- (plan_exec);
+    \draw ($(pddl_kb) + (2.6, 0.0)$) node[tool_3rd_party] (planner){Planner\strut};
+    \draw[arrow_dashed] (pddl_kb) -- (planner)
+        node[midway, above, font=\scriptsize] {PDDL model};
+
+    \draw ($(planner) + (0.0, -1.8)$) node[tool_3rd_party] (plan_exec){Plan Execution\strut};
+    \draw[arrow_dashed] (planner) -- (plan_exec)
+        node[midway, right, font=\scriptsize] {plan};
     \coordinate (pddlkb_plan_exec_arrow) at (pddl_kb.south -| pddl_kb);
-    \draw[arrow_dashed] ($(pddlkb_plan_exec_arrow) + (0.2, 0.0)$) |- (plan_exec);
+    \draw[arrow_dashed] ($(pddlkb_plan_exec_arrow) + (0.2, 0.0)$) |- (plan_exec)
+        node[pos=0.2, right, font=\scriptsize] {PDDL model};
 
     % \coordinate (robot_start) at (problem.south -| plansys.west);
-    \draw ($(problem.south -| plansys) + (0.0, -0.7)$) node[minimum width=4.3cm] (robot){Robotic System\strut};
+    \draw ($(problem.south -| plansys) + (0.0, -1.4)$) node[minimum width=5.5cm] (robot){Robotic System\strut};
     \begin{pgfonlayer}{background}
         % \coordinate (help2) at ($(combine2.south) + (0, -0.2)$);
         \coordinate (bottom_plansys) at (problem.south -| plansys.east);
-        \draw[system] (robot.north west) rectangle ($(robot.south east) + (0.0, -0.0)$);    
+        \draw[system] (robot.north west) rectangle ($(robot.south east) + (0.0, -0.0)$);
     \end{pgfonlayer}
-    
-    \draw[arrow_dashed] (plan_exec) -- (robot.north -| plan_exec);
-    \draw[arrow_dashed] (robot.north -| pddl_kb) -- (pddl_kb);
+
+    \draw[arrow_dashed] (plan_exec) -- (robot.north -| plan_exec)
+        node[pos=0.7, right, font=\scriptsize, align=left] {task and reconfig\\actions};
+    \draw[arrow_dashed] (robot.north -| pddl_kb) -- (pddl_kb)
+        node[pos=0.2, right, font=\scriptsize] {monitoring};
 
     \draw[dashed] ($(robot.south -| ontology.east) + (0.25, 0)$) -- ($(design_time.north -| ontology.east) + (0.25, 0)$);
     \draw[dashed] ($(robot.south -| domain3.east) + (0.2, 0)$) -- ($(design_time.north -| domain3.east) + (0.2, 0)$);
@@ -128,68 +133,68 @@
 
 
 % \begin{tikzpicture}[font=\sffamily]
-    
+
 %     \coordinate (origin) at (0,0);
 %     \draw (origin) node[artifact] (domain) {PDDL domain\strut};
-    
+
 %     \draw ($(domain) + (0, -1)$) node[artifact] (problem) {PDDL problem\strut};
-    
+
 %     \draw ($(problem) + (2.5, -1.2)$) node[artifact] (tbox) {TBox\strut};
 %     \draw ($(tbox) + (1.2, 0)$) node[artifact] (abox) {ABox\strut};
-    
+
 %     \draw ($(tbox) + (0.6, -0.6)$) node (ontology) {PDDL-TOMASys};
 %     % outline of ontology
 %     \coordinate (help1) at (ontology.south -| tbox.west);
 %     \draw[artifact] ($(help1) + (-0.1, -0.1)$) rectangle ($(abox.north east) + (0.1, 0.1)$);
-    
+
 %     \draw (tbox |- domain) node[process] (combine1) {combine} ;
 %     \draw (abox |- problem) node[process] (combine2) {combine}  ;
-    
+
 %     \draw ($(domain) + (6, 0)$) node[artifact] (domain2) {PDDL domain\strut};
 %     \draw (domain2 |- problem) node[artifact] (problem2) {PDDL problem\strut};
-    
-%     \draw ($(domain2) + (3, 0)$) node[tool] (taca) 
+
+%     \draw ($(domain2) + (3, 0)$) node[tool] (taca)
 %     {\begin{tabular}{c}
 %         TACA\\
 %         transformation
 %     \end{tabular}};
-    
+
 %     \draw ($(problem2) + (2.8, -0.2)$) node[process] (update) {update values\strut};
 %     \draw ($(update) + (0.6, -1)$) node[process, rounded corners=0.5cm] (monitor) {\begin{tabular}{c}
 %             plan execution\\
 %             and monitoring
 %     \end{tabular}};
-    
+
 %     \draw ($(taca) + (3.5, 0)$) node[artifact] (domain3) {PDDL domain\strut};
 %     \draw (domain3 |- problem2) node[artifact] (problem3) {PDDL problem\strut};
-    
+
 %     \draw ($(domain3) + (2.5, -0.5)$) node[tool, minimum height=1.5cm] (planner) {\begin{tabular}{c}
 %             PDDL\\
 %             planner
 %         \end{tabular}};
-    
+
 %     \draw (monitor -| planner) node[artifact] (plan) {plan\strut};
-    
+
 %     % OWL2PDDL
 %     \draw ($(ontology) + (0, 3.6)$) node[minimum width=3cm] (owlTool) {OWL2PDDL};
 %     \begin{pgfonlayer}{background}
 %         \coordinate (help2) at ($(combine2.south) + (0, -0.2)$);
-%         \draw[tool] (owlTool.north west) rectangle (owlTool.east |- help2);    
+%         \draw[tool] (owlTool.north west) rectangle (owlTool.east |- help2);
 %     \end{pgfonlayer}
-    
+
 %     %PlanSys
 %     \draw ($(update) + (0.3, 0.5)$) node[minimum width=3.4cm] (plansys) {PlanSys2};
 %     \begin{pgfonlayer}{background}
 %         \coordinate (help3) at ($(monitor.south) + (0, -0.2)$);
-%         \draw[tool] (plansys.north west) rectangle (plansys.east |- help3);    
+%         \draw[tool] (plansys.north west) rectangle (plansys.east |- help3);
 %     \end{pgfonlayer}
-    
+
 %     % runtime stuff
 %     \draw ($(plansys) + (-1, -3.2)$) node[runtime] (runtime) {\begin{tabular}{c}
 %             runtime\\
 %             values
 %         \end{tabular}};
-    
+
 %     \draw ($(plansys) + (1, -3.2)$) node[runtime] (actions) {\begin{tabular}{c}
 %             actions of\\
 %             system
@@ -200,30 +205,30 @@
 %     \draw[arrow] (problem) -- (combine2);
 %     \draw[arrow] (tbox) -- (combine1);
 %     \draw[arrow] (abox) -- (combine2);
-    
+
 %     \draw[arrow] (combine1) -- (domain2);
 %     \draw[arrow] (combine2) -- (problem2);
-    
+
 %     \draw[arrow] (domain2) -- (taca);
 %     \draw[arrow] (problem2.east |- update) -- (update);
-    
+
 %     \draw[arrow] (taca) -- (domain3);
 %     \draw[arrow] (update) -- (problem3.west |- update);
-    
+
 %     \draw[arrow] (domain3) -- (domain3 -| planner.west);
 %     \draw[arrow] (problem3) -- (problem3 -| planner.west);
-    
+
 %     \draw[arrow] (planner) -- (plan);
 %     \draw[arrow] (plan) -- (monitor);
-    
+
 %     \coordinate (help4) at ($(runtime.north) + (-0.2, 0)$);
 %     \draw[arrow] (help4) -- (update.south -| help4);
-    
+
 %     \coordinate (help5) at ($(runtime.north) + (0.5, 0)$);
 %     \draw[arrow] (help5) -- (monitor.south -| help5);
-    
+
 %     \draw[arrow] (monitor.south -| actions) -- (actions);
-    
-    
-    
+
+
+
 % \end{tikzpicture}

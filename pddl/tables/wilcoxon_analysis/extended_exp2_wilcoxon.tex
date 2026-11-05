@@ -1,0 +1,18 @@
+\begin{table}[tb]
+\centering
+\caption{Extended experiment 2: paired Wilcoxon signed-rank comparisons. Each cell reports the unadjusted p-values for the comparison between the managing subsystem in the row and the one in the column for both the \emph{pipeline search time} and \emph{pipeline distance inspected} metrics. Cells with a green background indicate that the alternative hypothesis was favored, and cells with a blue background indicate that the null hypothesis cannot be rejected in favor of the alternative hypothesis. Values rounding to 0.000 are shown as $<0.001$.}
+\label{planta:tab:wilcoxon-extended-exp2}
+\renewcommand{\arraystretch}{1.2} % Row height for better readability
+\resizebox{0.7\textwidth}{!}{%
+\begin{tabular}{p{1.65cm}|*{3}{p{1.3cm}}|*{3}{p{1.3cm}}}
+\hline
+\multirow{2}{1.65cm}{\raggedright \textbf{Managing subsystem}} & \multicolumn{3}{c|}{\textbf{Pipeline search time}} & \multicolumn{3}{c}{\textbf{Pipeline distance inspected}} \\ \cline{2-7}
+ & \textbf{BT} & \textbf{ROSA} & \textbf{PLANTA} & \textbf{BT} & \textbf{ROSA} & \textbf{PLANTA} \\
+\hline
+\textbf{BT} & - & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & - & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ \\
+\textbf{ROSA} & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_blue}0.862 & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_green}$<0.001$ \\
+\textbf{PLANTA} & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}0.138 & - & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & - \\
+\hline
+\end{tabular}
+}
+\end{table}

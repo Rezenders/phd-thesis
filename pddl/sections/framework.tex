@@ -1,0 +1,226 @@
+\section{Planning Method}\label{planta:sec:method}
+
+To enable ontology-mediated planning with \pddltomasys for solving TACA, this work introduces \acronym (see \Cref{planta:fig:architecture}). In \acronym, the task planning problem is specified in PDDL, while the adaptation logic is modeled in an OWL ontology conforming to \pddltomasys. These two models are automatically combined into a single PDDL model, as described in \Cref{planta:sec:owl_to_pddl}. The resulting PDDL model is transformed once again to include TACA concerns by converting the task actions into \textit{managed} actions. In the running example, $search\_pipeline$ (A1) becomes a managed action. At runtime, a planning system uses this final PDDL model for task and configuration planning, as well as for managing plan execution.
+\Cref{planta:sec:owl_to_pddl} explains the OWL to PDDL transformation, and \Cref{planta:sec:plan_transformation_taca} details the final transformation that incorporates all TACA-related concerns.
+
+\subsection{OWL to PDDL translation}\label{planta:sec:owl_to_pddl}
+
+The translation algorithm used in this work for encoding the axioms of the OWL ontology into the PDDL formulation follows the approach proposed by Borgwardt et al.~\cite{DBLP:conf/aaai/Borgwardt0KKNS22}, where the OWL axioms of the ontology are rewritten into derived predicates in PDDL (see also~\Cref{planta:sec:related_ontology_planning}).
+
+To add the OWL axioms to the PDDL domain, one has to translate and incorporate an ontology $\Ont$, with class names $\NC$, relation names $\NR$, and individual names $\NI$, into an existing planning formulation of the form $\pddlTask = \langle \pddlDomain, \pddlInstance \rangle$, with $\pddlDomain = \langle \pddlActions, \pddlDerRules \rangle$ and $\pddlInstance= \langle \pddlObjects, \pddlInitial, \pddlGoal \rangle$ over the set of predicates $\pddlPredicates$. As summarized in \Cref{planta:tab:owl_to_pddl_mapping}, the translation extends the predicates to $\pddlPredicates' = \pddlPredicates \cup \NC \cup \NR$, the objects to $\pddlObjects' = \pddlObjects \cup \NI$, and the initial state to $\pddlInitial' = \pddlInitial \cup \pddlInitial_{\text{ABox}}$, where $\pddlInitial_{\text{ABox}}$ contains the grounded atoms obtained from the class and relation assertions in the ABox.
+
+\begin{table}[tbp]
+\centering
+\caption{Mapping between OWL ontology and PDDL concepts following the approach of~\cite{DBLP:conf/aaai/Borgwardt0KKNS22}.}%
+\label{planta:tab:owl_to_pddl_mapping}
+\begin{tabular}{@{}llll@{}}
+\toprule
+{\textbf{Concept}} & {\textbf{Concept}} & {\textbf{Example}} & {\textbf{Example}}  \\
+%\hline
+\textbf{OWL Ontology} & \textbf{PDDL} & \textbf{OWL Ontology} & \textbf{PDDL} \\
+\midrule
+Individual & Object & \texttt{f1} & \texttt{(f1 - object)} \\
+Class  & Unary predicate & $\FunctionTomasys$ & \texttt{(Function ?f)} \\ % chktex 26 -- literal PDDL syntax
+Class Assertion & Grounded unary predicate & $\FunctionTomasys(\texttt{f1})$ & \texttt{(Function f1)} \\
+Relation  & Binary predicate & $\functionGrounding$ & \texttt{(functionGrounding ?f ?fd)} \\ % chktex 26 -- literal PDDL syntax
+Relation Assertion & Grounded binary predicate & $\functionGrounding(\texttt{f1}, \texttt{fd1})$ & \texttt{(functionGrounding f1 fd1)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Schema information encoded in the TBox and in SWRL-rules is translated into derivation rules. Sub-concept relations $C_1 \sqsubseteq C_2$ in the ontology are translated to derivation rules of the form $C_2(x) \leftarrow C_1(x)$. SWRL-rules $(\antecedent, \consequent)$ are translated to derivation rules
+\[\consequent(\pddlActParam) \leftarrow \exists \pddlActParam_a. \antecedent(\pddlActParam),\]
+where \pddlActParam contains variables occurring in the $\consequent$ and $\pddlActParam_a$ contains variables occurring only in $\antecedent$, see \Cref{planta:fig:swrl_to_pddl} for an example. The new set of derivation rules is $\pddlDerRules'= \pddlDerRules \cup \pddlDerRules_{\text{TBox}}$ where $\pddlDerRules_{\text{TBox}}$ are the derivation rules generated from sub-class axioms and SWRL rules.
+
+\begin{figure}[tbp]
+\centering
+\begin{minipage}{0.41\textwidth}
+\[
+\begin{aligned}
+&\FunctionTomasys(\varF) \wedge \FunctionDesign(\fdUnground) \\
+&\implies \solvesF(\fdUnground, \varF)
+\end{aligned}
+\]
+\end{minipage}
+\hfill
+\begin{minipage}{0.57\textwidth}
+
+\begin{lstlisting}[language=PDDL,numbers=none]
+(:derived (solvesF ?fd_unground ?f)
+  (and (= ?fd_unground fd_unground)
+    (and (Function ?f)
+      (FunctionDesign fd_unground))))
+\end{lstlisting}
+
+\end{minipage}
+
+\vspace{-0.5cm}
+
+\begin{minipage}[t]{0.41\textwidth}
+    \captionof{lstlisting}{SWRL rule}%
+    \label{planta:lst:swrl_math}
+\end{minipage}
+\begin{minipage}[t]{0.57\textwidth}
+    \captionof{lstlisting}{PDDL derived predicate}%
+    \label{planta:lst:pddl_rule}
+\end{minipage}
+\caption{Transformation of a SWRL rule into its equivalent PDDL derived predicate.}%
+\label{planta:fig:swrl_to_pddl}
+\Description{Two side-by-side representations of the same rule. On the left, a SWRL implication
+states that if f is a Function and fd\_unground is a FunctionDesign, then fd\_unground
+solves f. On the right, a PDDL derived predicate for solvesF expresses the same
+conditions and uses an equality test to bind its first parameter to the constant
+fd\_unground.}
+\end{figure}
+
+
+The new planning task is then defined as $\Pi' = \langle \pddlDomain', \pddlInstance' \rangle$ over the set of predicates $\pddlPredicates'$,
+with $\pddlDomain' = \langle \pddlActions, \pddlDerRules' \rangle$ and $\pddlInstance'= \langle \pddlObjects', \pddlInitial', \pddlGoal \rangle$.
+
+\subsection{Planning task transformation for co-adaptation}\label{planta:sec:plan_transformation_taca}
+
+Finally, to support task and configuration planning, this work proposes transforming the planning task $\Pi' = \langle \pddlDomain', \pddlInstance' \rangle$, which was produced by the OWL to PDDL translation, into a new planning task $\Pi''$ that incorporates adaptation concerns. This includes the addition of reconfiguration actions and the modification of action preconditions to account for functional and quality requirements. Specifically, each action $a \in \pddlActions_{\text{adapt}} \subseteq \pddlActions$, where $\pddlActions_{\text{adapt}}$ is the set of actions subject to adaptation, is replaced with a managed action $a_m \in \pddlActions_m$, the original action $a$ is removed from $\pddlActions$, and a single pair of reconfiguration  actions $a_{r_1}, a_{r_2} \in \pddlActions_r$ is added to the domain.
+
+The effect of this transformation is illustrated using the \texttt{search\_pipeline} action from the running example (Section~\ref{planta:sec:running_example}), which encodes \emph{A1} and requires the \emph{generate search path} and \emph{maintain motion} functionalities.
+Listing~\ref{planta:lst:search_pipeline} shows its original form, in which the only precondition is that the robot has started and the sole effect is that the pipeline has been found.
+Listing~\ref{planta:lst:search_pipeline_managed} shows the managed version, in which the preconditions are extended with functional and quality requirements for both functionalities, ensuring that each is grounded to an active, non-failed $\FunctionDesign$ with the highest available utility.  For example, while water visibility is high the highest-utility function design for \emph{generate search path} is the high-altitude spiral design ($\fdSpiralHigh$). When visibility drops during \emph{A1} (uncertainty \Utwo), that design is no longer valid, so the managed precondition no longer holds and replanning inserts a reconfiguration action in the plan that re-grounds \emph{generate search path} to the medium-altitude spiral design ($\fdSpiralMed$), which then satisfies the $\bestFD$ requirement.
+
+Additionally, the managed precondition requires that all functions not required by the action are inactive, preventing conflicts between components that serve different task actions. For example, the function used to follow the pipeline in \emph{A2}, $\fFollowPipeline$, must be inactive while \texttt{search\_pipeline} executes, as enforced by the trailing \texttt{(not (F\_active f\_follow\_pipeline \ldots{}))} condition in Listing~\ref{planta:lst:search_pipeline_managed}. This constraint ensures that only the architectural configuration appropriate for the current task action is active at any time. % chktex 26 -- literal PDDL syntax
+
+\begin{figure}[tbp]
+\begin{lstlisting}[language={PDDL},basicstyle=\sffamily\footnotesize, numbers=none,caption={Original \texttt{search\_pipeline} action},label={planta:lst:search_pipeline}]
+(:action search_pipeline
+  :parameters (?p - pipeline ?r - robot)
+  :precondition (and (robot_started ?r))
+  :effect (and (pipeline_found ?p)))
+\end{lstlisting}
+\Description{PDDL listing of the original search\_pipeline action. Its parameters are a pipeline and
+a robot. The precondition requires the robot to have started, and the effect marks the
+pipeline as found.}
+\end{figure}
+
+\begin{figure}[tbp]
+\begin{lstlisting}[language={PDDL},basicstyle=\sffamily\footnotesize,numbers=none,caption={Managed \texttt{search\_pipeline} action},label={planta:lst:search_pipeline_managed}]
+(:action search_pipeline
+  :parameters (?p - pipeline ?r - robot)
+  :precondition (and
+    (robot_started ?r)
+    ;; ?a = a_search_pipeline; ?f1 = f_generate_search_path, ?f2 = f_maintain_motion
+    (exists (?a ?f1 ?f2 ?fd1 ?fd2)
+      (and
+        (Action ?a)
+        (= ?a a_search_pipeline)
+        (not (= ?f1 ?f2))
+        (requiresF ?a ?f1)
+        (F_active ?f1 true_boolean)
+        (FunctionGrounding ?f1 ?fd1)
+        (not (Fd_realisability ?fd1 false_boolean))
+        (not
+          (exists (?fd1_b)
+            (and
+              (not (= ?fd1 ?fd1_b))
+              (SolvesF ?fd1_b ?f1)
+              (not (Fd_realisability ?fd1_b false_boolean))
+              (FdBetterUtility  ?fd1_b ?fd1))))
+        ;; same conditions for ?f2 (f_maintain_motion)
+      ))
+    ;; every functionality not required by A1 must be inactive. Here, f_follow_pipeline required by A2
+    (not (F_active f_follow_pipeline true_boolean)))
+  :effect (and (pipeline_found ?p)))
+\end{lstlisting}
+\Description{PDDL listing of the managed search\_pipeline action. The original parameters and effect
+are retained. Additional existential preconditions require two distinct functions for
+the action, each active and grounded to a realizable FunctionDesign with no better
+realizable alternative. The follow-pipeline function, which is not required by this
+action, must be inactive.}
+\end{figure}
+
+Formally, the transformation of an action $a \in \pddlActions$ into a managed action
+$a_m \in \pddlActions_m$ is defined as follows. Let $\pddlActName_a$ denote the action name,
+$\pddlActParam_a$ the parameters of action $a$, $\pddlActPre_a$ its preconditions, and
+$\pddlActAdd_a$ and $\pddlActDel_a$ the sets of atoms added to and removed from the state,
+respectively, when $a$ is executed. The managed action is a tuple
+$a_m = (\pddlActName_a, \pddlActParam_a, \pddlActPre_{a_m}, \pddlActAdd_a, \pddlActDel_a)$ with
+
+\begin{align*}
+    \pddlActPre_{a_m} =& \pddlActPre_a  ~ \cup \pddlActionReq ~ \cup
+    \left\lbrace\begin{array}{l}\neg \fActive(\instanceF, \instanceTrue) \mid \\
+    \forall \instanceF. \FunctionTomasys(\instanceF) \land \neg(\requiresF(a, \instanceF)) \end{array}\right\rbrace
+\end{align*}
+
+Where the action's requirements are expressed in terms of functional and quality requirements:
+
+\begin{align*}
+    \pddlActionReq =& \exists \instanceA, \instanceF_1, \ldots{},\instanceF_n,\instanceFD_1,\ldots{},\instanceFD_n .\left(\begin{array}{l} \Action(\instanceA) \land \instanceA = \pddlActName_a \land  \\
+    \functionalReq(\instanceA, \instanceF_1, \instanceFD_1) \land \bestFD(\instanceF_1, \instanceFD_1) \land
+    \\ \ldots{} \land \\
+    \functionalReq(\instanceA, \instanceF_n, \instanceFD_n) \land \bestFD(\instanceF_n, \instanceFD_n) \land \\
+    \bigwedge_{1 \leq i < j \leq n} \instanceF_i \neq \instanceF_j \\
+ \end{array}\right)
+\end{align*}
+
+The final condition requires the $n$ functions to be pairwise distinct, so that a single function cannot satisfy several functional requirements. For \texttt{search\_pipeline}, $n = 2$, and $\instanceF_1$ and $\instanceF_2$ are the \emph{generate search path} and \emph{maintain motion} functions in \Cref{planta:lst:search_pipeline_managed}.
+
+A functional requirement is defined with the $\functionalReq(\instanceA, \instanceF, \instanceFD)$ predicate, which holds when a $\FunctionTomasys$ $\instanceF$ required by an $\Action$ $\instanceA$ has a grounded $\FunctionDesign$ solving it:
+\begin{align*}
+    \functionalReq(\instanceA, \instanceF, \instanceFD) =& \left\lbrace\begin{array}{l}
+    \requiresF(\instanceA, \instanceF) \land \fActive(\instanceF, \instanceTrue) \land \functionGrounding(\instanceF, \instanceFD) \\
+    \land \neg \fdRealisability(\instanceFD, \instanceFalse)
+    \end{array}\right\rbrace
+\end{align*}
+
+Quality requirements can be defined with the predicate $\bestFD(\instanceF, \instanceFD)$, which holds if there does not exist another realizable $\FunctionDesign$ that solves function $\instanceF$ with better utility than $\instanceFD$. When specified as a quality requirement, the $\bestFD$ predicate constrains the planner to select a $\FunctionDesign$ with the highest utility among realizable alternatives for the corresponding function. This local requirement does not imply mission-level optimality, as \acronym computes a satisficing task and reconfiguration plan without optimizing overall mission utility. Different expressions can be used to define other types of quality requirements.
+
+\begin{align*}
+    \bestFD(\instanceF, \instanceFD) =& \nexists \instanceFD'.\left(\begin{array}{l}
+         \solvesF(\instanceFD', \instanceF)
+        \land \neg \fdRealisability(\instanceFD', \instanceFalse)
+        \land \fdBetterUtility(\instanceFD', \instanceFD)
+    \end{array} \right)\\
+\end{align*}
+
+The two additional reconfiguration actions, $a_{r_1}$ and $a_{r_2}$, are responsible for selecting architectural configurations by grounding $\FunctionDesigns$ to their corresponding $\FunctionsTomasys$. This is achieved by inserting predicates of the form $\functionGrounding(\instanceF, \instanceFD)$ into the state. Specifically, $a_{r_1}$ is applied when a $\functionGrounding(\instanceF, \instanceFD)$ already exists for function $\instanceF$, whereas $a_{r_2}$ is applied when the function is not grounded.
+
+Both reconfiguration actions have similar parameters: a target $\FunctionTomasys$, a new $\FunctionDesign$ to be selected, and, in the case of $a_{r_1}$ only, the currently active $\FunctionDesign$. In both actions, the preconditions ensure that the new $\FunctionDesign$ is valid. The only difference between them is whether an existing $\FunctionDesign$ must be deactivated before activating a new one. Formally, the two reconfiguration actions are defined as $a_{r_1} = (\pddlActName_1, \pddlActParam_1, \pddlActPre_1, \pddlActAdd_1, \pddlActDel_1)$ and $a_{r_2} = (\pddlActName_2, \pddlActParam_2, \pddlActPre_2, \pddlActAdd_2, \pddlActDel_2)$, with:
+
+\vspace{-0.5cm}
+\begin{center}
+\begin{minipage}[t]{0.38\linewidth}
+\begin{align*}
+    \pddlActName_1 =& \text{reconfigure1} \\
+    \pddlActParam_1 =& (\instanceF, \instanceFD_\text{new}, \instanceFD_\text{old})\\
+    \pddlActPre_1 =& \functionGrounding(\instanceF, \instanceFD_\text{old})\\
+    & \land \FunctionDesign(\instanceFD_\text{new}) \\
+    & \land \solvesF(\instanceFD_\text{new}, \instanceF) \\
+    & \land (\instanceFD_\text{old} \neq \instanceFD_\text{new})\\
+    & \land \lnot  \fdRealisability(\instanceFD_\text{new}, \instanceFalse) \\
+    \pddlActAdd_1 =& \functionGrounding(\instanceF, \instanceFD_\text{new}) \\
+    \pddlActDel_1 =& \functionGrounding(\instanceF, \instanceFD_\text{old})
+\end{align*}
+\end{minipage}%
+% \hfill
+\begin{minipage}[t]{0.38\linewidth}
+\begin{align*}
+    \pddlActName_2 =& \text{reconfigure2} \\
+    \pddlActParam_2 =& (\instanceF, \instanceFD_\text{new})\\
+    \pddlActPre_2 =& \nexists \instanceFD. \functionGrounding(\instanceF, \instanceFD) \\
+     &\land \FunctionDesign(\instanceFD_\text{new}) \\
+     &\land \solvesF(\instanceFD_\text{new}, \instanceF) \\
+     & \land \lnot \fdRealisability(\instanceFD_\text{new}, \instanceFalse) \\
+    \pddlActAdd_2 =& \functionGrounding(\instanceF, \instanceFD_\text{new}) \\
+    \pddlActDel_2 =& \emptyset
+\end{align*}
+\end{minipage}
+\end{center}
+
+In the running example, the visibility drop described above is handled by \texttt{reconfigure1} with $\instanceF$ the \emph{generate search path} function, $\instanceFD_\text{old} = \fdSpiralHigh$, and $\instanceFD_\text{new} = \fdSpiralMed$.
+
+The resulting planning task is defined as $\Pi'' = \langle \pddlDomain'', \pddlInstance' \rangle$ over the set of predicates $\pddlPredicates'$, where $\pddlDomain'' = \langle \pddlActions'', \pddlDerRules' \rangle$, and $\pddlInstance'= \langle \pddlObjects', \pddlInitial', \pddlGoal \rangle$ with $\pddlActions'' = (\pddlActions \setminus \pddlActions_{\text{adapt}}) \cup \pddlActions_m \cup \pddlActions_r$. That is, only the set of actions is modified.
+
+An off-the-shelf PDDL planner solves $\Pi''$ directly and returns a combined task and configuration plan that interleaves reconfiguration and managed actions, for example $\pi = (\underline{a_{r_2}}, \underline{a_{m_1}}, \underline{a_{r_1}}, \ldots, \underline{a_{r_1}}, \underline{a_{m_n}}, \underline{a_{r_1}})$. \acronym executes this plan with \plansys, which re-evaluates action preconditions as runtime information such as measured $\QAvalue$ individuals updates the state, and replans when a precondition no longer holds (\Cref{planta:sec:bg_plansys,planta:sec:impl_plansys}). % chktex 12 -- sentence starts with a macro
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

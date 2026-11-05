@@ -1,0 +1,16 @@
+\section{Threats to Validity}\label{planta:sec:threats}
+
+
+\paragraph{Construct validity}
+The comparison with \CamaraApproach involves different planning guarantees: an optimal policy under probabilistic uncertainty versus a satisficing deterministic plan with replanning (\Cref{planta:sec:disc_nav}). The plan-quality comparison shows that, on the evaluated instances, both approaches produced plans with near-identical path length and estimated remaining battery. However, these metrics are computed for nominal execution and do not capture how each approach performs when probabilistic events, such as collisions, occur. Moreover, only the final step of the approach of Cámara et al.\ was replicated. As discussed in \Cref{planta:sec:nav_exp}, the reported computational performance difference therefore likely underestimates the advantage of \acronym.
+
+\paragraph{Internal validity}
+Planner choice and planner configuration influence planning time. \acronym uses Fast Downward in all experiments because it supports the derived predicates and existential preconditions required by the generated planning models (\Cref{planta:sec:impl_plansys}), and other planners or search configurations may yield different planning times. To expose this effect, the scalability experiments compare A* search with the blind heuristic and eager greedy search with the goal-count heuristic, each with and without the adaptation logic (\Cref{planta:sec:scale_exp}). To reduce the effect of random variation, the navigation and scalability experiments were repeated ten times. Each SUAVE experiment was executed 30 times per managing subsystem, with randomized parameters drawn for each group of five consecutive runs (\Cref{planta:tab:suave_params}), and differences between managing subsystems were assessed with the Wilcoxon signed-rank test. All source code and experimental artifacts are publicly available to support replication. % chktex 12 -- sentence starts with a macro
+
+\paragraph{External validity}
+The evaluation covers only two use cases and therefore does not establish that the results generalize to other robotic systems. Both use cases come from the literature and were originally introduced to evaluate other self-adaptation approaches, which reduces the risk of selecting scenarios that favor \acronym. Moreover, \Sone--\Sfive are synthetic variations of the navigation use case. They use generated grid maps and, depending on the experiment, synthetic corridor types, mission-level PDDL actions, or additional architectural configurations that do not model realistic selection criteria. Their results therefore characterize planning-time trends for grid-map navigation missions within the tested parameter ranges (\Cref{planta:tab:scalability_params}). The SUAVE experiments were executed in the Gazebo simulator rather than on a physical vehicle, so they do not capture the behavior of \acronym on a physical AUV\@. All managing subsystems were evaluated in the same simulated setup, which keeps their comparison consistent. Finally, \acronym does not support PDDL numeric fluents (\Cref{planta:sec:limitations}), and the navigation map was discretized to uniform edge lengths, so the results do not extend to problems that require numerical planning.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

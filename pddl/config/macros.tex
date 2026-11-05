@@ -52,6 +52,7 @@
 \DeclareMathOperator{\FunctionDesigns}{FunctionDesigns}
 \DeclareMathOperator{\Component}{Component}
 \DeclareMathOperator{\QAtype}{QAtype}
+\DeclareMathOperator{\QAtypes}{QAtypes}
 \DeclareMathOperator{\QAvalue}{QAvalue}
 \DeclareMathOperator{\Objective}{Objective}
 \DeclareMathOperator{\Objectives}{Objectives}
@@ -63,7 +64,6 @@
 \DeclareMathOperator{\hasQAestimation}{hasQAestimation}
 \DeclareMathOperator{\hasNFR}{hasNFR}
 \DeclareMathOperator{\typeF}{typeF}
-\DeclareMathOperator{\typedFD}{typedFD}
 \DeclareMathOperator{\solvesO}{solvesO}
 \DeclareMathOperator{\typeFD}{typeFD}
 \DeclareMathOperator{\hasQAvalue}{hasQAvalue}
@@ -81,8 +81,7 @@
 \DeclareMathOperator{\oImprove}{o\_always\_improve}
 \DeclareMathOperator{\oStatus}{o\_status}
 \DeclareMathOperator{\oUpdatable}{o\_updatable}
-\DeclareMathOperator{\fdSpiralHigh}{fd\_spiral\_high}
-\DeclareMathOperator{\fGenerateSearchPath}{f\_generate\_search\_path}
+
 
 %vocabulary new tomasys
 \DeclareMathOperator{\Action}{Action}
@@ -93,6 +92,14 @@
 \DeclareMathOperator{\fActive}{f\_active}
 \DeclareMathOperator{\fdUtility}{fd\_utility}
 
+% instances example
+\DeclareMathOperator{\fdSpiralMed}{fd\_spiral\_medium}
+\DeclareMathOperator{\fdSpiralLow}{fd\_spiral\_low}
+\DeclareMathOperator{\fdSpiralHigh}{fd\_spiral\_high}
+\DeclareMathOperator{\aSearchPipelineOwl}{a\_search\_pipeline}
+\DeclareMathOperator{\fGenerateSearchPath}{f\_generate\_search\_path}
+\DeclareMathOperator{\fMaintainMotion}{f\_maintain\_motion}
+\DeclareMathOperator{\fFollowPipeline}{f\_follow\_pipeline}
 
 \DeclareMathOperator{\Domain}{Domain}
 \DeclareMathOperator{\Range}{Range}
@@ -142,12 +149,19 @@
 \newcommand{\hide}[1]{}
 
 
-% \newcommand\red[1]{{\color{red}#1}}
+
+\newcommand{\gustavo}[1]{\todo[inline,color=cyan!30]{{\footnotesize Gustavo: #1}}}
+\newcommand{\tobias}[1]{\todo[inline,color=orange!30]{{\footnotesize Tobias: #1}}}
+\newcommand{\ebj}[1]{\todo[inline,color=red!30]{{\footnotesize Einar: #1}}}
+\newcommand{\carlos}[1]{\todo[inline,color=green!30]{{\footnotesize Carlos: #1}}}
+\newcommand{\francisco}[1]{\todo[inline,color=magenta!30]{{\footnotesize Francisco: #1}}}
+
+\newcommand\red[1]{{\color{red}#1}}
 
 \newcommand{\RQ}[1]{\textbf{RQ#1}}
 
 \newcommand\owltopddl{Owl2PDDL\xspace}
-\newcommand\planta{PLANTA\xspace}
+\newcommand\acronym{PLANTA\xspace}
 \newcommand{\CamaraApproach}{\textsc{Camara}\xspace}
 \newcommand\plansys{PlanSys2\xspace}
 \newcommand\tomasys{TOMASys\xspace}
@@ -158,16 +172,25 @@
 \newcommand{\Utwo}{\emph{U2}\xspace}
 \newcommand{\Uthree}{\emph{U3}\xspace}
 
+% navigation planta commands
+\newcommand{\Sone}{\emph{S1}\xspace}
+\newcommand{\Stwo}{\emph{S2}\xspace}
+\newcommand{\Sthree}{\emph{S3}\xspace}
+\newcommand{\Sfour}{\emph{S4}\xspace}
+\newcommand{\Sfive}{\emph{S5}\xspace}
+
 
 % define the colors to use. This is also the order how preferred they are
 \definecolor{MidnightBlue}{HTML}{006795}
 \definecolor{OliveGreen}{HTML}{3C8031}
 \definecolor{BrickRed}{HTML}{B6321C}
 \definecolor{Purple}{HTML}{800080}
+\definecolor{Orange}{HTML}{F59527}
 \newcommand{\greenColor}{OliveGreen} 	% encodes PLANTA
 \newcommand{\blueColor}{MidnightBlue}	% encodes Camara et al
 \newcommand{\redColor}{BrickRed}
 \newcommand{\purpleColor}{Purple}
+\newcommand{\orangeColor}{Orange}
 % \newcommand{\whiteColor}{white}
 % \newcommand\white[1]{{\color{white}#1}}
 
@@ -286,7 +309,7 @@ draw=\blueColor
 \tikzstyle{unsafe} = [
     decorate=true,
     decoration=snake,
-    line cap=round  
+    line cap=round
 ]
 
 \tikzstyle{dark} = [
@@ -335,6 +358,15 @@ draw=\blueColor
 \pgfsetlayers{background,main}
 
 
+
+% Input a generated table file (e.g. tables/wilcoxon_analysis/*.tex) without its
+% table float, caption, and label, so that it can be placed in a subtable or given
+% a new caption. The generated files stay untouched for regeneration.
+\newcommand{\inputtablebody}[1]{\begingroup
+  \renewenvironment{table}[1][]{}{}%
+  \renewcommand{\caption}[2][]{}%
+  \renewcommand{\label}[1]{}%
+  \input{#1}\endgroup} % chktex 27 -- argument is a file path
 
 % pgf stuff for box-plots
 \makeatletter

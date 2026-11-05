@@ -1,0 +1,69 @@
+\section{Background}\label{planta:sec:background}
+
+
+\subsection{PDDL Planning}\label{planta:sec:bg_planning}
+
+This work adopts a standard definition of planning problems based on a first-order (lifted) planning formalism, as defined in PDDL~\cite{fox2003pddl2}.
+
+A \emph{planning task} is defined as a tuple $\pddlTask = \langle \pddlDomain, \pddlInstance \rangle$, where \pddlDomain denotes the planning domain and \pddlInstance the problem instance. The domain and the problem instance must be defined over the same finite set of predicate symbols \pddlPredicates.
+
+A \emph{planning problem instance} is defined as a tuple $\pddlInstance= \langle \pddlObjects, \pddlInitial, \pddlGoal \rangle$, where \pddlObjects is a finite set of objects, \pddlInitial is the initial state represented as a set of ground atoms, and \pddlGoal is the goal condition, i.e., a set of ground atoms that must be satisfied in the final state. Ground atoms are constructed using predicate symbols from \pddlPredicates and constants/objects from \pddlObjects.
+
+A \emph{planning domain} is defined as a tuple $\pddlDomain = \langle \pddlActions, \pddlDerRules \rangle$ where \pddlActions is a set of actions and \pddlDerRules is a set of derivation rules.
+An \emph{action} is a tuple $\instanceA = \langle \pddlActName, \pddlActParam, \pddlActPre, \pddlActAdd, \pddlActDel \rangle$, where $\pddlActName$ is the action name, $\pddlActParam$ are the action parameters, $\pddlActPre$ is a first-order formula describing the precondition that needs to be satisfied to perform the action, $\pddlActAdd$ and $\pddlActDel$ represent, respectively, the set of atoms that are added and deleted from the current state when the action is performed. A grounded action $\underline{a}$ is an action $a$ in which the variables in $\pddlActParam$ are substituted by objects from \pddlObjects.
+A \emph{derivation rule} is of the form $p(\pddlActParam) \leftarrow \phi(\pddlActParam)$ where $\pddlActParam$ is a vector of variables, $p \in \pddlPredicates$ and $\phi(\pddlActParam)$ is a first-order formula with free variables $\pddlActParam$ describing the condition when $p$ should hold. All predicates $p$ that occur in such a rule are called \emph{derived predicates}.
+
+\emph{Planning} is the search for a \emph{plan} $\pi = (\underline{a_{1}}, \ldots{}, \underline{a_{n}})$, i.e., a finite list of grounded actions, where the ordered application of the grounded actions produces a state $s_{\text{goal}}$ that contains the goal atoms, i.e. $\pddlGoal \subseteq s_{\text{goal}}$.
+
+
+\subsection{PlanSys2}\label{planta:sec:bg_plansys}
+
+This work uses \plansys for automated planning with off-the-shelf planners, for runtime plan execution, and for managing the PDDL knowledge base, which is updated at runtime with information from the robot's perception system.
+
+\plansys transforms task plans into plan graphs that capture dependencies between actions and allow non-interfering actions to execute in parallel. These graphs are then converted into behavior trees (BTs)~\cite{pddl_plans_bt} for runtime execution. During execution, the BT continuously checks the action preconditions specified in the PDDL formulation and triggers replanning when a precondition is violated. Consequently, the PDDL constructs used in a planning task must be supported by both the selected planner and \plansys's mechanisms.
+
+\plansys partially supports PDDL 2.1 up to level 3~\cite{fox2003pddl2} and lacks several PDDL features that this work requires. \Cref{planta:sec:impl_plansys} lists them and details the extensions to \plansys that add this support. % chktex 12 -- sentence starts with a macro
+
+\subsection{Description Logic Ontologies}\label{planta:sec:bg_dl}
+
+This work uses \emph{description logic ontologies}~\cite{DBLP:books/daglib/0041477}. In this setting, an \emph{ontology} \Ont is a set of axioms defined over a common vocabulary \N. The vocabulary is partitioned as $\N = \NC \cup \NR \cup \NI$, where \NC, \NR, and \NI denote the sets of concept (class) names, role (property) names, and individual names, respectively.
+
+
+There are two types of \emph{axioms} that form an ontology: (i) terminological box~(\emph{TBox}) axioms, which describe relations between concepts and (ii) assertional box~(\emph{ABox}) axioms that describe assertions. TBox axioms are of the form $C_1 \sqsubseteq C_2$ where $C_1, C_2$ are concepts. Such axioms describe a sub-concept relationship, i.e., that all elements in $C_1$ are also elements in $C_2$. ABox axioms are of the form $C(a)$ and $r(a,b)$, where $C$ is a concept, $a$ and $b$ are individual names and $r$ is a role name.
+
+\emph{Concepts} are complex expressions built from the vocabulary \N. Depending on the logical fragment used, the concepts allowed vary.
+In this work, the fragment \ALCI~(Attributive Language with Complement and Inverse roles) is sufficient. It builds concepts from concept names using negation, conjunction, disjunction, and existential and universal restrictions over roles and their inverses.
+
+Additionally, an ontology can be extended with rules defined with the \emph{semantic web rule language~(SWRL)}~\cite{HorrocksPBTG2004}, which are an additional way to infer facts by providing a consequent that is inferred when the antecedent holds. A rule $(\antecedent, \consequent)$ is a pair of sets of atoms. Atoms are either of the form $C(x)$ or $r(x,y)$, where $C$ is a concept name, $r$ is a role name or a (numeric) comparison operator, and $x$ and $y$ are either variables, individual names or data values.
+
+
+
+\subsection{TOMASys Ontology}\label{planta:sec:bg_tomasys}
+
+The Teleological and Ontological Metamodel for Autonomous Systems (\tomasys)~\cite{aguado2021functional,corbato2013model} is an ontology designed to capture the knowledge necessary for enabling architectural adaptation in robotic systems. It models the system's functionalities, the architectural alternatives that realize each functionality, the runtime quality requirements associated with these functionalities, and the expected quality output for each architectural variant.
+
+\paragraph{Classes}
+\tomasys' class names \NC are defined as follows:
+\[
+\NC = \left\lbrace \begin{array}{l}
+	\FunctionTomasys, \FunctionDesign, \QAtype, \QAvalue,
+	\Component, \Objective, \FunctionGrounding
+\end{array}\right\rbrace
+\]
+
+
+An individual of the $\FunctionTomasys$ class represents a system functionality. A $\FunctionDesign$ individual represents an architectural variant that realizes a particular $\FunctionTomasys$, and a single functionality could have several designs that differ in the quality they provide. A $\Component$ individual represents a hardware or software element that a FunctionDesign requires. In SUAVE, there is a \emph{generate search path} functionality that is realized by three function designs that perform spiral search at different altitudes. The six AUV thrusters are represented as $\Component$ individuals, which are required by the function designs of the \emph{maintain motion} functionality.
+
+A $\QAtype$ individual represents a type of quality attribute (QA)~\cite{wiki:sebok}, and a $\QAvalue$ individual represents a specific value of a $\QAtype$, which can be used to express quality requirements, the estimated quality output of function designs, and runtime measurements. In SUAVE, water visibility and search performance are $\QAtypes$. Each generate search path function design has a minimum required water visibility value and an estimated search performance. At runtime, the perception system reports the measured water visibility as a $\QAvalue$ individual. In SUAVE extended, battery level is a $\QAtype$ used to express the requirement that the measured battery level shall not go lower than $25\%$.
+
+\tomasys also defines runtime elements. An $\Objective$ individual represents a runtime goal to have a $\FunctionTomasys$ realized, and a $\FunctionGrounding$ individual records which $\FunctionDesign$ currently meets that $\Objective$. Further relations link them to the measured QA values.
+
+\paragraph{Relations}
+In \tomasys, $\solvesF$ represents which $\FunctionDesign$ solves which $\FunctionTomasys$, $\requiredBy$ represents that a $\Component$ is required by a $\FunctionDesign$, $\isQAtype$ represents that a $\QAvalue$ is of a given $\QAtype$, and $\hasQAestimation$ represents the expected $\QAvalue$ of selecting a $\FunctionDesign$. In SUAVE, $\isQAtype$ relates a value such as \emph{low} to the \emph{water visibility} $\QAtype$, and $\hasQAestimation$ gives each spiral design its required \emph{water visibility} $\QAvalue$, e.g., \emph{low} for the lowest-altitude design.
+
+In addition to TBox and ABox axioms, \tomasys contains SWRL rules that infer the system status at runtime, e.g., whether a function design is realizable given the status of its required components.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

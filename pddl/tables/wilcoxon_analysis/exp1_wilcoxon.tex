@@ -1,0 +1,21 @@
+\begin{table}[tb]
+\centering
+\caption{Experiment 1: paired Wilcoxon signed-rank comparisons. Each cell reports the unadjusted p-values for the comparison between the managing subsystem in the row and the one in the column for both the \emph{pipeline search time} and \emph{pipeline distance inspected} metrics. Cells with a green background indicate that the alternative hypothesis was favored, and cells with a blue background indicate that the null hypothesis cannot be rejected in favor of the alternative hypothesis. Values rounding to 0.000 are shown as $<0.001$. ``MC'' stands for Metacontrol.}%
+\label{planta:tab:wilcoxon-exp1}
+\renewcommand{\arraystretch}{1.2} % Row height for better readability
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{1.65cm}*{6}{p{1.3cm}}*{6}{p{1.3cm}}}
+\toprule
+\multirow{2}{1.65cm}{\raggedright \textbf{Managing subsystem}} & \multicolumn{6}{c}{\textbf{Pipeline search time}} & \multicolumn{6}{c}{\textbf{Pipeline distance inspected}} \\ \cline{2-13}
+ & \textbf{None} & \textbf{Random} & \textbf{BT} & \textbf{MC} & \textbf{ROSA} & \textbf{PLANTA} & \textbf{None} & \textbf{Random} & \textbf{BT} & \textbf{MC} & \textbf{ROSA} & \textbf{PLANTA} \\
+\midrule
+\textbf{None} & - & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_blue}0.997 & \cellcolor{pvalue_green}0.013 & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & - & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_green}0.010 \\
+\textbf{Random} & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}0.999 & \cellcolor{pvalue_blue}0.999 & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 \\
+\textbf{BT} & \cellcolor{pvalue_green}0.003 & \cellcolor{pvalue_green}$<0.001$ & - & \cellcolor{pvalue_green}0.001 & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & - & \cellcolor{pvalue_blue}0.767 & \cellcolor{pvalue_blue}0.241 & \cellcolor{pvalue_green}$<0.001$ \\
+\textbf{MC} & \cellcolor{pvalue_blue}0.987 & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_blue}0.999 & - & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}0.016 & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_blue}0.233 & - & \cellcolor{pvalue_green}0.015 & \cellcolor{pvalue_green}$<0.001$ \\
+\textbf{ROSA} & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_green}0.001 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & - & \cellcolor{pvalue_blue}0.846 & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_blue}0.759 & \cellcolor{pvalue_blue}0.985 & - & \cellcolor{pvalue_green}$<0.001$ \\
+\textbf{PLANTA} & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_green}0.001 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}0.984 & \cellcolor{pvalue_blue}0.154 & - & \cellcolor{pvalue_blue}0.991 & \cellcolor{pvalue_green}$<0.001$ & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & \cellcolor{pvalue_blue}1.000 & - \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
