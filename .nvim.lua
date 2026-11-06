@@ -3,30 +3,29 @@ local root = vim.fs.dirname(debug.getinfo(1, "S").source:sub(2))
 root = vim.fn.fnamemodify(root, ":p"):gsub("/$", "")
 
 -- VimTeX owns interactive compilation and PDF navigation; Texlab does not build.
+-- XeLaTeX matches the Makefile; dissertation.cls loads the bundled Libertinus
+-- OpenType fonts only under XeLaTeX. VimTeX appends the engine flag after
+-- `options` (default `-pdf`, which latexmk would honour last), so set it here.
 vim.g.vimtex_view_method = "zathura"
+vim.g.vimtex_compiler_latexmk_engines = { _ = "-xelatex" }
 vim.g.vimtex_compiler_latexmk = {
   out_dir = "build",
-  options = { "-pdf", "-synctex=1", "-file-line-error", "-interaction=nonstopmode" },
+  options = { "-synctex=1", "-file-line-error", "-interaction=nonstopmode" },
 }
--- Match the Makefile's TeX/BibTeX search paths. Keep the trailing separator so
--- TeX still searches its standard directories. latexmkrc handles paired PDFs.
-for _, key in ipairs({ "TEXINPUTS", "BSTINPUTS" }) do
-  local prefix = root .. ":" .. root .. "/styles//:"
-  local current = vim.env[key] or ""
-  if current:sub(1, #prefix) ~= prefix then
-    vim.env[key] = prefix .. current
-  end
-end
 
 local spell_dir = root .. "/.nvim/spell"
 vim.fn.mkdir(spell_dir, "p")
-local group = vim.api.nvim_create_augroup("planta-paper", { clear = true })
--- Set before VimTeX initializes a section buffer; leave supplement roots alone.
+local group = vim.api.nvim_create_augroup("phd-thesis", { clear = true })
+-- Chapter files (including pddl/sections/*, which pddl/pddl.tex \input's) all
+-- belong to dissertation.tex. Set before VimTeX initializes the buffer;
+-- propositions.tex is its own root and is left alone.
 vim.api.nvim_create_autocmd("BufReadPre", {
   group = group,
-  pattern = root .. "/sections/*.tex",
+  pattern = root .. "/*.tex",
   callback = function(args)
-    vim.b[args.buf].vimtex_main = root .. "/main-acm.tex"
+    local path = vim.api.nvim_buf_get_name(args.buf)
+    if path == root .. "/propositions.tex" or path == root .. "/dissertation.tex" then return end
+    vim.b[args.buf].vimtex_main = root .. "/dissertation.tex"
   end,
 })
 vim.api.nvim_create_autocmd("FileType", {
@@ -56,15 +55,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- Run from the project root regardless of :cd. One job at a time avoids
--- concurrent writes to build/; stop VimTeX's watcher before an explicit build.
+-- Run a Makefile target from the project root regardless of :cd. One job at a
+-- time; stop VimTeX's watcher first because both write to build/.
 local job
 local function run_make(target)
   if job then
-    vim.notify("A paper task is already running", vim.log.levels.WARN)
+    vim.notify("A thesis build is already running", vim.log.levels.WARN)
     return
   end
-  if target == "pdf" and vim.fn.exists("*vimtex#compiler#stop") == 1 then
+  if vim.fn.exists("*vimtex#compiler#stop") == 1 then
     vim.fn["vimtex#compiler#stop"]()
   end
   vim.cmd("wall")
@@ -72,45 +71,28 @@ local function run_make(target)
   job = vim.system({ "make", "--no-print-directory", target },
     { cwd = root, text = true }, vim.schedule_wrap(function(result)
       job = nil
-      local output = (result.stdout or "") .. "\n" .. (result.stderr or "")
-      local items = {}
-      for line in output:gmatch("[^\r\n]+") do
-        local file, lnum, message = line:match("^(.+):(%d+):%s*(.+)$")
-        local warning, lint_file, lint_line, lint_message =
-          line:match("^Warning (%d+) in (.-) line (%d+):%s*(.*)$")
-        if warning then
-          file, lnum, message = lint_file, lint_line, "ChkTeX " .. warning .. ": " .. lint_message
-        elseif not file then
-          -- lint-diff intentionally reports stable context, not line numbers.
-          file, message = line:match("^(.-): (Warning %d+:.*)$")
-        end
-        if file then
-          items[#items + 1] = {
-            filename = file:sub(1, 1) == "/" and file or root .. "/" .. file,
-            lnum = tonumber(lnum) or 0,
-            text = message,
-            type = target == "pdf" and "E" or "W",
-          }
-        end
-      end
-      -- Preserve output if a tool failed without a recognized location.
-      if #items == 0 and result.code ~= 0 then
+      if result.code ~= 0 then
+        local output = (result.stdout or "") .. "\n" .. (result.stderr or "")
+        local items = {}
         for line in output:gmatch("[^\r\n]+") do
           items[#items + 1] = { text = line }
         end
+        vim.fn.setqflist({}, " ", { title = "Thesis: make " .. target, items = items })
+        vim.cmd("copen")
       end
-      vim.fn.setqflist({}, " ", { title = "Paper: make " .. target, items = items })
-      if #items > 0 then vim.cmd("copen") end
       vim.notify(("make %s exited %d"):format(target, result.code),
         result.code == 0 and vim.log.levels.INFO or vim.log.levels.WARN)
     end))
 end
-for name, target in pairs({ PaperBuild = "pdf", PaperLint = "lint", PaperLintDiff = "lint-diff" }) do
+-- ThesisBuild: dissertation PDF plus glossary. ThesisBuildAll: also the
+-- propositions and the print PDF.
+for name, target in pairs({ ThesisBuild = "build/dissertation.pdf", ThesisBuildAll = "all" }) do
   vim.api.nvim_create_user_command(name, function() run_make(target) end,
-    { desc = "Paper: make " .. target, force = true })
+    { desc = "Thesis: make " .. target, force = true })
 end
 
--- Project-specific LTeX classification of config/macros.tex and config/preamble.tex.
+-- LTeX classification of the PLANTA chapter macros (pddl/config/macros.tex and
+-- pddl/config/preamble.tex), which dissertation.tex loads globally.
 -- These are grammatical placeholders, not TeX macro expansion. Review this list
 -- when adding macros; argument-taking commands need an explicit signature.
 local commands = {}
