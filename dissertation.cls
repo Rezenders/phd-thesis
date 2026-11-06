@@ -32,7 +32,8 @@
     \RequirePackage[xetex]{geometry}
     %\RequirePackage[xetex]{graphicx}
     %\usepackage[bookmarks=false,hidelinks]{hyperref}
-    \RequirePackage[xetex,bookmarks=false,hidelinks]{hyperref}
+    \RequirePackage[xetex,bookmarksnumbered]{hyperref}
+    \RequirePackage{bookmark}
     \RequirePackage{fontspec}
     \RequirePackage{xltxtra}
     \defaultfontfeatures{Ligatures=TeX}
@@ -40,11 +41,13 @@
     \ifpdf
         \RequirePackage[pdftex]{geometry}
         %\RequirePackage[pdftex]{graphicx}
-        \RequirePackage[pdftex,bookmarks=false,hidelinks]{hyperref}
+        \RequirePackage[pdftex,bookmarksnumbered]{hyperref}
+        \RequirePackage{bookmark}
     \else
         \RequirePackage[dvips]{geometry}
         %\RequirePackage[dvips]{graphicx}
-        \RequirePackage[hypertex,bookmarks=false,hidelinks]{hyperref}
+        \RequirePackage[hypertex,bookmarksnumbered]{hyperref}
+        \RequirePackage{bookmark}
         \fi
     \RequirePackage[utf8]{inputenc}
 \fi
@@ -586,8 +589,15 @@
     \bibliography{#1}%
 }
 
-%% Hyperlinks are cyan, except in print mode, when they are all black.
-\hypersetup{
-    colorlinks = false
-}
+%% Hyperlinks are coloured in the digital version and hidden in print mode.
+\if@print
+    \hypersetup{hidelinks}
+\else
+    \hypersetup{
+        colorlinks = true,
+        linkcolor  = tudelft-cyan!70!black, % \ref, ToC, figures/tables
+        citecolor  = tudelft-cyan!70!black, % \cite
+        urlcolor   = tudelft-cyan!70!black  % \url, \href
+    }
+\fi
 
