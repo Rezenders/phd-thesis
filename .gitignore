@@ -6,3 +6,4 @@ build/
 *.out
 *.toc
 dissertation.pdf
+build-agent/
