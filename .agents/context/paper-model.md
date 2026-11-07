@@ -93,6 +93,10 @@ paper. Edits to scientific content belong in the paper source, not the chapter.
 
 - Chapter text lives in the thesis. The papers are published/accepted, so the
   thesis copy is authoritative. No paper repo is configured.
+- The implementation repos below are reference only for these two chapters: the
+  code has changed since publication, so the published text wins (author decision
+  2026-11-06). `rosa_3_ws` is a later TypeDB 3 migration.
+- SUAVE depends on `\qa` from the generated `pddl/config/preamble.tex` (F-016).
 
 ## Implementation References
 
@@ -102,7 +106,7 @@ propose code changes during thesis tasks.
 | What to verify | Where to look |
 |---|---|
 | SUAVE exemplar | `~/ros_workspaces/suave_rebetmc_ws/src/suave/` |
-| ROSA | `~/ros_workspaces/suave_rebetmc_ws/src/rosa/` (also `~/ros_workspaces/rosa_3_ws/`; canonical copy unconfirmed) |
+| ROSA | `~/ros_workspaces/suave_rebetmc_ws/src/{rosa,suave_rosa,ros_typedb}/` (reference only; `~/ros_workspaces/rosa_3_ws/` is a later TypeDB 3 migration) |
 | PLANTA | `~/ros_workspaces/planta_ws/src/{suave_planta,navigation_planta,owl_to_pddl,pddl_tomasys,plansys2}/` |
 | Tactical Retreat | `~/ros_workspaces/suave_rebetmc_ws/src/typedb_tactics/` |
 | Thesis experiment data | `data/` (`*_experiment.csv`, `preprocess_data.py`) |

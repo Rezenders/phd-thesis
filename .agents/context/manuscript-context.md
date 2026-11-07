@@ -22,8 +22,8 @@ Build configuration, chapter map, and source-of-truth rules are authoritative in
 
 | Chapter | Thesis files | Chapter context | Paper status |
 |---|---|---|---|
-| SUAVE | `suave/suave.tex` | `chapters/suave/` (README only, not bootstrapped) | Published, SEAMS 2023 |
-| ROSA | `rosa/rosa.tex` | `chapters/rosa/` (README only, not bootstrapped) | Accepted, Robotics Software Engineering Journal |
+| SUAVE | `suave/suave.tex` | `chapters/suave/` (bootstrapped 2026-11-06) | Published, SEAMS 2023 |
+| ROSA | `rosa/rosa.tex` | `chapters/rosa/` (bootstrapped 2026-11-06) | Accepted, Robotics Software Engineering Journal |
 | PLANTA | `pddl/pddl.tex` + generated `pddl/sections/` | `chapters/planta/` (ported from the paper repo) | Under review, ACM TAAS |
 | Tactical Retreat | `cognitive_architecture/cognitive_architecture.tex` | `chapters/tactical-retreat/` (ported from the paper repo) | In preparation, Elsevier journal |
 

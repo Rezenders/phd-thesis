@@ -14,6 +14,8 @@ Terms shared across chapters. Chapter-specific terminology lives in
 | MAPE-K loop | MAPE-K | Cite `kephart03computer`. |
 | Exemplar | SUAVE | Cite `suave`. Reused as the evaluation scenario in ROSA and PLANTA. |
 | Knowledge-based managing subsystem | ROSA | Cite `silva2025rosa`. |
+| SUAVE metrics | pipeline search time, pipeline distance inspected, reaction time | Framing chapters use this (PLANTA) form; paper chapters keep their own wording (decision 2026-11-06, F-015). |
+| Robot activity | SUAVE: task (T1/T2); ROSA: action (A1--A3); PLANTA: mission-level PDDL action | Say which sense is meant when crossing chapters. |
 | Metacontrol ontology | TOMASys | Cite `corbato2013model`. PLANTA uses a modified version. |
 | Planning language | PDDL | |
 | Ontology language | OWL | The introduction expands it as "Ontology Web Language". The W3C name is "Web Ontology Language", which the PLANTA abstract uses. See `open-findings.md`. |
