@@ -1,7 +1,9 @@
 \chapter{ROSA: A knowledge-based solution for robot self-adaptation}\label{rosa}
 
 \begin{abstract}
-Sample Abstract.
+Autonomous robots must operate in diverse environments and handle multiple tasks despite uncertainties. This creates challenges in designing software architectures and task decision-making algorithms, as different contexts may require distinct task logic and architectural configurations. To address this, robotic systems can be designed as self-adaptive systems capable of adapting their task execution and software architecture at runtime based on their context.
+This paper introduces ROSA, a novel knowledge-based framework for RObot Self-Adaptation, which enables task-and-architecture co-adaptation (TACA) in robotic systems. ROSA achieves this by providing a knowledge model that captures all application-specific knowledge required for adaptation and by reasoning over this knowledge at runtime to determine when and how adaptation should occur.
+In addition to a conceptual framework, this work provides an open-source ROS 2-based reference implementation of ROSA and evaluates its feasibility and performance in an underwater robotics application. Experimental results highlight ROSA’s advantages in reusability and development effort for designing self-adaptive robotic systems.
 \end{abstract}
 
 \blfootnote{This chapter is a verbatim copy of the paper~\cite{silva2025rosa}.
@@ -13,27 +15,21 @@ Sample Abstract.
 
 \newpage
 
-\section{Abstract}
-
-Autonomous robots must operate in diverse environments and handle multiple tasks despite uncertainties. This creates challenges in designing software architectures and task decision-making algorithms, as different contexts may require distinct task logic and architectural configurations. To address this, robotic systems can be designed as self-adaptive systems capable of adapting their task execution and software architecture at runtime based on their context.
-This paper introduces ROSA, a novel knowledge-based framework for RObot Self-Adaptation, which enables task-and-architecture co-adaptation (TACA) in robotic systems. ROSA achieves this by providing a knowledge model that captures all application-specific knowledge required for adaptation and by reasoning over this knowledge at runtime to determine when and how adaptation should occur.
-In addition to a conceptual framework, this work provides an open-source ROS 2-based reference implementation of ROSA and evaluates its feasibility and performance in an underwater robotics application. Experimental results highlight ROSA’s advantages in reusability and development effort for designing self-adaptive robotic systems.
-
 \section{Introduction}
 
 A current challenge in robotics is designing software architectures and task decision-making algorithms that enable robots to autonomously perform multiple tasks in diverse environments while handling internal and environmental uncertainties. This challenge arises because different contexts may demand distinct task logic and architectural configurations. At runtime, certain actions may become unfeasible, requiring the robot to adapt its task execution to ensure mission completion. For example, a robot navigating through an environment might run out of battery during its operation, requiring it to adapt its task execution to include a recharge action. Additionally, actions may require different architectural configurations depending on the context. For example, a navigation action that relies on vision-based localization cannot be executed in environments without lights but could potentially be executed with an alternative architectural configuration that employs a localization strategy based on lidar. This becomes even more challenging when both the robot’s task execution and its architectural configuration need to be adapted. For instance, when a robot runs out of battery while navigating, it must simultaneously adapt its architecture to a configuration that consumes less energy and its task execution to include a recharge action and to navigate along paths that are better suited to the new configuration. To address this challenge, robots can be designed as self-adaptive systems~(SASs) with the ability to perform \emph{task-and-architecture co-adaptation}~(TACA)~\citep{ CAMARASoftwareArchitectureTask2020}, i.e., simultaneously adapt their task execution and software architecture dependently during runtime. This work focuses on proposing a systematic solution for enabling TACA that can be reused with different robotic systems.
 
 
-A common approach to enable self-adaptation in software systems is to design them as two-layered systems containing a managing and managed subsystem~\citep{weyns2020introduction}, where the managing subsystem monitors and reconfigures the managed subsystem, and the managed subsystem is responsible for the domain logic. This design facilitates the development and maintenance of the system by creating a clear separation between the adaptation and the domain logic. While several solutions have been proposed for solving either architectural~\citep{ALBERTS2025112258} or task adaptation in robotic systems~\citep{carreno2021situation, hamilton2022towards}, there are some works that partially address TACA~\mbox{\citep{park2012task, runtime_variability_lotz, rra_nico, temoto}}, and there are few works that fully address TACA~\citep{braberman2018extended, CAMARASoftwareArchitectureTask2020}. 
+A common approach to enable self-adaptation in software systems is to design them as two-layered systems containing a managing and managed subsystem~\citep{weyns2020introduction}, where the managing subsystem monitors and reconfigures the managed subsystem, and the managed subsystem is responsible for the domain logic. This design facilitates the development and maintenance of the system by creating a clear separation between the adaptation and the domain logic. While several solutions have been proposed for solving either architectural~\citep{ALBERTS2025112258} or task adaptation in robotic systems~\citep{carreno2021situation, hamilton2022towards}, there are some works that partially address TACA~\mbox{\citep{park2012task, runtime_variability_lotz, rra_nico, temoto}}, and there are few works that fully address TACA~\citep{braberman2018extended, CAMARASoftwareArchitectureTask2020}.
 More critically, to the best of our knowledge, the existing solutions for TACA  require a significant and complex re-programming of the adaptation logic for each different use case, including the creation of multiple models based on different DSLs, hindering the adoption of SAS methods in robotics.
 
-To address the limitations of SAS methods for TACA, this paper proposes to extend traditional robotics architectures with a novel knowledge-based managing subsystem for RObot Self-Adaptation~(ROSA) that promotes reusability, composability, and extensibility. The main novelty of ROSA is its knowledge base~(KB) which captures 
-knowledge about the actions the robot can perform, the robot's architecture, the relationship between both, and their requirements to answer questions such as ``What actions can the robot perform in situation X?'' and  ``What is the best configuration available for each action in situation Y?'', for example, ``Can the robot perform an inspection action when the battery level is lower than 50\%?'' or ``What is the best software configuration for the inspection action when the visibility is low?''. 
+To address the limitations of SAS methods for TACA, this paper proposes to extend traditional robotics architectures with a novel knowledge-based managing subsystem for RObot Self-Adaptation~(ROSA) that promotes reusability, composability, and extensibility. The main novelty of ROSA is its knowledge base~(KB) which captures
+knowledge about the actions the robot can perform, the robot's architecture, the relationship between both, and their requirements to answer questions such as ``What actions can the robot perform in situation X?'' and  ``What is the best configuration available for each action in situation Y?'', for example, ``Can the robot perform an inspection action when the battery level is lower than 50\%?'' or ``What is the best software configuration for the inspection action when the visibility is low?''.
 This results in a reusable solution for TACA in which all application-specific aspects of the adaptation logic are captured in its KB.
 
 In addition to a conceptual framework, this work provides a reference implementation of ROSA as an open-source framework that can be reused for research on self-adaptive robotic systems.  ROSA is implemented as a ROS~2-based system~\cite{ros2}, leveraging \emph{TypeDB}~\citep{dorn2023type, typeql} for knowledge representation and reasoning, and \emph{behavior trees}~(BT)~\citep{colledanchise2018behavior} as well as \emph{PDDL-based planners}~\citep{pddl} for task decision-making.
 
-The \emph{feasibility} of using ROSA for runtime self-adaptation in robotic systems is demonstrated by applying it to the SUAVE exemplar~\citep{suave}, and its adaptation \emph{performance} is evaluated in comparison to other approaches available in the exemplar. ROSA's \emph{reusability} is demonstrated by using it to model the TACA scenarios described by \cite{braberman2018extended} and \cite{CAMARASoftwareArchitectureTask2020}. 
+The \emph{feasibility} of using ROSA for runtime self-adaptation in robotic systems is demonstrated by applying it to the SUAVE exemplar~\citep{suave}, and its adaptation \emph{performance} is evaluated in comparison to other approaches available in the exemplar. ROSA's \emph{reusability} is demonstrated by using it to model the TACA scenarios described by \cite{braberman2018extended} and \cite{CAMARASoftwareArchitectureTask2020}.
 The \emph{development effort} for using ROSA is evaluated by analyzing the number of elements contained in the knowledge models created to solve the aforementioned use cases and comparing it with the size of a BT-based approach used to solve SUAVE. ROSA's \emph{development effort scalability} is demonstrated by showing how ROSA's knowledge model grows with the addition of extra adaptations in a hypothetical scenario.
 
 In summary, the main contributions of this paper are:
@@ -63,7 +59,7 @@ This work combines principles from self-adaptive systems and knowledge represent
 
 Numerous approaches have been proposed for programming and designing autonomous robot architectures~\mbox{\citep{Kortenkamp2016}}. In recent years, two main trends have emerged: component-based frameworks and middlewares--among which ROS~\cite{ros2} stands out due to its widespread adoption in academia and industry--and layered architectures \mbox{\citep{barnett2022architectural}}. \mbox{\cite{barnett2022architectural}} reviewed 21 robotics architectures and concluded that most architectures follow a layered pattern, and even those that do not can still have their elements mapped onto a layered architectural structure. Furthermore, they found that all architectures include a bottom functional layer responsible for interacting with the robot's hardware, an upper task decision layer--whose responsibilities vary across architectures--and an arbitrary number of intermediate layers. This work aims to design a reusable solution for TACA that can be integrated into robotics architectures adhering to these architectural patterns. To achieve this, the proposed solution establishes a clear separation between architectural management and task logic, organizing them into distinct layers, or subsystems, as commonly referred to in the self-adaptive systems community.
 
-The LAAS architecture~\mbox{\citep{laas_98}} is an example of a three-layered architecture consisting of a functional layer, an executive, and a decision layer. The functional layer contains the robot's control and perception algorithms. The executive layer receives a task plan from the decision layer and selects functions from the functional layer to realize each action in the task plan. The decision layer includes a planner that generates task plans and a supervisor responsible for monitoring plan execution and triggering replanning when necessary. 
+The LAAS architecture~\mbox{\citep{laas_98}} is an example of a three-layered architecture consisting of a functional layer, an executive, and a decision layer. The functional layer contains the robot's control and perception algorithms. The executive layer receives a task plan from the decision layer and selects functions from the functional layer to realize each action in the task plan. The decision layer includes a planner that generates task plans and a supervisor responsible for monitoring plan execution and triggering replanning when necessary.
 More recent examples of layered robot architectures include AEROSTACK~\mbox{\citep{Sanchez-Lopez-2016}}, designed for aerial drone swarms, and SERA~\mbox{\citep{Garcia-2018}}, which is tailored for decentralized and collaborative robots. These architectures build on the layered model but focus on providing domain-specific solutions.
 
 Cognitive architectures~\mbox{\citep{Kotseruba-2018}}, such as CRAM~\mbox{\citep{Beetz-2010, Kazhoyan-2021}}, focus on generating intelligent and flexible behavior by integrating cognitive capabilities such as planning, perception, or reasoning. However, being integral solutions, these works provide a blueprint for the complete robot control system and are not intended for reuse and integration with other methods, thus making it difficult to adapt and customize for specific applications.
@@ -113,7 +109,7 @@ MORPH~\citep{braberman2018extended}    & Yes          & Yes          & Yes      
 }
 \end{table}
 
-\cite{park2012task} introduced the SHAGE framework for task-based and resource-aware architecture adaptation in robotic systems. SHAGE partially solves TACA, as it can adapt the robot's architecture at runtime to specifically realize each action in its task plan when it needs to be performed. However, SHAGE does not support task execution adaptation based on the robot's architectural state. 
+\cite{park2012task} introduced the SHAGE framework for task-based and resource-aware architecture adaptation in robotic systems. SHAGE partially solves TACA, as it can adapt the robot's architecture at runtime to specifically realize each action in its task plan when it needs to be performed. However, SHAGE does not support task execution adaptation based on the robot's architectural state.
 SHAGE promotes reusability by leveraging architectural models and knowledge captured with an ontology to reason about adaptation at runtime. However, to the best of our knowledge, there is no implementation of the SHAGE framework that works with common robotic frameworks. Thus, it is not possible to directly reuse SHAGE.
 
 \mbox{\cite{runtime_variability_lotz}} proposed a method to model operational and quality variability using two distinct domain-specific languages~(DSLs) models. Their work provides a high-level discussion on how these models could be used at runtime to enable architectural adaptation based on the actions executed by the robot. An interesting aspect of their approach is the clear separation between functional and non-functional requirements: one model captures the task deliberation logic, functional requirements, and their variation points, while the other focuses on non-functional requirements and their possible variations.
@@ -127,7 +123,7 @@ While this separation of concerns simplifies the modeling process, combining tas
 
 In the context of TACA, \cite{CAMARASoftwareArchitectureTask2020} developed a method for finding \emph{optimal} task and reconfiguration plans for an autonomous ground vehicle~(AGV) navigating in a graph-like environment. To enable optimal planning within reasonable time limits, their method first reduces the search space by finding all possible reconfiguration plans and then computing the shortest N paths the robot can take to reach its goal. Then, it uses this information along with task-specific models that capture mission quality attributes (e.g., energy consumption, collision probabilities) and a preferred utility to apply model checking and determine an optimal reconfiguration plan for each path. Finally, an optimization function selects the best plan based on a predefined utility function (e.g., minimizing energy consumption, time, or collision probability). Although their approach reduces the planning search space to improve planning time, their experiments show that solving the navigation use case still takes an average of $15.1$ seconds, an impractical duration for robots that frequently need to replan at runtime to handle uncertainties. Additionally, while the approach is model-based, it relies on task-specific model transformations (e.g., converting the map or battery model into PRISM model snippets), which require dedicated implementations for different tasks. This limits the reusability of their approach for different types of tasks, as it requires a considerable amount of development effort.
 
-\cite{graph_based_nico} argue that robots should have access to and exploit software-related knowledge about how they were engineered to support runtime adaptation. They demonstrate how labeled property graphs~(LPGs) can be used to persistently store and compose different domain models specified with domain-specific languages~(DSL) to enable runtime architectural adaptation. Although their approach is interesting, its reusability is limited as it does not define a knowledge model that can be reused for other applications: for each different use case and DSL the roboticist is responsible for creating a translation from the DSL to the corresponding LPG. 
+\cite{graph_based_nico} argue that robots should have access to and exploit software-related knowledge about how they were engineered to support runtime adaptation. They demonstrate how labeled property graphs~(LPGs) can be used to persistently store and compose different domain models specified with domain-specific languages~(DSL) to enable runtime architectural adaptation. Although their approach is interesting, its reusability is limited as it does not define a knowledge model that can be reused for other applications: for each different use case and DSL the roboticist is responsible for creating a translation from the DSL to the corresponding LPG.
 % In addition, no tools are provided to support the roboticist in integrating Neo4j with robotic systems.
 
 \mbox{\cite{stefan_adaptive_runtime_models, p20_stefan_ice}} propose ICE as a method for adapting the information processing subsystem in multi-robot systems, specifically by adapting the connections between system components. Their approach uses an ontology to define each component's required inputs and outputs, along with quality-of-service information for each connection. This ontology is then translated into answer set programming (ASP), and an ASP solver determines an optimal configuration. While they conceptually demonstrate how their method could be applied to robots, they do not demonstrate it with a robotic system. Moreover, their approach focuses solely on structural and connection adaptation to maintain the functionality of the information processing subsystem, without considering other subsystems of the robotic system.
@@ -150,7 +146,7 @@ To enable TACA, this paper proposes to extend traditional robotics architectures
 
 % \paragraph{Robotic architecture}
 \subsection{Robotics architecture}
-This work assumes that the robotics architecture is layered, containing a bottom functional layer, an upper task decision layer, and an arbitrary number of layers in between, as common in robotics architectures~\citep{barnett2022architectural}. The functional layer is responsible for interacting with the robots' sensors and actuators, and the task decision layer is responsible for task planning and execution\footnote{Some architecture have distinct layers for handling task planning and execution, in the context of this work, they can be considered as sub-layers of the task decision layer.}. To enable TACA with ROSA, the task decision layer shall use the knowledge contained in ROSA's KB to decide which actions to perform, and it must update the KB with the actions selected to be performed to enable ROSA to configure the robot's architecture accordingly. To enable architectural adaptation, the robotic architecture must be component-based, its components must be able to be activated and deactivated at runtime, and its components' parameters must be able to be adapted at runtime.  
+This work assumes that the robotics architecture is layered, containing a bottom functional layer, an upper task decision layer, and an arbitrary number of layers in between, as common in robotics architectures~\citep{barnett2022architectural}. The functional layer is responsible for interacting with the robots' sensors and actuators, and the task decision layer is responsible for task planning and execution\footnote{Some architecture have distinct layers for handling task planning and execution, in the context of this work, they can be considered as sub-layers of the task decision layer.}. To enable TACA with ROSA, the task decision layer shall use the knowledge contained in ROSA's KB to decide which actions to perform, and it must update the KB with the actions selected to be performed to enable ROSA to configure the robot's architecture accordingly. To enable architectural adaptation, the robotic architecture must be component-based, its components must be able to be activated and deactivated at runtime, and its components' parameters must be able to be adapted at runtime.
 
 % \paragraph{ROSA architecture}
 \subsection{ROSA architecture}
@@ -166,7 +162,7 @@ The knowledge model is presented as a conceptual data model conforming to a part
 
 \subsection{Knowledge model}\label{sec:rosa:kb_model}
 To enable adaptation, the knowledge model captures
-\emph{what} can be adapted with the architectural knowledge depicted in \Cref{fig:arch_model}; \emph{why} to adapt and \emph{how} to select an adaptation with the adaptation heuristics knowledge depicted in \Cref{fig:adapt_model}; and \emph{how} to execute an adaptation with the reconfiguration plan knowledge depicted in \Cref{fig:reconfig_plan}. Tables \ref{tab:elements_km_architectural}-\ref{tab:elements_km_reconfig} define each element in the model alongside examples based on SUAVE to ease its understanding.  
+\emph{what} can be adapted with the architectural knowledge depicted in \Cref{fig:arch_model}; \emph{why} to adapt and \emph{how} to select an adaptation with the adaptation heuristics knowledge depicted in \Cref{fig:adapt_model}; and \emph{how} to execute an adaptation with the reconfiguration plan knowledge depicted in \Cref{fig:reconfig_plan}. Tables \ref{tab:elements_km_architectural}-\ref{tab:elements_km_reconfig} define each element in the model alongside examples based on SUAVE to ease its understanding.
 
 \begin{figure}[h]
     \centering
@@ -175,7 +171,7 @@ To enable adaptation, the knowledge model captures
         \includegraphics[width=\linewidth]{rosa/figures/arch_k.pdf}
         \caption{Architectural}
         \label{fig:arch_model}
-    \end{minipage}  
+    \end{minipage}
     \hfill
     \begin{minipage}[b]{0.482\textwidth}
         \centering
@@ -196,10 +192,10 @@ To enable adaptation, the knowledge model captures
 \end{figure}
 
 \subsubsection{Architectural knowledge}
-The architectural knowledge~(see \Cref{tab:elements_km_architectural}) captures what actions the robot can accomplish, the set of functionalities the robot needs to realize an action, the set of components required to realize a functionality, and the possible parameters for a component. 
+The architectural knowledge~(see \Cref{tab:elements_km_architectural}) captures what actions the robot can accomplish, the set of functionalities the robot needs to realize an action, the set of components required to realize a functionality, and the possible parameters for a component.
 
 \begin{table}[h]
-\small  
+\small
 \centering
 \caption{The elements of the architectural knowledge. Instances of the elements with \runtimefont are created at runtime. Instances of the other elements are defined at design time. The `@key' expression after an attribute indicates that the attribute is used as a unique identifier. E stands for entity and R stands for relationship.}
 \label{tab:elements_km_architectural}
@@ -214,7 +210,7 @@ The architectural knowledge~(see \Cref{tab:elements_km_architectural}) captures 
   \textbf{Attributes} \\ \hline
 % \multicolumn{5}{l}{\textbf{Architectural knowledge}} \\ \hline
 \multirow{4}{*}{E} &
-  Action & 
+  Action &
   ``Action is defined as an operation applied by an agent or team to affect a change in or maintain either an agent's state(s), the environment, or both.''\citep{ieep1872}. Where in the context of this paper the agent is the robot &
   An AUV can perform the \entity{Action} \instance{search pipeline}, and \instance{inspect pipeline} &
   \attribute{name:String @key}  \attribute{\runtime{status:String}} \attribute{\runtime{is-required:Bool}} \\
@@ -261,7 +257,7 @@ At runtime, ROSA performs parameter adaptation by switching the selected \relati
 This work considers that the robotic system might need to adapt due to changes in the environment, changes in the system's quality attributes (QAs)~\citep{wiki:sebok}, component failures, and changes in the robot's selected actions.
 
 \begin{table}[h]
-\small  
+\small
 \centering
 \caption{The elements of the adaptation heuristic knowledge. Instances of the elements with \runtimefont are created at runtime. Instances of the other elements are defined at design time. The `@key' expression after an attribute indicates that the attribute is used as a unique identifier. E stands for entity and R stands for relationship.}
 \label{tab:elements_km_heuristic}
@@ -313,18 +309,18 @@ This work considers that the robotic system might need to adapt due to changes i
 }
 \end{table}
 
-The adaptation heuristic knowledge enables adaptation due to changes in the environment or the system's QAs with the \relationship{constraint} relationship by capturing constraints on the selection of \entity{Actions}, \entity{Components}, \relationship{function designs}, or \relationship{component configurations} in terms of measured values of \entity{Measures}. 
-It enables adaptation due to component failures by capturing a \entity{Component}'s status as an attribute and adaptation due to changes in the robot's task execution by capturing what \entity{Actions} need to be performed with the \relationship{required action} relationship. At runtime, adaptation is triggered when a measurement violates a constraint, when a component has a failure status, or when required actions change. 
+The adaptation heuristic knowledge enables adaptation due to changes in the environment or the system's QAs with the \relationship{constraint} relationship by capturing constraints on the selection of \entity{Actions}, \entity{Components}, \relationship{function designs}, or \relationship{component configurations} in terms of measured values of \entity{Measures}.
+It enables adaptation due to component failures by capturing a \entity{Component}'s status as an attribute and adaptation due to changes in the robot's task execution by capturing what \entity{Actions} need to be performed with the \relationship{required action} relationship. At runtime, adaptation is triggered when a measurement violates a constraint, when a component has a failure status, or when required actions change.
 
-To capture the decision criteria on how to select an adaptation, the \attribute{priority} attribute can be used to express the order of priority for selecting each \relationship{function design} or \relationship{component configuration}. For more complex criteria, the \relationship{estimation} relationship can be used to capture the estimated impact of selecting a \relationship{function design}, \entity{Component}, or \relationship{component configuration} on the measured values of \entity{Measures}. Furthermore, a \relationship{required action} can relate to a \entity{Measure} to indicate the preferred \relationship{estimation} when selecting a configuration for that action. At runtime, the configuration planner component exploits this knowledge to decide which configuration to select. 
+To capture the decision criteria on how to select an adaptation, the \attribute{priority} attribute can be used to express the order of priority for selecting each \relationship{function design} or \relationship{component configuration}. For more complex criteria, the \relationship{estimation} relationship can be used to capture the estimated impact of selecting a \relationship{function design}, \entity{Component}, or \relationship{component configuration} on the measured values of \entity{Measures}. Furthermore, a \relationship{required action} can relate to a \entity{Measure} to indicate the preferred \relationship{estimation} when selecting a configuration for that action. At runtime, the configuration planner component exploits this knowledge to decide which configuration to select.
 
 
 \subsubsection{Reconfiguration plan knowledge}
-The reconfiguration plan knowledge represents which component parameters must be updated (i.e., how to execute parameter adaptation) and which components must be activated and deactivated (i.e., how to execute structural adaptation). The execute component exploits this knowledge at runtime to reconfigure the managed subsystem. 
+The reconfiguration plan knowledge represents which component parameters must be updated (i.e., how to execute parameter adaptation) and which components must be activated and deactivated (i.e., how to execute structural adaptation). The execute component exploits this knowledge at runtime to reconfigure the managed subsystem.
 
 
 \begin{table}[h]
-\small  
+\small
 \centering
 \caption{The elements of the reconfiguration plan knowledge. Instances of the elements with \runtimefont are created at runtime. Instances of the other elements are defined at design time. R stands for relationship.}
 \label{tab:elements_km_reconfig}
@@ -340,7 +336,7 @@ The reconfiguration plan knowledge represents which component parameters must be
 \multirow{4}{*}{R} &
   \runtime{reconfiguration plan} &
   Represents the reconfiguration plan generated in the plan step & When the AUV completes the \instance{search pipeline} action and starts the \instance{inspect pipeline} action, the \relationship{reconfiguration plan} consists of deactivating the \instance{generate spiral search path node} and activating the \instance{follow pipeline node}
-   & 
+   &
   \attribute{\runtime{start-time:Datetime}} \attribute{\runtime{end-time:Datetime}} \attribute{\runtime{result:String}} \\
  &
   \runtime{component activation} &
@@ -362,8 +358,8 @@ The reconfiguration plan knowledge represents which component parameters must be
 \end{table}
 
 \subsection{Rules}\label{sec:rosa:rules}
-To enable ROSA to reason about when the managed subsystem should be adapted and what type of adaptation is needed, the KB contains a set of generic rules that define how the status of the system can be inferred based on monitored information, e.g., how to infer if a constraint is violated and how to propagate a constraint violation. 
-A change in status only occurs when measurements are updated or when a component fails. The complete status inference rules are depicted as decision diagrams in \Cref{fig:status_diagrams}. 
+To enable ROSA to reason about when the managed subsystem should be adapted and what type of adaptation is needed, the KB contains a set of generic rules that define how the status of the system can be inferred based on monitored information, e.g., how to infer if a constraint is violated and how to propagate a constraint violation.
+A change in status only occurs when measurements are updated or when a component fails. The complete status inference rules are depicted as decision diagrams in \Cref{fig:status_diagrams}.
 
 The status of the required \entity{Components}, \entity{Functions}, and \entity{Actions} indicate when and what type of adaptation is needed. When a \entity{Component} is ``unsolved'' or in ``configuration error''~(see \Cref{fig:component_status}), parameter adaptation is required, i.e., a new \relationship{component configuration} needs to be selected. When a required \entity{Function} is ``unsolved'' or in ``configuration error''~(see \Cref{fig:function_status}), structural adaptation is required, i.e., a new \relationship{function design} needs to be selected. When a required \entity{Action} is ``unfeasible''~(see \Cref{fig:action_status}), TACA is needed, i.e., the task decision layer must choose a new action to perform, consequently triggering architectural adaptation.
 
@@ -374,7 +370,7 @@ The status of the required \entity{Components}, \entity{Functions}, and \entity{
         \includegraphics[width=\linewidth]{rosa/figures/constraint_status.pdf}
         \caption{Constraint status}
         \label{fig:constraint_status}
-    \end{minipage}  
+    \end{minipage}
     \hfill
     \begin{minipage}[b]{0.32\textwidth}
         \centering
@@ -389,9 +385,9 @@ The status of the required \entity{Components}, \entity{Functions}, and \entity{
         \caption{Component status}
         \label{fig:component_status}
     \end{minipage}
-    
+
     \vspace{1em}
-    
+
     \begin{minipage}[b]{0.32\textwidth}
         \centering
         \includegraphics[width=\linewidth]{rosa/figures/function_design_status.pdf}
@@ -441,10 +437,10 @@ The full ROSA implementation is available at \url{https://github.com/kas-lab/ros
 
 % \paragraph{Knowledge Base and Analyze}
 \subsubsection{Knowledge base and analyze}
-The KB component consists of the TypeDB implementation of the proposed knowledge model and inference rules, the ROS interfaces for communicating with the MAPE components, and the logic to manage ROSA's knowledge which is stored in a TypeDB database. In this reference ROSA implementation, TypeDB's reasoner fulfills the role of the analyze component, executing ROSA's inference rules~(\Cref{fig:status_diagrams} to infer new data when the KB is queried. Thus, since TypeDB's reasoner is part of TypeDB, there is no separate analyze component. 
+The KB component consists of the TypeDB implementation of the proposed knowledge model and inference rules, the ROS interfaces for communicating with the MAPE components, and the logic to manage ROSA's knowledge which is stored in a TypeDB database. In this reference ROSA implementation, TypeDB's reasoner fulfills the role of the analyze component, executing ROSA's inference rules~(\Cref{fig:status_diagrams} to infer new data when the KB is queried. Thus, since TypeDB's reasoner is part of TypeDB, there is no separate analyze component.
 
-\textit{Knowledge model and rules:} 
-To exemplify how the knowledge model is implemented, \Cref{lst:km} depicts how the \relationship{functional-requirement} relationship and the \entity{Action} entity are defined with TypeQL (TypeDB's query language). Line 1 defines the \relationship{functional-requirement} relationship, and lines 2-3 define that it can relate elements that play the role of \instance{actions} and \instance{required-functions}. Lines 5-7 define the \entity{Action} entity and that it has the attributes `action-name' (its unique identifier) and `action-status'. Lines 8-9 define that it can play the \instance{action} role in a \relationship{functional-requirement} relationship and the \instance{constrained} role in a \relationship{constraint} relationship. 
+\textit{Knowledge model and rules:}
+To exemplify how the knowledge model is implemented, \Cref{lst:km} depicts how the \relationship{functional-requirement} relationship and the \entity{Action} entity are defined with TypeQL (TypeDB's query language). Line 1 defines the \relationship{functional-requirement} relationship, and lines 2-3 define that it can relate elements that play the role of \instance{actions} and \instance{required-functions}. Lines 5-7 define the \entity{Action} entity and that it has the attributes `action-name' (its unique identifier) and `action-status'. Lines 8-9 define that it can play the \instance{action} role in a \relationship{functional-requirement} relationship and the \instance{constrained} role in a \relationship{constraint} relationship.
 
 % \begin{figure}
 % \vspace{-4ex}
@@ -461,7 +457,7 @@ Action sub entity,
 \end{lstlisting}
 % \end{figure}
 
-\Cref{lst:rules} exemplifies how the inference rules are implemented with TypeQL. The \entity{component-status-configuration-error} rule defines that a \entity{Component} has a `configuration error' status when it is required, it does not have an `unfeasible' or `failure' status, and it is in a \relationship{component-configuration} relationship that is selected and has an `unfeasible' status~(see \Cref{fig:component_status}). 
+\Cref{lst:rules} exemplifies how the inference rules are implemented with TypeQL. The \entity{component-status-configuration-error} rule defines that a \entity{Component} has a `configuration error' status when it is required, it does not have an `unfeasible' or `failure' status, and it is in a \relationship{component-configuration} relationship that is selected and has an `unfeasible' status~(see \Cref{fig:component_status}).
 
 % \vspace{-2ex}
 % \begin{figure}
@@ -471,23 +467,23 @@ rule component-status-configuration-error:
  when {
   $c isa Component, has is-required true;
   not {
-    $c has status $c_status; 
-    $c_status like 'unfeasible|failure'; 
+    $c has status $c_status;
+    $c_status like 'unfeasible|failure';
   };
   (component: $c) isa component-configuration,
-    has is-selected true,  
+    has is-selected true,
     has status 'unfeasible';
  } then {
-   $c has status 'configuration error'; 
+   $c has status 'configuration error';
  };
 \end{lstlisting}
 % \vspace{-5ex}
 % \end{figure}
 
-\textit{Interfaces:} 
-% \paragraph{Interfaces} 
-The KB component abstracts the details of interacting with TypeDB with the ROS interfaces it implements, enabling the MAPE components to read and write knowledge via the interfaces described in \Cref{tab:ros_interfaces}. 
-When the MAPE components request or send data to the KB component via these interfaces, the KB component queries the TypeDB database to retrieve or write knowledge. For example, when the task decision layer calls the service \emph{/action/selectable} to retrieve the name of the selectable \entity{Actions} (i.e., actions that do not have an `unfeasible' status), the KB component performs the TypeQL query depicted in \Cref{lst:typedb_query} to retrieve the name (unique identifiers) of the selectable \entity{Actions}. 
+\textit{Interfaces:}
+% \paragraph{Interfaces}
+The KB component abstracts the details of interacting with TypeDB with the ROS interfaces it implements, enabling the MAPE components to read and write knowledge via the interfaces described in \Cref{tab:ros_interfaces}.
+When the MAPE components request or send data to the KB component via these interfaces, the KB component queries the TypeDB database to retrieve or write knowledge. For example, when the task decision layer calls the service \emph{/action/selectable} to retrieve the name of the selectable \entity{Actions} (i.e., actions that do not have an `unfeasible' status), the KB component performs the TypeQL query depicted in \Cref{lst:typedb_query} to retrieve the name (unique identifiers) of the selectable \entity{Actions}.
 When data is written in the KB, the KB component publishes a message in the \emph{/events} topic specifying which type of data was written, i.e., `monitoring data', `action update', `reconfiguration plan'. Additionally, the KB component provides the \emph{/query} service, which can be used to perform \emph{any} TypeDB query to the database. It is not used in ROSA's runtime workflow, but it enables users to perform custom queries, for example, to retrieve all reconfiguration plans that were executed.
 
 \begin{table}[h]
@@ -512,13 +508,13 @@ Monitor nodes &
   \textbf{Name} \\ \hline
 \multirow{4}{*}{KB} &
   Configuration Planner &
-  \begin{tabular}[c]{@{}l@{}}$\sim$/function/adaptable\\ $\sim$/function\_designs/selectable\\ $\sim$/function\_designs/priority\\ $\sim$/component/adaptable\\ $\sim$/component\_configuration/selectable\\ $\sim$/component\_configuration/priority\\ $\sim$/select\_configuration\end{tabular} \\ \cline{2-3} 
+  \begin{tabular}[c]{@{}l@{}}$\sim$/function/adaptable\\ $\sim$/function\_designs/selectable\\ $\sim$/function\_designs/priority\\ $\sim$/component/adaptable\\ $\sim$/component\_configuration/selectable\\ $\sim$/component\_configuration/priority\\ $\sim$/select\_configuration\end{tabular} \\ \cline{2-3}
  &
   Execute &
-  \begin{tabular}[c]{@{}l@{}}$\sim$/reconfiguration\_plan/get\_latest\\ $\sim$/reconfiguration\_plan/result/set\\ $\sim$/component/active/set\\ $\sim$/component\_parameters/get\end{tabular} \\ \cline{2-3} 
+  \begin{tabular}[c]{@{}l@{}}$\sim$/reconfiguration\_plan/get\_latest\\ $\sim$/reconfiguration\_plan/result/set\\ $\sim$/component/active/set\\ $\sim$/component\_parameters/get\end{tabular} \\ \cline{2-3}
  &
   Task Decision Layer &
-  \begin{tabular}[c]{@{}l@{}}$\sim$/action/selectable\\ $\sim$/action/request\end{tabular} \\ \cline{2-3} 
+  \begin{tabular}[c]{@{}l@{}}$\sim$/action/selectable\\ $\sim$/action/request\end{tabular} \\ \cline{2-3}
  &
   User &
   $\sim$/query \\ \hline
@@ -534,15 +530,15 @@ match  $a isa Action, has name $name;
 % \vspace{-5ex}
 \end{figure}
 
-% \paragraph{Monitor} 
-\subsubsection{Monitor} 
-ROSA's implementation does not provide generic monitor nodes. They should be implemented as needed for each application with the requirement that they publish the monitored information in the \emph{/diagnostics} topic\footnote{The \emph{/diagnostics} topic is a standard topic for publishing system diagnosis information within the ROS ecosystem. See \href{https://www.ros.org/reps/rep-0107.html}{ROS REP 107} for more information.} with the standard ROS \emph{DiagnosticArray} message format. 
+% \paragraph{Monitor}
+\subsubsection{Monitor}
+ROSA's implementation does not provide generic monitor nodes. They should be implemented as needed for each application with the requirement that they publish the monitored information in the \emph{/diagnostics} topic\footnote{The \emph{/diagnostics} topic is a standard topic for publishing system diagnosis information within the ROS ecosystem. See \href{https://www.ros.org/reps/rep-0107.html}{ROS REP 107} for more information.} with the standard ROS \emph{DiagnosticArray} message format.
 When a monitor node sends measurement updates to the KB, the message field in the \emph{DiagnosticStatus} message needs to be set to `QA measurement' or `EA measurement', and when sending component status updates (e.g., that the component is in failure), the message field must be set to `Component status'. When the KB receives monitoring data, it sends an event message in the `/events' topic to inform that monitoring data was written in the KB.
 
-\subsubsection{Configuration planner} 
+\subsubsection{Configuration planner}
 The configuration planner component selects the configurations (i.e., \relationship{function designs} or \relationship{component configuration}) with the highest priority. When the configuration planner receives an event message indicating that monitoring data was written in the KB or that there was an update in the required actions, it calls the services `/function/adaptable' and `/component/adaptable' to check which \entity{Functions} and \entity{Components} must be adapted. Then, it calls the services `/function/selectable' and `/component/selectable' to check which \relationship{function designs} and \relationship{component configurations} are available for the \entity{Functions} and \entity{Components} that need to be adapted. Finally, the configuration planner selects the \relationship{function designs} and \relationship{component configurations} with the highest priority and informs the KB about the newly selected configuration by calling the service `/select\_configuration'. When this service is called, the KB component checks the current state of the robot, creates a \relationship{reconfiguration plan} to bring the robot to the goal configuration, and sends an event message in the `/events' topic to inform that there is a new reconfiguration plan available.
 
-\subsubsection{Execute}  
+\subsubsection{Execute}
 In ROS-based systems, software components are realized either as ROS nodes or as a particular type of ROS nodes called \emph{lifecycle} nodes. The difference between both is that the latter can be set to different states at runtime, such as \emph{active} and \emph{inactive}, and the former cannot. To enable ROSA to leverage ROS~2 mechanisms to adapt the system, the knowledge model was extended to capture knowledge about ROS~2 components as depicted in \Cref{fig:ros_schema}. The execute component performs structural adaptation by starting or killing ROS nodes or switching the state of lifecycle nodes to active or inactive, and it performs parameter adaptation by calling the ROS's parameter API to change the ROS nodes' parameters at runtime.
 
 \begin{figure}[h]
@@ -556,12 +552,12 @@ When the execute component receives an event message indicating that a new recon
 
 % \paragraph{Task planner}
 \subsubsection{Task decision layer}
-ROSA's implementation provides an integration for the task decision layer for both PDDL-based planners and BTs, which are implemented leveraging the PlanSys2~\citep{plansys2} and the BehaviorTree.CPP\footnote{\url{https://www.behaviortree.dev/}} packages, respectively. 
+ROSA's implementation provides an integration for the task decision layer for both PDDL-based planners and BTs, which are implemented leveraging the PlanSys2~\citep{plansys2} and the BehaviorTree.CPP\footnote{\url{https://www.behaviortree.dev/}} packages, respectively.
 
 
-\emph{Planning:} 
-To enable task decision-making and execution with PDDL-based planners in combination with ROSA, the planner and plan executor must consider the runtime feasibility of performing the robot's actions as inferred by the KB component. 
-This work maps the action status from ROSA's knowledge model to PDDL by 
+\emph{Planning:}
+To enable task decision-making and execution with PDDL-based planners in combination with ROSA, the planner and plan executor must consider the runtime feasibility of performing the robot's actions as inferred by the KB component.
+This work maps the action status from ROSA's knowledge model to PDDL by
 capturing whether the action's status is feasible as a PDDL predicate of the form ``\emph{action\_feasible ?action}'' and using it as a precondition to select the respective action. An example can be seen in~\Cref{lst:task_interface_pddl} where the action \emph{my\_action} can only be selected when it does not have an `unfeasible' status in the KB.
 At runtime, if an action becomes unfeasible during execution, the plan executor triggers re-planning to generate a new action plan. This results in task execution adaptation and, if the newly selected actions require a different architectural configuration, also in architectural adaptation, i.e., TACA.
 
@@ -580,10 +576,10 @@ At runtime, if an action becomes unfeasible during execution, the plan executor 
 % \vspace{-5ex}
 % \end{figure}
 
-To handle the interaction between PlanSys2 and ROSA's KB, this work provides a custom ROS~2 node called \emph{RosaPlanner} and a custom PlanSys2 action called \emph{RosaAction}. The \emph{RosaPlanner} is responsible for querying the KB and updating the PDDL problem formulation with information on whether the ROSA actions are feasible or not using the aforementioned ``\emph{action\_feasible ?action}'' PDDL predicate. The \emph{RosaAction} action is responsible 
-for querying the KB to request or cancel an \entity{Action} when the execution of an action starts or finishes. Each PlanSys2 action that should be managed by ROSA should derive from \emph{RosaAction}, and it should implement the logic for the specific action execution. 
+To handle the interaction between PlanSys2 and ROSA's KB, this work provides a custom ROS~2 node called \emph{RosaPlanner} and a custom PlanSys2 action called \emph{RosaAction}. The \emph{RosaPlanner} is responsible for querying the KB and updating the PDDL problem formulation with information on whether the ROSA actions are feasible or not using the aforementioned ``\emph{action\_feasible ?action}'' PDDL predicate. The \emph{RosaAction} action is responsible
+for querying the KB to request or cancel an \entity{Action} when the execution of an action starts or finishes. Each PlanSys2 action that should be managed by ROSA should derive from \emph{RosaAction}, and it should implement the logic for the specific action execution.
 
-\emph{Behavior trees:} 
+\emph{Behavior trees:}
 % \paragraph{Behavior trees}
 To enable task decision-making and execution with BTs in combination with ROSA, the BTs must consider the runtime feasibility of performing the robot's actions as inferred by the KB component. This work proposes adding before action nodes a condition node that queries the KB to ask whether the following action is feasible. The proposed pattern is depicted in \Cref{fig:tasK_interface_bt}, where the action \emph{MyAction} would only be executed when its status in the KB is not `unfeasible'.
 
@@ -612,23 +608,23 @@ This section evaluates ROSA to answer the following questions:
 
 \subsubsection{Feasibility} To evaluate the feasibility of applying ROSA at runtime to enable TACA in ROS~2-based robotic systems, it was applied to the SUAVE exemplar described in \Cref{sec:rosa:example}. SUAVE was selected since, to the best of our knowledge, it is the only ROS~2-based open-source exemplar for self-adaptive robotic systems.
 
-\subsubsection{Performance} 
-To evaluate ROSA's performance, metrics were collected 
+\subsubsection{Performance}
+To evaluate ROSA's performance, metrics were collected
 with the SUAVE exemplar.
-The metrics collected were the ones available in SUAVE, \emph{search time} and \emph{distance of the pipeline inspected}, in addition to the \emph{reaction time} metric introduced in this paper. For the original use case, the experiments were performed with no managing subsystem, with a BT managing system, with Metacontrol\footnote{Metacontrol is the only managing subsystem packaged with SUAVE. The Metacontrol implementation for this use case is described in detail in the SUAVE paper~\citep{suave}.}, and with ROSA. For the extended use case, the experiments were performed with a BT managing system and with ROSA. 
+The metrics collected were the ones available in SUAVE, \emph{search time} and \emph{distance of the pipeline inspected}, in addition to the \emph{reaction time} metric introduced in this paper. For the original use case, the experiments were performed with no managing subsystem, with a BT managing system, with Metacontrol\footnote{Metacontrol is the only managing subsystem packaged with SUAVE. The Metacontrol implementation for this use case is described in detail in the SUAVE paper~\citep{suave}.}, and with ROSA. For the extended use case, the experiments were performed with a BT managing system and with ROSA.
 
 
-\subsubsection{Reusability} 
-To evaluate to what extent ROSA's knowledge model can capture the knowledge required for TACA, it was used to model the TACA scenarios presented by ~\cite{CAMARASoftwareArchitectureTask2020} and ~\cite{braberman2018extended}\footnote{To the best of our knowledge, these are the only two scenarios in the literature in which the authors explicitly claim the need for TACA.}, and we showcase how the captured knowledge can be exploited to enable TACA. The experimental setup for both scenarios is not publicly available. Thus, it was not possible to apply ROSA at runtime to the simulated environments they used. 
+\subsubsection{Reusability}
+To evaluate to what extent ROSA's knowledge model can capture the knowledge required for TACA, it was used to model the TACA scenarios presented by ~\cite{CAMARASoftwareArchitectureTask2020} and ~\cite{braberman2018extended}\footnote{To the best of our knowledge, these are the only two scenarios in the literature in which the authors explicitly claim the need for TACA.}, and we showcase how the captured knowledge can be exploited to enable TACA. The experimental setup for both scenarios is not publicly available. Thus, it was not possible to apply ROSA at runtime to the simulated environments they used.
 
-\subsubsection{Development effort} To evaluate the development effort of using ROSA to enable adaptation in robotic systems, we analyze the number of elements contained in the ROSA model created to solve the use cases described in this paper. Furthermore, we compare it to the number of elements modeled with the BT approach to solve the SUAVE use case. 
+\subsubsection{Development effort} To evaluate the development effort of using ROSA to enable adaptation in robotic systems, we analyze the number of elements contained in the ROSA model created to solve the use cases described in this paper. Furthermore, we compare it to the number of elements modeled with the BT approach to solve the SUAVE use case.
 
 \subsubsection{Development effort scalability} To analyze how ROSA's development effort scales for more complex use cases, we showcase how many elements must be modeled in ROSA's model to include structural and parameter adaptation in a hypothetical adaptation scenario.
 
 \medskip
 
-The experimental setup for the \emph{Feasibility} and \emph{Performance} evaluation is open source and reproducible, it can be found at 
-\url{https://github.com/kas-lab/suave_rosa}. 
+The experimental setup for the \emph{Feasibility} and \emph{Performance} evaluation is open source and reproducible, it can be found at
+\url{https://github.com/kas-lab/suave_rosa}.
 The models designed to evaluate \emph{Reusability} can be found at
 \url{https://github.com/kas-lab/rosa_examples}.
 
@@ -669,13 +665,13 @@ To apply ROSA in simulation to the SUAVE exemplar, the knowledge model depicted 
 $a_search_pipeline isa Action, has action-name
     'search_pipeline';
 
-$f_generate_search_path isa Function, has function-name 
+$f_generate_search_path isa Function, has function-name
     'generate_search_path';
 
 # functional-requirement relationship
-(action: $a_search_pipeline, 
- required-function: $f_generate_search_path, 
- required-function: $f_maintain_motion) 
+(action: $a_search_pipeline,
+ required-function: $f_generate_search_path,
+ required-function: $f_maintain_motion)
  isa functional-requirement;
 \end{lstlisting}
 % \end{figure}
@@ -704,9 +700,9 @@ $f_generate_search_path isa Function, has function-name
 
 \subsubsection{Experimental setup} To evaluate ROSA's performance, the SUAVE exemplar was configured with the same parameters as described in the SUAVE paper~\citep{suave}. In addition, for the extended use case, the battery was set to discharge within 200 seconds, and the \textit{search pipeline} and \textit{inspect pipeline} actions were set to require at least 25\% of battery to be performed.
 
-\subsubsection{Results} 
-The results obtained are shown in \Cref{tab:results}. 
-The different managed subsystems had similar performance despite the difference in their reaction time. Furthermore, since the performance with ROSA was better than without a managing subsystem and close to the other 
+\subsubsection{Results}
+The results obtained are shown in \Cref{tab:results}.
+The different managed subsystems had similar performance despite the difference in their reaction time. Furthermore, since the performance with ROSA was better than without a managing subsystem and close to the other
  managing subsystems, it can be considered as additional evidence of the feasibility of applying it at runtime to enable self-adaptation in robotic systems.
 
 \begin{table}[h]
@@ -720,7 +716,7 @@ The different managed subsystems had similar performance despite the difference 
   \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}\textbf{Number} \\ \textbf{of runs}\end{tabular}} &
   \multicolumn{2}{l}{\textbf{Search time (s)}} &
   \multicolumn{2}{l}{\textbf{Distance inspected (s)}} &
-  \multicolumn{3}{l}{\textbf{Mean reaction time (s)}} \\ \cline{3-9} 
+  \multicolumn{3}{l}{\textbf{Mean reaction time (s)}} \\ \cline{3-9}
               &              & \textbf{Mean}          & \textbf{Std dev}       & \textbf{Mean}          & \textbf{Std dev}       & \textbf{U1}           & \textbf{U2} & \textbf{U3}        \\ \hline
 \multicolumn{9}{l}{\textbf{SUAVE}}                                                                                             \\ \hline
 None          & 100          & 174.75       & 36.00         & 33.20         & 13.49         & N/A          & N/A   & N/A         \\
@@ -736,7 +732,7 @@ BT            & 100          & 94.37          & 34.92          & 20.88          
 
 \subsection{Reusability}\label{sec:reusability}
 \subsubsection{Autonomous ground vehicle use case~\citep{CAMARASoftwareArchitectureTask2020}}
-In this scenario, an AGV has to navigate from an initial to a goal position in a graph-like environment while facing uncertainties such as component failures, corridors with obstacles, and changing light conditions. 
+In this scenario, an AGV has to navigate from an initial to a goal position in a graph-like environment while facing uncertainties such as component failures, corridors with obstacles, and changing light conditions.
 
 The AGV has distinct architectural variants available to solve navigation. It has three localization algorithms (AMCL, MRPT, or aruco) and three sensing components (camera, lidar, or Kinect). However, there are some restrictions on how they can be combined. The AMCL and MRPT algorithms can only be combined with lidar or Kinect, and the aruco algorithm can only be combined with a camera. In low-light conditions, the camera can only be used with a lamp. Furthermore, the robot can move at three different speeds. Each configuration has a different energy cost, safety, and accuracy level. This scenario can be solved with ROSA with the knowledge model depicted in \Cref{fig:camara}\footnote{The accuracy estimation for \emph{fd1} and \emph{fd2} and all energy estimations are omitted from the figure to improve readability}.
 
@@ -753,17 +749,17 @@ When navigating, the robot performs adaptation by selecting which corridors it n
 In this scenario, a UAV has to search for samples in a predefined area and analyze them. To accomplish this mission, the UAV can perform the actions \emph{(A1) search for samples}, \emph{(A2) pick up and analyze samples}, \emph{(A3) analyze samples on site}, \emph{(A4) return to base and recharge}, and \emph{(A5) land and fold gripper}. The analyze action \emph{A2} performs a better analysis than \emph{A3}, however, it consumes more battery. Furthermore, action \emph{A2} requires a \emph{gripper}, while \emph{A3} requires an \emph{infra-red camera}. When operating, the UAV might run out of battery, and its gripper might fail.
 
 There are three adaptation scenarios in this use case:
-\emph{(1)} if the battery level is insufficient to perform \emph{A1}, the UAV must perform \emph{A4}; \emph{(2)} if the battery level is insufficient to perform \emph{A2} but it is still sufficient to perform \emph{A3}, the UAV must perform \emph{A3}; \emph{(3)} if the \emph{gripper} fails while performing \emph{A2}, the UAV must perform \emph{A3}. 
+\emph{(1)} if the battery level is insufficient to perform \emph{A1}, the UAV must perform \emph{A4}; \emph{(2)} if the battery level is insufficient to perform \emph{A2} but it is still sufficient to perform \emph{A3}, the UAV must perform \emph{A3}; \emph{(3)} if the \emph{gripper} fails while performing \emph{A2}, the UAV must perform \emph{A3}.
 Before transitioning from \emph{A2} to \emph{A3}, the UAV must first perform \emph{A5}.
 
 Adaptation scenarios \emph{1} and \emph{2} can be solved with ROSA's knowledge model by capturing the battery level as a \entity{Quality Attribute} and using it as a \relationship{constraint} for actions \emph{A1} and \emph{A2}. Adaptation scenario \emph{3} can be solved by capturing that the \entity{Function} required by \emph{A2} requires a \emph{gripper} component. Furthermore, the task decision layer is responsible for guaranteeing that \emph{A3} is only performed when \emph{A5} is finished.
 
-\subsubsection{Results} This evaluation demonstrates that in addition to SUAVE, the knowledge required for the adaptation logic to solve the AGV and UAV use cases can be captured with ROSA's knowledge model. This indicates that ROSA's knowledge model can be used to capture the knowledge required for TACA in adaptation scenarios similar to the ones presented. 
+\subsubsection{Results} This evaluation demonstrates that in addition to SUAVE, the knowledge required for the adaptation logic to solve the AGV and UAV use cases can be captured with ROSA's knowledge model. This indicates that ROSA's knowledge model can be used to capture the knowledge required for TACA in adaptation scenarios similar to the ones presented.
 Furthermore, it shows that all entities and relationships contained in the proposed knowledge model had to be used to model the aforementioned adaptation scenarios, supporting their inclusion in the knowledge model.
 
 \subsection{Development effort}
 
-\subsubsection{Experimental Setup} 
+\subsubsection{Experimental Setup}
 To measure ROSA's development effort for each use case, we count the number of entities and relationships contained in the models created for the use cases presented. To measure the BT managing system development effort for SUAVE,  we count the number of nodes contained in the BTs created to solve it, and the number of modes and parameters included in the System Modes' configuration file already packaged in SUAVE. In the remainder of this paper, we denote the elements modeled in both approaches as \emph{overhead}.
 
 \subsubsection{Results}  The overhead for both approaches can be seen in \Cref{tab:dev_effort}. Although it is not possible to make a straightforward comparison between the development efforts of both approaches using the observed overheads since the difficulty of modeling an element using the different modeling techniques is subjective, analyzing the reason for the observed overheads provides insights for comparing the development efforts of both approaches.
@@ -791,9 +787,9 @@ SUAVE extended    & 34                     & 38                     & 72        
 % }
 \end{table}
 
-\emph{ROSA:} 
-In TypeDB, each entity and relationship is inserted in the KB with TypeQL queries such as the ones presented in \Cref{lst:suave}. 
-Thus, the total number of queries that the roboticist must define to solve an adaptation scenario is equal to the sum of the number of entities and relationships contained in the model, with a clear separation between the task and adaptation logic. 
+\emph{ROSA:}
+In TypeDB, each entity and relationship is inserted in the KB with TypeQL queries such as the ones presented in \Cref{lst:suave}.
+Thus, the total number of queries that the roboticist must define to solve an adaptation scenario is equal to the sum of the number of entities and relationships contained in the model, with a clear separation between the task and adaptation logic.
 
 \begin{figure}[h]
     \centering
@@ -814,14 +810,14 @@ Thus, the total number of queries that the roboticist must define to solve an ad
     \label{fig:behaviortree_patterns}
 \end{figure}
 
-\emph{BT managing system:} 
-The BT used to model SUAVE's task logic without adaptation contains 10 nodes, and the BT used for the extended use case contains 16 nodes. These values were deducted from the development effort metric for the BT managing system since they are independent of the adaptation problem. 
+\emph{BT managing system:}
+The BT used to model SUAVE's task logic without adaptation contains 10 nodes, and the BT used for the extended use case contains 16 nodes. These values were deducted from the development effort metric for the BT managing system since they are independent of the adaptation problem.
 
-\Cref{fig:behaviortree_patterns} depicts the pattern used to model SUAVE's \emph{search pipeline} action and its related adaptations\footnote{The full BT can be found in the SUAVE repository.}. As can be seen, there is no separation between the task and adaptation logic, which is the main limitation of using BTs in comparison to using ROSA to model the adaptation logic. The coupling of both logics hinders the reusability of the approach as another system with the same task logic but different adaptation logic, or vice-versa, cannot reuse the existing BTs. In addition, when any changes are made to the task or adaptation problems, it will most likely require changes to parts of the BT that are not necessarily related to the changes introduced. Furthermore, it makes the modeling process more difficult as the roboticist needs to consider both problems simultaneously when modeling the BTs. 
+\Cref{fig:behaviortree_patterns} depicts the pattern used to model SUAVE's \emph{search pipeline} action and its related adaptations\footnote{The full BT can be found in the SUAVE repository.}. As can be seen, there is no separation between the task and adaptation logic, which is the main limitation of using BTs in comparison to using ROSA to model the adaptation logic. The coupling of both logics hinders the reusability of the approach as another system with the same task logic but different adaptation logic, or vice-versa, cannot reuse the existing BTs. In addition, when any changes are made to the task or adaptation problems, it will most likely require changes to parts of the BT that are not necessarily related to the changes introduced. Furthermore, it makes the modeling process more difficult as the roboticist needs to consider both problems simultaneously when modeling the BTs.
 
 \subsection{Development effort scalability}
 \subsubsection{Experimental setup}
-To evaluate how ROSA's development effort scales for more complex use cases, we analyze how the development effort of a base scenario grows with the addition of new actions and adaptations. 
+To evaluate how ROSA's development effort scales for more complex use cases, we analyze how the development effort of a base scenario grows with the addition of new actions and adaptations.
 The growth for adding actions and adaptations depends on the specific application.
 Thus, we make the following assumptions to generalize and simplify the analysis of adding adaptation.
 
@@ -840,7 +836,7 @@ Every \entity{Component} is a \entity{ROSNode} containing one \attribute{package
         \includegraphics[width=\textwidth]{rosa/figures/overhead_base_model.pdf}
         \caption{Base model}
         \label{fig:base_model}
-    \end{minipage}  
+    \end{minipage}
     \hfill
     \begin{minipage}[b]{0.3\textwidth}
         \centering
@@ -867,7 +863,7 @@ To add structural adaptation to the base scenario (given Assumption~\mbox{\ref{a
 This results in a minimum overhead of $6$ elements for each structural adaptation. To add parameter adaptation to the base scenario (given Assumption~\mbox{\ref{as:2}}), it is necessary to add the elements depicted in \Cref{fig:overhead_parameter} to the model.
 This results in a minimum overhead of $3$ elements for each parameter adaptation.
 
-In conclusion, given Assumptions~\ref{as:1} and~\ref{as:2}, the total overhead per action can be defined as $10 + 6*n_{sa} + 3*n_{pa}$, where $n_{sa}$ and $n_{pa}$ represent the number of structural and parameter adaptations for the action, respectively. 
+In conclusion, given Assumptions~\ref{as:1} and~\ref{as:2}, the total overhead per action can be defined as $10 + 6*n_{sa} + 3*n_{pa}$, where $n_{sa}$ and $n_{pa}$ represent the number of structural and parameter adaptations for the action, respectively.
 This indicates that the ROSA model grows linearly with the number of actions and adaptations, which is made possible by the clear separation of the task and adaptation logic.
 
 

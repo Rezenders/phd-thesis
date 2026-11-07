@@ -2,19 +2,6 @@
 \label{suave}
 
 \begin{abstract}
-Sample Abstract.
-\end{abstract}
-
-\blfootnote{This chapter is a verbatim copy of the paper~\cite{suave}.
-\begin{itemize}
-    \item \textbf{Gustavo Rezende Silva}, Juliane P{\"a}{\ss}ler, Jeroen Zwanepol, Elvin Alberts, S. Lizeth Tapia Tarifa, Ilias Gerostathopoulos, Einar Broch Johnsen, and Carlos Hern{\'a}ndez Corbato. "SUAVE: an exemplar for self-adaptive underwater vehicles." In 2023 IEEE/ACM 18th Symposium on Software Engineering for Adaptive and Self-Managing Systems (SEAMS), pp. 181-187. IEEE, 2023.
-\end{itemize}
-}
-
-
-\newpage
-
-\section{Abstract}
 Once deployed in the real world, autonomous underwater vehicles
   (AUVs) are out of reach for human supervision yet need to take
   decisions to adapt to unstable and unpredictable environments. To
@@ -32,6 +19,16 @@ Once deployed in the real world, autonomous underwater vehicles
   of Metacontrol to adapt the AUV during its mission improves its
   performance when measured by the overall time taken to complete the
   mission or the length of the inspected pipeline.
+\end{abstract}
+
+\blfootnote{This chapter is a verbatim copy of the paper~\cite{suave}.
+\begin{itemize}
+    \item \textbf{Gustavo Rezende Silva}, Juliane P{\"a}{\ss}ler, Jeroen Zwanepol, Elvin Alberts, S. Lizeth Tapia Tarifa, Ilias Gerostathopoulos, Einar Broch Johnsen, and Carlos Hern{\'a}ndez Corbato. "SUAVE: an exemplar for self-adaptive underwater vehicles." In 2023 IEEE/ACM 18th Symposium on Software Engineering for Adaptive and Self-Managing Systems (SEAMS), pp. 181-187. IEEE, 2023.
+\end{itemize}
+}
+
+
+\newpage
 
 \section{Introduction}
 
@@ -135,7 +132,7 @@ Section~\ref{sec:conclusion} concludes the paper.
 %\subsection{Self-adaptation in robotics and ROS}
 The UNDERSEA exemplar by Gerasimou \emph{et
 al.}~\cite{undersea} provides an AUV simulation in which the robot performs self-adaptation to
-deal with uncertainties such as sensor failures and changing goals. 
+deal with uncertainties such as sensor failures and changing goals.
 SUAVE is related to UNDERSEA as both address the domain of self-adaptive AUVs. However, a
 key difference is the underlying libraries used to develop software
 for the robot. UNDERSEA uses MOOS-IvP while SUAVE uses
@@ -149,17 +146,17 @@ its application differs significantly from SUAVE as it concerns
 health monitoring through a series of sensors rather than a robot
 vehicle fulfilling a mission autonomously.
 
-Cheng \emph{et al.} proposed AC-ROS~\cite{ACROS}, a framework 
+Cheng \emph{et al.} proposed AC-ROS~\cite{ACROS}, a framework
 which uses assurance cases to endow a ROS-based system with
 self-adaptive capabilities. Specifically, it concerns an `EvoRally'
 vehicle, a terrestrial robot tasked with patrolling an environment as
 its mission, while meeting requirements such as energy
-efficiency. The authors 
+efficiency. The authors
 do not provide the source code of the proposed system,
 which means it does not serve as an exemplar as SUAVE
 does.
 
-The paper by Bozhinoski \emph{et al.} \cite{bozhinoski22advrob} concerns an earlier iteration of using MROS for runtime adaptation similar to this paper. Their work revolves around two cases, a manipulator robot with a ``pick and place" task and a mobile robot navigating around obstacles on a factory floor. Both of the use cases show a need to deal with uncertainties, e.g., with a safety concern by disabling one of the pick and place arms. When compared to SUAVE, the key differences are the migration from ROS to ROS 2, as well as the use case being an AUV rather than a manipulator or mobile terrestrial robot. 
+The paper by Bozhinoski \emph{et al.} \cite{bozhinoski22advrob} concerns an earlier iteration of using MROS for runtime adaptation similar to this paper. Their work revolves around two cases, a manipulator robot with a ``pick and place" task and a mobile robot navigating around obstacles on a factory floor. Both of the use cases show a need to deal with uncertainties, e.g., with a safety concern by disabling one of the pick and place arms. When compared to SUAVE, the key differences are the migration from ROS to ROS 2, as well as the use case being an AUV rather than a manipulator or mobile terrestrial robot.
 
 \section{Pipeline inspection exemplar}
 \label{sec:problem_statement}
@@ -170,7 +167,7 @@ system layers are detailed in Sections~\ref{sec:managed} and
 \subsection{Use case description}
 \label{sec:use_case_description}
 The use case in this exemplar is about an AUV inspecting pipelines located on a seabed.
-Its mission consists of two sequential tasks, $(T1)$~searching for the pipeline, then $(T2)$~simultaneously following and inspecting the pipeline. 
+Its mission consists of two sequential tasks, $(T1)$~searching for the pipeline, then $(T2)$~simultaneously following and inspecting the pipeline.
 
 
 When performing its mission, the AUV is subject to two sources of
@@ -180,7 +177,7 @@ possibility of the AUV's thrusters failing at runtime, which may cause
 the AUV to move unexpectedly. This is relevant for both $T1$ and $T2$. To overcome $U1$, the managed subsystem of the AUV
 contains functional alternatives. When
 one or more thrusters fail, it is possible to enter a recovery state
-in which the thrusters are recovered. 
+in which the thrusters are recovered.
 $U2$
 influences the maximum distance at which the AUV can visually perceive
 objects. This is relevant for $T1$, higher water visibility
@@ -200,7 +197,7 @@ the path generator algorithm according to the measured water
 visibility.  Thus, by reacting to $U1$ and $U2$, the managing
 subsystem increases the reliability and performance of the system.
 
-For the feasibility of the exemplar, the use case was simplified while still allowing for a worthwhile application of self-adaptation to an AUV.  
+For the feasibility of the exemplar, the use case was simplified while still allowing for a worthwhile application of self-adaptation to an AUV.
  It is important to highlight that a
 realistic operation of an AUV used for pipeline inspection would include
 steps that are related to pre-dive, launching and recovery, human
@@ -262,10 +259,10 @@ The managed subsystem is implemented as a ROS 2-based system and is depicted in 
 package works as a bridge between \kw{ArduSub} and the ROS 2 components. The \kw{Detect Pipeline} node detects the pipeline and informs \kw{Follow Pipeline} and the \kw{Coordinate Mission} node about its position\footnote{A mock perception system is used.}. The \kw{Coordinate Mission} node coordinates the tasks' execution and sets the adaptation goals. Note that the function \kw{Inspect Pipeline} is not implemented,
 since the actual inspection of the pipeline is not the focus of this work. However, the exemplar can easily be extended with this functionality by adding a new node that implements the pipeline inspection.
 
-\kw{Follow Pipeline}, \kw{Generate Search Path},  and \kw{Maintain Motion} are lifecycle nodes, which means that they have internal states, such as \emph{active} and \emph{inactive}, and it is possible to switch between these states at runtime. Furthermore, the System Modes package \cite{nordmann2021system} 
+\kw{Follow Pipeline}, \kw{Generate Search Path},  and \kw{Maintain Motion} are lifecycle nodes, which means that they have internal states, such as \emph{active} and \emph{inactive}, and it is possible to switch between these states at runtime. Furthermore, the System Modes package \cite{nordmann2021system}
 extends the state \emph{active} with additional modes, e.g., \emph{active.low\_altitude}.
 
-To adapt the managed subsystem, the managing subsystem adapts the lifecycle nodes by changing their states. This is done by the \kw{Mode Manager} node, which is used off-the-shelf from the System Modes package. 
+To adapt the managed subsystem, the managing subsystem adapts the lifecycle nodes by changing their states. This is done by the \kw{Mode Manager} node, which is used off-the-shelf from the System Modes package.
 The states available for \kw{Generate Search Path} are \kw{deactivated}, \kw{low altitude}, \kw{medium altitude}, and \kw{high altitude}. Subsequently, the states available for \kw{Follow Pipeline} are \kw{deactivated} and \kw{activated}, while the states for \kw{Maintain Motion} are \kw{deactivated}, and \kw{recover thrusters}.
 
 To enable other developers of self-adaptive systems to use this exemplar and compare different approaches, a \kw{Gazebo}-based  \footnote{\url{https://gazebosim.org/home}} simulation of a pipeline inspection environment and a model of the AUV is provided. The BlueROV2\footnote{\url{https://bluerobotics.com/store/rov/bluerov2/}}
@@ -284,7 +281,7 @@ formulated and implemented with Metacontrol.
 
 \subsection{Metacontrol Background}
 \label{subsec:metacontrol}
-\emph{Metacontrol} uses the MAPE-K feedback loop \cite{brun09,kephart03computer} to implement self-adaptation. It \emph{Monitors} the managed subsystem during runtime, \emph{Analyzes} whether the system meets its requirements, \emph{Plans} a new configuration if the system does not meet the requirements, and then \emph{Executes} the reconfiguration of the managed subsystem. All this is done using a shared \emph{Knowledge Base} to which each step refers. In Metacontrol, the knowledge base conforms to the TOMASys (Teleological and Ontological Metamodel for Autonomous Systems) metamodel \cite{corbato2013model}. 
+\emph{Metacontrol} uses the MAPE-K feedback loop \cite{brun09,kephart03computer} to implement self-adaptation. It \emph{Monitors} the managed subsystem during runtime, \emph{Analyzes} whether the system meets its requirements, \emph{Plans} a new configuration if the system does not meet the requirements, and then \emph{Executes} the reconfiguration of the managed subsystem. All this is done using a shared \emph{Knowledge Base} to which each step refers. In Metacontrol, the knowledge base conforms to the TOMASys (Teleological and Ontological Metamodel for Autonomous Systems) metamodel \cite{corbato2013model}.
 
 \begin{figure}
     \centering
@@ -299,13 +296,13 @@ The architectural variants that implement these requirements are captured by \em
 
 An \emph{objective} $O(F,S_O,\qa^{req})$ is a runtime instantiation of a function $F$, e.g., generating a search path with a minimum required water visibility, whose status $S_O$ reflects whether the objective is currently achieved. Furthermore, the set $\qa^{req}$ of \emph{required quality attributes} specifies which quality attribute value the objective requires in order to work properly.
 
-An objective $O$ is solved by a \emph{function grounding} $FG(O,FD,S_{FG}, \qa^{meas})$, which represents the function design $FD$ that is currently used to solve the objective. 
+An objective $O$ is solved by a \emph{function grounding} $FG(O,FD,S_{FG}, \qa^{meas})$, which represents the function design $FD$ that is currently used to solve the objective.
 Its status $S_{FG}$ reflects whether the function grounding is currently able to achieve the objective. The set $\qa^{meas}$ of \emph{measured quality attributes} reflects how well the function grounding currently fulfills $O$ and is computed using sensor data.
 
 
 \subsection{Metacontrol Formulation}
 \label{sec:metacontrol_formulation}
-The functions, architectural variants, and quality attributes required to solve the tasks $(T1)$ Search Pipeline and $(T2)$ Inspect Pipeline, described in Section \ref{sec:problem_statement}, are modeled conforming to the TOMASys metamodel. Table~\ref{tbl:functions_exemplar} specifies the functions ($F_1$)~maintain\_motion, ($F_2$)~generate\_search\_path, and ($F_3$)~follow\_pipeline, while Table~\ref{tbl:qas_exemplar} describes the quality attributes ($QA_1$)~water\_visibility, and ($QA_2$)~performance. 
+The functions, architectural variants, and quality attributes required to solve the tasks $(T1)$ Search Pipeline and $(T2)$ Inspect Pipeline, described in Section \ref{sec:problem_statement}, are modeled conforming to the TOMASys metamodel. Table~\ref{tbl:functions_exemplar} specifies the functions ($F_1$)~maintain\_motion, ($F_2$)~generate\_search\_path, and ($F_3$)~follow\_pipeline, while Table~\ref{tbl:qas_exemplar} describes the quality attributes ($QA_1$)~water\_visibility, and ($QA_2$)~performance.
 Functions $F_1$ and $F_2$ are required to achieve $T1$, whereas $T2$ is achieved by $F_1$ and $F_3$.
 The function designs that solve these functions are specified in Table~\ref{tbl:function_designs_exemplar}. The set of required components is empty for function designs $FD_2 - FD_6$ because they do not require any components that are susceptible to adaptation, or used in the reasoning process.
 
@@ -320,13 +317,13 @@ Since the objectives and function groundings are instantiated during runtime, th
         \hline
         \textbf{Function} & \textbf{Name} & \textbf{Requirement} \\
         \hline
-        \rule{0pt}{2ex} 
+        \rule{0pt}{2ex}
         $F_1$ & maintain\_motion & Maintain the motion of the robot\\
         \hline
-        \rule{0pt}{2ex} 
+        \rule{0pt}{2ex}
         $F_2$ & generate\_search\_path & Generate a path to search for the pipeline\\
         \hline
-        \rule{0pt}{2ex} 
+        \rule{0pt}{2ex}
         $F_3$ & follow\_pipeline & Follow and inspect the pipeline\\
         \hline
     \end{tabular}
@@ -335,13 +332,13 @@ Since the objectives and function groundings are instantiated during runtime, th
     \label{tbl:qas_exemplar}
     \begin{tabular}{|l|l|l|p{3.9cm}|}
         \hline
-        \rule{0pt}{2ex} 
+        \rule{0pt}{2ex}
         \textbf{QA} & \textbf{Name} & \textbf{Unit} & \textbf{Description}\\
         \hline
-        \rule{0pt}{2ex} 
+        \rule{0pt}{2ex}
         $QA_1$ & water\_visibility & [$0,\infty)$ & Reflects the maximum altitude (in meters) from which the AUV can perceive the seabed\\
         \hline
-        \rule{0pt}{2ex} 
+        \rule{0pt}{2ex}
         $QA_2$ & performance & $[0,1]$ & Reflects how efficient the current search strategy is\\
         \hline
     \end{tabular}
@@ -352,28 +349,28 @@ Since the objectives and function groundings are instantiated during runtime, th
         \hline
         \textbf{Function Design} & \textbf{Name} & \textbf{Description} \\
         \hline
-        \rule{-3pt}{2ex} 
+        \rule{-3pt}{2ex}
         $FD_1(F_1,\{\text{thruster}\_x\mid x=1,\dots,6\}, \{QA_2^{exp}=1\})$ & all\_thrusters & Uses all thrusters \\
         \hline
-        \rule{-3pt}{2ex} 
+        \rule{-3pt}{2ex}
         $FD_2(F_1, \varnothing, \{QA_2^{exp}=0.5\})$ & recover\_thrusters & Recovers the thrusters that are in failure\\
         \hline
-        \rule{-3pt}{2ex} 
+        \rule{-3pt}{2ex}
         $FD_3(F_2, \varnothing, \{QA_1^{exp}=0.5,$ $ QA_2^{exp}=0.25\})$ & spiral\_low & Produces a spiral search path with low altitude \\
         \hline
-        \rule{-3pt}{2ex} 
+        \rule{-3pt}{2ex}
         $FD_4(F_2, \varnothing, \{QA_1^{exp}=1,$ $ QA_2^{exp}=0.5\})$ & spiral\_medium & Produces a spiral search path with medium altitude \\
         \hline
-        \rule{-3pt}{2ex} 
+        \rule{-3pt}{2ex}
         $FD_5(F_2, \varnothing, \{QA_1^{exp}=2,$ $ QA_2^{exp}=1\})$ & spiral\_high & Produces a spiral search path with high altitude \\
         \hline
-        \rule{-3pt}{2ex} 
+        \rule{-3pt}{2ex}
         $FD_6(F_3, \varnothing, \varnothing)$ & follow\_pipeline & Follows the pipeline \\
         \hline
     \end{tabular}
 \end{table}
 
-The MAPE-K loop steps in this exemplar are formulated as follows. The monitor step is responsible for measuring $QA_1^{meas}$ and for monitoring the state of the six thrusters. 
+The MAPE-K loop steps in this exemplar are formulated as follows. The monitor step is responsible for measuring $QA_1^{meas}$ and for monitoring the state of the six thrusters.
 
 The analyze step uses Horn rules
 to reason about the knowledge base. One example rule that analyzes whether the measured water visibility $QA_1^{meas}$ still satisfies the expected water visibility $QA_1^{exp}$ of the grounded function design is displayed in Fig.~\ref{fig:swrl_rule}. Note that it is written in terms of the notation introduced in Section~\ref{subsec:metacontrol}. Line~\ref{eq:fg} expresses that the rule reasons about a function grounding $FG$ that solves an objective $O$, is of type $FD$, has a status $S_{FG}$ and an associated set of measured quality attributes $\qa^{meas}$. Furthermore, the function design $FD$ solves the function $F$, has a set of required components $\mathcal{C}$ and an associated set of expected quality attributes $\qa^{exp}$. Note that it is implicitly assumed that $FG$ is well-formed, i.e., that the function of which $O$ is a type of is the same as the function that $FD$ solves. Since this rule should analyze the water visibility, Line~\ref{eq:qas_contained} ensures that $QA_1^{meas}$ is an element of the set $\qa^{meas}$ and that $QA_1^{exp}$ is an element of the set $\qa^{exp}$, i.e., that both $FG$ and $FD$ are related to water visibility. Finally, if the measured value of $QA_1$ is less than its expected value associated with the grounded function design, see Line \ref{eq:meas_less_exp}, then the status of the function grounding is set to \emph{error}, see Line~\ref{eq:status_error}.
@@ -396,8 +393,8 @@ In the planning step, the function designs with $QA_1^{exp}$ higher than $QA_1^{
 
 \subsection{Metacontrol Implementation}
 
-As depicted in Fig.~\ref{fig:system_architecture}, the monitor step is implemented with the \kw{Water Visibility Observer} and the \kw{Thruster Monitor} nodes. They are used for measuring $QA_1$ and monitoring the status of the six thrusters $\text{thruster}\_x$ where $x\in\{1,\dots,6\}$, respectively. 
-To simplify the system and avoid the addition of unnecessary nodes, instead of adding water visibility to the Gazebo simulator, the \kw{Water Visibility Observer} simulates water visibility measurements with a sine function, and instead of probing the managed subsystem to identify thruster failures the \kw{Thruster Monitor} simulates the thruster failures events. Since the monitor step is mocked up, and its probes and intermediary nodes that would be required to provide the probes are not implemented, they are not included in Fig. \ref{fig:system_architecture}. Both nodes publish their data into the \kw{/diagnostics} topic with the ROS 2 default \kw{DiagnosticArray} message type. 
+As depicted in Fig.~\ref{fig:system_architecture}, the monitor step is implemented with the \kw{Water Visibility Observer} and the \kw{Thruster Monitor} nodes. They are used for measuring $QA_1$ and monitoring the status of the six thrusters $\text{thruster}\_x$ where $x\in\{1,\dots,6\}$, respectively.
+To simplify the system and avoid the addition of unnecessary nodes, instead of adding water visibility to the Gazebo simulator, the \kw{Water Visibility Observer} simulates water visibility measurements with a sine function, and instead of probing the managed subsystem to identify thruster failures the \kw{Thruster Monitor} simulates the thruster failures events. Since the monitor step is mocked up, and its probes and intermediary nodes that would be required to provide the probes are not implemented, they are not included in Fig. \ref{fig:system_architecture}. Both nodes publish their data into the \kw{/diagnostics} topic with the ROS 2 default \kw{DiagnosticArray} message type.
 
 
 The knowledge base (KB), the analyze and plan step are implemented using MROS~\footnote{\url{https://github.com/meta-control/mc_mros_reasoner}}~\cite{bozhinoski2022mros}, a ROS 2-based Metacontrol implementation, as the \kw{MROS Reasoner} node. The KB
@@ -459,9 +456,9 @@ Since the system is implemented with a modular design, it can be extended with a
 To evaluate the performance of different managing subsystems using this exemplar, the mission described in Section~\ref{sec:problem_statement} was implemented.
 The mission consists of the AUV performing $T1$ and $T2$ while subject to $U1$ and $U2$ until a user-provided time limit  is reached. To evaluate the mission, the following metrics were used: the \emph{search time}, the amount of time elapsed from the beginning of the search until the pipeline is found, and the total \emph{distance inspected} of the pipeline.
 
-To provide a baseline for the exemplar, the mission is performed with two different managing subsystems and with no managing subsystem, using a fixed configuration. The managing subsystems are the Metacontrol-based implementation detailed in Section~\ref{sec:managing_subsystem} and a random managing subsystem that selects configurations arbitrarily. 
+To provide a baseline for the exemplar, the mission is performed with two different managing subsystems and with no managing subsystem, using a fixed configuration. The managing subsystems are the Metacontrol-based implementation detailed in Section~\ref{sec:managing_subsystem} and a random managing subsystem that selects configurations arbitrarily.
 
-Since the system is non-deterministic due to characteristics of \kw{Gazebo}, \kw{ArduSub}, and the interaction between them, no run of the simulation is exactly the same. Thus, the mission execution and metrics collection are automated with a runner to allow multiple runs to be easily performed. 
+Since the system is non-deterministic due to characteristics of \kw{Gazebo}, \kw{ArduSub}, and the interaction between them, no run of the simulation is exactly the same. Thus, the mission execution and metrics collection are automated with a runner to allow multiple runs to be easily performed.
 
 This section briefly describes how to configure the exemplar, and the results of running the exemplar. Further details may be found in the exemplar repository.
 
@@ -470,8 +467,8 @@ This section briefly describes how to configure the exemplar, and the results of
 In SUAVE, the AUV's mission execution can be varied by changing the parameters of the system. In the \kw{Water Visibility Observer}, the available parameters are the water visibility minimum and maximum values, periodicity, and initial phase shift. In the \kw{Thrusters Monitor}, the available parameter is a list with thruster events indicating which thruster fails and when. In the \kw{Coordinate Mission}, the mission time limit can be set. In the random manager, the adaptation periodicity can be set, and when using no manager, the default states for the lifecycle nodes can be set. In addition, the runner is parametrized with the number of runs to execute, and which managing subsystem to select. All parameters are adjusted using configuration files packaged in the exemplar.
 
 \subsection{Results}
-The mission was executed with a time limit of 300 seconds, water visibility  periodicity of 80 seconds, minimum and maximum values of 1.25 and 3.75, no phase shift, and thruster 1 failing after 35 seconds from the start of the mission. The results are shown in Table~\ref{tab:results_m1}. It can be noticed that with the Metacontrol managing subsystem both mean \emph{search time}\footnote{When the pipeline is not found, the time limit is used as the \emph{search time}} is lower, and the \emph{distance inspected} is higher. 
-This indicates that, in this exemplar, Metacontrol improves the performance of the system, and outperforms the random managing subsystem and the system without a managing subsystem. 
+The mission was executed with a time limit of 300 seconds, water visibility  periodicity of 80 seconds, minimum and maximum values of 1.25 and 3.75, no phase shift, and thruster 1 failing after 35 seconds from the start of the mission. The results are shown in Table~\ref{tab:results_m1}. It can be noticed that with the Metacontrol managing subsystem both mean \emph{search time}\footnote{When the pipeline is not found, the time limit is used as the \emph{search time}} is lower, and the \emph{distance inspected} is higher.
+This indicates that, in this exemplar, Metacontrol improves the performance of the system, and outperforms the random managing subsystem and the system without a managing subsystem.
 In addition, the standard deviation (Std) of the \emph{search time} is lower for Metacontrol, indicating that it is more consistent when searching for the pipeline. The Std of the random manager for the \emph{distance inspected} is lower, however, its mean value is also low, indicating that the random manager is consistent in not inspecting the pipeline.
 The results shown can be used as a baseline for comparing different managing subsystems.
 
@@ -484,7 +481,7 @@ The results shown can be used as a baseline for comparing different managing sub
 \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}Managing\\ subsystem\end{tabular}}} &
   \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}Number \\ of runs\end{tabular}}} &
   \multicolumn{2}{l|}{\textbf{Search time (s)}} &
-  \multicolumn{2}{l|}{\textbf{Distance inspected (m)}} \\ \cline{3-6} 
+  \multicolumn{2}{l|}{\textbf{Distance inspected (m)}} \\ \cline{3-6}
                      &            & \multicolumn{1}{l|}{\textbf{Mean}} & \textbf{Std} & \multicolumn{1}{l|}{\textbf{Mean}} & \textbf{Std} \\ \hline
 None                 & 20          & \multicolumn{1}{l|}{187.85}             & 42.40            & \multicolumn{1}{l|}{31.40}             & 13.00            \\ \hline
 Random               & 20          & \multicolumn{1}{l|}{180.15}             & 82.05           & \multicolumn{1}{l|}{3.88}             & 3.19            \\ \hline
