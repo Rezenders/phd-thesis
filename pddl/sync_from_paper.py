@@ -46,7 +46,10 @@ LST_LABEL_RE = re.compile(r"(\blabel=)(\{[^{}]*\}|[^,\]\s]+)")
 PATH_RE = re.compile(r"\{(\s*)(navigation_experiment|figures|tables)/")
 # Paper citation keys that already exist in dissertation.bib under another
 # spelling (BibTeX keys are case-insensitive, so both cannot coexist).
-CITE_KEY_MAP = {"PlanSys2": "plansys2"}
+CITE_KEY_MAP = {
+    "PlanSys2": "plansys2",
+    "nordmann2021system": "nordmannSystemModes2021",
+}
 CITE_RE = re.compile(r"(\\cite[a-zA-Z]*\*?(?:\[[^\]]*\])*\{)([^{}]*)\}")
 DATA_RE = re.compile(r"pddl/(navigation_experiment/data/[^}\s]+)")
 

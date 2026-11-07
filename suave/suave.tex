@@ -259,7 +259,7 @@ The managed subsystem is implemented as a ROS 2-based system and is depicted in 
 package works as a bridge between \kw{ArduSub} and the ROS 2 components. The \kw{Detect Pipeline} node detects the pipeline and informs \kw{Follow Pipeline} and the \kw{Coordinate Mission} node about its position\footnote{A mock perception system is used.}. The \kw{Coordinate Mission} node coordinates the tasks' execution and sets the adaptation goals. Note that the function \kw{Inspect Pipeline} is not implemented,
 since the actual inspection of the pipeline is not the focus of this work. However, the exemplar can easily be extended with this functionality by adding a new node that implements the pipeline inspection.
 
-\kw{Follow Pipeline}, \kw{Generate Search Path},  and \kw{Maintain Motion} are lifecycle nodes, which means that they have internal states, such as \emph{active} and \emph{inactive}, and it is possible to switch between these states at runtime. Furthermore, the System Modes package \cite{nordmann2021system}
+\kw{Follow Pipeline}, \kw{Generate Search Path},  and \kw{Maintain Motion} are lifecycle nodes, which means that they have internal states, such as \emph{active} and \emph{inactive}, and it is possible to switch between these states at runtime. Furthermore, the System Modes package \cite{nordmannSystemModes2021}
 extends the state \emph{active} with additional modes, e.g., \emph{active.low\_altitude}.
 
 To adapt the managed subsystem, the managing subsystem adapts the lifecycle nodes by changing their states. This is done by the \kw{Mode Manager} node, which is used off-the-shelf from the System Modes package.
@@ -281,7 +281,7 @@ formulated and implemented with Metacontrol.
 
 \subsection{Metacontrol Background}
 \label{subsec:metacontrol}
-\emph{Metacontrol} uses the MAPE-K feedback loop \cite{brun09,kephart03computer} to implement self-adaptation. It \emph{Monitors} the managed subsystem during runtime, \emph{Analyzes} whether the system meets its requirements, \emph{Plans} a new configuration if the system does not meet the requirements, and then \emph{Executes} the reconfiguration of the managed subsystem. All this is done using a shared \emph{Knowledge Base} to which each step refers. In Metacontrol, the knowledge base conforms to the TOMASys (Teleological and Ontological Metamodel for Autonomous Systems) metamodel \cite{corbato2013model}.
+\emph{Metacontrol} uses the MAPE-K feedback loop \cite{brun09,kepharTheVision2003} to implement self-adaptation. It \emph{Monitors} the managed subsystem during runtime, \emph{Analyzes} whether the system meets its requirements, \emph{Plans} a new configuration if the system does not meet the requirements, and then \emph{Executes} the reconfiguration of the managed subsystem. All this is done using a shared \emph{Knowledge Base} to which each step refers. In Metacontrol, the knowledge base conforms to the TOMASys (Teleological and Ontological Metamodel for Autonomous Systems) metamodel \cite{corbato2013model}.
 
 \begin{figure}
     \centering
