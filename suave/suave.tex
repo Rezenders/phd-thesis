@@ -34,7 +34,7 @@ Once deployed in the real world, autonomous underwater vehicles
 
 Autonomous robots are an excellent case for applying self-adaptation
 techniques
-\cite{edwardsArchDrivenRobotics,CAMARASoftwareArchitectureTask2020,park_task-based_2012,shin_platooning_2021,askarpour_robomax_2021,undersea,ACROS}. These
+\cite{edwardsArchDrivenRobotics,CAMARASoftwareArchitectureTask2020,park2012task,shin_platooning_2021,askarpour_robomax_2021,undersea,ACROS}. These
 robots face uncertainty in their operation stemming from both the
 system (e.g., sensor failures) and the environment (e.g., different
 terrains). They need to complete their missions despite such
@@ -58,7 +58,7 @@ This paper proposes the exemplar SUAVE\footnote{ Self-adaptive
 the challenging domain of self-adaptive AUVs and to allow the
 comparison of different self-adaptation strategies.  SUAVE is based
 on ROS 2 -- one of the most widely adopted robotics software
-frameworks~\cite{doi:10.1126/scirobotics.abm6074}. This ensures that
+frameworks~\cite{ros2}. This ensures that
 the system built for SUAVE can (i)~run directly on real robots and
 not only in simulation environments, (ii)~serve as a basis for other
 adaptive robotic missions, and (iii)~be easily extended with new
@@ -90,7 +90,7 @@ generation algorithm to account for changes in water visibility.
 
 To illustrate the use of adaptation frameworks in SUAVE, the
 managing subsystem was implemented with
-Metacontrol~\cite{corbato2013model,bozhinoski22advrob}, a framework
+Metacontrol~\cite{corbato2013model,bozhinoski2022mros}, a framework
 that enables self-adaptation in robotic systems and promotes the reuse
 of the adaptation logic by exploiting a model of the managed subsystem
 at runtime. Metacontrol's strength lies in the separation between the
@@ -156,7 +156,7 @@ do not provide the source code of the proposed system,
 which means it does not serve as an exemplar as SUAVE
 does.
 
-The paper by Bozhinoski \emph{et al.} \cite{bozhinoski22advrob} concerns an earlier iteration of using MROS for runtime adaptation similar to this paper. Their work revolves around two cases, a manipulator robot with a ``pick and place" task and a mobile robot navigating around obstacles on a factory floor. Both of the use cases show a need to deal with uncertainties, e.g., with a safety concern by disabling one of the pick and place arms. When compared to SUAVE, the key differences are the migration from ROS to ROS 2, as well as the use case being an AUV rather than a manipulator or mobile terrestrial robot.
+The paper by Bozhinoski \emph{et al.} \cite{bozhinoski2022mros} concerns an earlier iteration of using MROS for runtime adaptation similar to this paper. Their work revolves around two cases, a manipulator robot with a ``pick and place" task and a mobile robot navigating around obstacles on a factory floor. Both of the use cases show a need to deal with uncertainties, e.g., with a safety concern by disabling one of the pick and place arms. When compared to SUAVE, the key differences are the migration from ROS to ROS 2, as well as the use case being an AUV rather than a manipulator or mobile terrestrial robot.
 
 \section{Pipeline inspection exemplar}
 \label{sec:problem_statement}
@@ -398,7 +398,7 @@ To simplify the system and avoid the addition of unnecessary nodes, instead of a
 
 
 The knowledge base (KB), the analyze and plan step are implemented using MROS~\footnote{\url{https://github.com/meta-control/mc_mros_reasoner}}~\cite{bozhinoski2022mros}, a ROS 2-based Metacontrol implementation, as the \kw{MROS Reasoner} node. The KB
-is implemented with the Ontology Web Language (OWL)~\cite{Antoniou2004}, the Horn rules used for the analyze step with the Semantic Web Rule Language (SWRL)~\cite{horrocks2004swrl}, and the reasoning is done with Pellet\footnote{\url{https://github.com/stardog-union/pellet}}. The \kw{MROS Reasoner} receives water visibility measurements ($QA_1^{meas}$) and thruster status information from the monitor step, then decides whether adaptation is required, and, in this case, selects a desired configuration which it sends to the execute step (see Section \ref{sec:metacontrol_formulation} for more details). The \kw{MROS Reasoner} initially does not have objectives, so it does not perform adaptation. The adaptation reasoning only starts when the \kw{Coordinate Mission} node sends new objectives, such as $O_2(F_2, null , \varnothing)$, via the \kw{Adaptation Goal Bridge}. New objectives do not have a status yet.
+is implemented with the Ontology Web Language (OWL)~\cite{Antoniou2004}, the Horn rules used for the analyze step with the Semantic Web Rule Language (SWRL)~\cite{HorrocksPBTG2004}, and the reasoning is done with Pellet\footnote{\url{https://github.com/stardog-union/pellet}}. The \kw{MROS Reasoner} receives water visibility measurements ($QA_1^{meas}$) and thruster status information from the monitor step, then decides whether adaptation is required, and, in this case, selects a desired configuration which it sends to the execute step (see Section \ref{sec:metacontrol_formulation} for more details). The \kw{MROS Reasoner} initially does not have objectives, so it does not perform adaptation. The adaptation reasoning only starts when the \kw{Coordinate Mission} node sends new objectives, such as $O_2(F_2, null , \varnothing)$, via the \kw{Adaptation Goal Bridge}. New objectives do not have a status yet.
 
 The execute step uses the System Modes' \kw{Mode Manager} to adapt the managed subsystem, and the \kw{System Modes Bridge} bridges the \kw{Mode Manager} with the \kw{MROS Reasoner}. When a reconfiguration is needed, the \kw{MROS Reasoner} requests the new configuration via the \kw{/mros/request\_configuration} service to the \kw{System Modes Bridge}.Then the \kw{System Modes Bridge} forwards the request to the \kw{Mode Manager} using the correct service names, depending on the lifecycle node being adapted. The services used by the \kw{Mode Manager} are listed in Table~\ref{tbl:system_modes_services}, and the available modes are listed in Table~\ref{tbl:system_modes_modes}.
 

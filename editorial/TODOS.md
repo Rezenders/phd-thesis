@@ -7,7 +7,6 @@ Findings that need your input (from open-findings.md):
 
 - F-003: The introduction describes Tactical Retreat as "extends ROSA… thorough
   evaluation of ROSA", which doesn't match that paper's own research questions.
-- F-008: both chapters still contain a "Sample Abstract." placeholder.
 - F-009 to F-011: in the ROSA results table, distance inspected is labelled in
   seconds instead of metres. ROSA also says "managed" where it means "managing",
   and there are two typos. These may be verbatim from the papers.
