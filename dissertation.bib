@@ -185,7 +185,7 @@ series = {MODELS '20}
   number    = {50},
   publisher = {American Association for the Advancement of Science (AAAS)},
   year      = {2021},
-  month     = {Jan},
+  month     = jan,
   doi       = {10.1126/scirobotics.abf4317},
   issn      = {2470-9476},
 }
@@ -197,7 +197,7 @@ series = {MODELS '20}
   pages      = {1241--1247},
   publisher  = {ASMEDC},
   year       = {2004},
-  month      = {Jan},
+  month      = jan,
   doi        = {10.1115/imece2004-61812},
   collection = {IMECE2004},
   series     = {IMECE2004},
@@ -224,7 +224,7 @@ abstract = {Autonomous Underwater Vehicles (AUVs) have a wide range of applicati
 title = "Model-based Self-awareness Patterns for Autonomy",
 abstract = "Technical systems are becoming more complex, they incorporate more advanced func- tionalities, they are more integrated with other systems and they are deployed in less controlled environments. All this supposes a more demanding and uncertain scenario for control systems, which are also required to be more autonomous and dependable. Autonomous adaptivity is a current challenge for extant control technologies. The ASys research project proposes to address it by moving the responsibility for adaptiv- ity from the engineers at design time to the system at run-time. This thesis has intended to advance in the formulation and technical reification of ASys principles of model-based self-cognition and having systems self-handle at run-time for robust autonomy. For that it has focused on the biologically inspired capability of self-awareness, and explored the possibilities to embed it into the very architecture of control systems. Besides self-awareness, other themes related to the envisioned solution have been explored: functional modeling, software modeling, patterns technology, components technology, fault tolerance. The state of the art in fields relevant for the issues of self- awareness and adaptivity has been analysed: cognitive architectures, fault-tolerant control, and software architectural reflection and autonomic computing. The extant and evolving ASys Theoretical Framework for cognitive autonomous systems has been adapted to provide a basement for this selfhood-centred analysis and to con- ceptually support the subsequent development of our solution. The thesis proposes a general design solution for building self-aware autonomous systems. Its central idea is the integration of a metacontroller in the control archi- tecture of the autonomous system, capable of perceiving the functional state of the control system and reconfiguring it if necessary at run-time. This metacontrol solution has been formalised into four design patterns: i) the Metacontrol Pattern, which defines the integration of a metacontrol subsystem, con- trolling the domain control system through an interface provided by its implemen- tation component platform, ii) the Epistemic Control Loop pattern, which defines a model-based cognitive control loop that can be applied to the design of such a meta- controller, iii) the Deep Model Reflection pattern proposes a solution to produce the online executable model used by the metacontroller by model-to-model transforma- tion from the engineering model, and, finally, iv) the Functional Metacontrol pattern, v which proposes to structure the metacontroller in two loops, one for controlling the configuration of components of the controller, and another one on top of the former, controlling the functions being realised by that configuration; this way the functional and structural concerns become decoupled. A reference architecture and an associated metamodel are the core pieces of the architectural framework developed to reify this patterned solution. The metamodel has been developed for representing the structure and its relation to the functional requirements of any autonomous system. The architecture is a blueprint for building a metacontroller according to the patterns. This metacontroller can be integrated on top of any component-based control architecture. At the core of its operation lies a model of the control system that conforms to the metamodel. An engineering process and accompanying assets have been constructed to com- plete and exploit the architectural framework. The engineering process defines the methodology to follow to develop the metacontrol subsystem from the functional model of the controller of the autonomous system. The assets include software li- braries that provide a domain and application-independent implementation of the meta- controller. They can be used in the implementation phase of the methodology. Finally, the complete solution has been validated in the development of an au- tonomous mobile robot that incorporates an metacontroller. The functional self-awareness and adaptivity properties achieved thanks to the metacontrol system have been vali- dated in different scenarios. In these scenarios the robot was able to overcome failures in the control system thanks to reconfigurations performed by the metacontroller.",
 keywords = "cognitive architecture, consciousness, autonomous systems, general systems theory",
-author = "Carlos Hern{\'a}ndez",
+author = "Carlos Hern{\'a}ndez Corbato",
 school = "Universidad Polit{\'e}cnica de Madrid",
 year = "2013",
 month = oct,
@@ -275,10 +275,14 @@ url="https://doi.org/10.1007/978-3-642-02161-9_3"
 
 % SEA paper
 @inproceedings{carreno2021situation,
-  title={{Situation-Aware Task Planning for Robust {AUV} Exploration in Extreme Environments}},
-  author={Carreno, Yaniel and Scharff Willners, J and Petillot, Yvan R and Petrick, R},
-  booktitle={Proc.\ IJCAI Workshop on Robust and Reliable Autonomy in the Wild},
-  year={2021}
+  title = "Situation-Aware Task Planning for Robust {AUV} Explorations in Extreme Environments",
+  abstract = "Achieving an accurate model of the underwater domain that captures all its complex dynamics represents a challenge. Therefore, planning solutions often involve replanning. High-level abstraction of the domain definition required for tractable planning means that the system often ignores specific properties, giving rise to states where survivability, reliability, and mission quality could be compromised. This work proposes an approach that combines planning, knowledge representation and decision making to achieve high-level mission goals that maintain mission survivability and improve robustness. We present the Situational Evaluation and Awareness (SEA) framework to bridge the highlevel planning and low-level mission execution systems. SEA maintains a dynamic evaluation of the state to provide a goal completion assessment for local recovery and global mission execution. The approach shows good performance during evaluation in different problems involving real scenarios.",
+  author = "Carreno, Yaniel and {Scharff Willners}, Jonatan and Petillot, Yvan and Petrick, Ronald P. A.",
+  booktitle = "IJCAI 2021 Workshop on Robust and Reliable Autonomy in the Wild (R2AW)",
+  year = "2021",
+  month = aug,
+  day = "19",
+  language = "English",
 }
 
 @article{temoto,
@@ -850,13 +854,15 @@ eprint = {
 @String{acm = "ACM Press" }
 
 
-@article{GOLDMANpddlTypeProblems2012,
-  title={Type problem in domain description!” or, outsiders’ suggestions for {PDDL} improvement},
-  author={Goldman, Robert P and Keller, Peter},
-  journal={WS-IPC 2012},
-  pages={43},
-  url={https://icaps12.icaps-conference.org/workshops/ipc2012-proceedings.pdf#page=47},
-  year={2012}
+@inproceedings{GOLDMANpddlTypeProblems2012,
+  title     = {``Type Problem in Domain Description!'' or, Outsiders' Suggestions for {PDDL} Improvement},
+  author    = {Goldman, Robert P. and Keller, Peter},
+  booktitle = {Proceedings of the 3rd Workshop on the International Planning Competition ({WS-IPC} 2012), 22nd International Conference on Automated Planning and Scheduling ({ICAPS})},
+  editor    = {Coles, Amanda and Coles, Andrew and Garc{\'\i}a Olaya, {\'A}ngel and Jim{\'e}nez, Sergio and Linares L{\'o}pez, Carlos and Sanner, Scott},
+  address   = {Atibaia, S{\~a}o Paulo, Brazil},
+  pages     = {43--48},
+  year      = {2012},
+  url       = {https://icaps12.icaps-conference.org/workshops/ipc2012-proceedings.pdf#page=47},
 }
 
 
@@ -1064,13 +1070,16 @@ series = {AAMAS '21}
   keywords={Information services;Electronic publishing;Internet;Hardware},
   doi={10.1109/ICRA.2013.6630618}}
 
+
 @inproceedings{zaman2019fault,
-  title={Fault Detection Using Sensors Data Trends for Autonomous Robotic Mapping},
-  author={Zaman, Safdar and Ahmad, Farhan and Khan, Mohammad Qasim and Shah, Shabir Ali and Jabeen, Asma and Aftab, Nouman},
-  booktitle={2019 International Conference on Engineering and Emerging Technologies (ICEET)},
-  pages={1--6},
-  year={2019},
-  organization={IEEE}
+  author    = {Zaman, Safdar and Ahmad, Farhan and Qasim Khan, Mohammad and Ali Shah, Shabir and Jabeen, Asma and Aftab, Nouman},
+  title     = {Fault Detection Using Sensors Data Trends for Autonomous Robotic Mapping},
+  booktitle = {2019 International Conference on Engineering and Emerging Technologies (ICEET)},
+  pages     = {1--6},
+  publisher = {IEEE},
+  year      = {2019},
+  month     = feb,
+  doi       = {10.1109/ceet1.2019.8711846},
 }
 
 @article{Correll-2017,
