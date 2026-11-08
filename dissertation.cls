@@ -55,7 +55,9 @@
 \RequirePackage{tablefootnote}
 \RequirePackage{lettrine}
 \RequirePackage{metalogo}
-\RequirePackage[sectionbib,numbers,sort&compress]{natbib}
+\RequirePackage[backend=biber,style=numeric-comp,sorting=none,natbib=true,
+    doi=true,url=false,isbn=false,eprint=false,maxbibnames=99]{biblatex}
+\AtEveryBibitem{\clearlist{language}}
 \RequirePackage[noindentafter]{titlesec}
 \RequirePackage{titletoc}
 %\RequirePackage[nottoc]{tocbibind}
@@ -585,8 +587,7 @@
 %% Create an unnumbered reference section.
 \addto\captionsenglish{\renewcommand*\bibname{\color{black}References}}
 \newcommand*\references[1]{%
-    \bibliographystyle{dissertation}%
-    \bibliography{#1}%
+    \printbibliography[heading=none]%
 }
 
 %% Hyperlinks are coloured in the digital version and hidden in print mode.
