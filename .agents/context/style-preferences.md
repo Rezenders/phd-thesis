@@ -8,7 +8,7 @@ correctness take precedence over preferences.
 These thesis-wide preferences combine the ones the author set in the PLANTA and
 Tactical Retreat paper repositories. They apply to framing chapters (introduction,
 conclusion, summary, propositions, acknowledgements). Inside verbatim paper
-chapters, report departures only; do not propose edits to generated PLANTA files.
+chapters, report departures only; in PLANTA files propose formatting-only edits.
 
 - Use formal, concise scientific English with precise terminology and direct,
   declarative sentences.

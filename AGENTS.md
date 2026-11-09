@@ -19,9 +19,12 @@ four paper chapters. Start from `.agents/context/manuscript-context.md`.
 - **Paper chapters are verbatim copies of papers.** Load `.agents/context/chapters/<name>/`
   for any task in a paper chapter. Diagnose freely, but scientific edits belong in
   the paper repository, not the thesis.
-- **Never edit generated PLANTA files** (`pddl/sections/`, `pddl/config/`, `pddl/figures/`,
-  `pddl/tables/`, `pddl/navigation_experiment/`). They are rewritten by
-  `pddl/sync_from_paper.py`. Only `pddl/pddl.tex` is hand-maintained.
+- **PLANTA files are thesis-owned, formatting-only** (`pddl/sections/`, `pddl/config/`,
+  `pddl/figures/`, `pddl/tables/`, `pddl/navigation_experiment/`). They are no longer
+  synced from the paper; do not run `pddl/sync_from_paper.py`. Edit them only to fit
+  the thesis template (layout of tables, listings, equations, figures, floats; line
+  breaks; LaTeX plumbing). Do not change content: wording, numbers, results, claims,
+  equation meaning, citations, labels. Content changes go to the author first.
 - **Build into `build-agent/`, never `build/`.** The author's VimTeX owns `build/`.
   Use `make BUILD=build-agent build-agent/dissertation.pdf`. Do not run `make clean`.
 - `\acronym` means PLANTA everywhere in the thesis.

@@ -19,7 +19,7 @@ thesis-level `terminology.md`.
 ## Macros
 
 - `\kw{...}`: node/package names (`dissertation.tex`).
-- `\qa`: $\mathcal{QA}$, declared in `pddl/config/preamble.tex` (generated PLANTA
+- `\qa`: $\mathcal{QA}$, declared in `pddl/config/preamble.tex` (PLANTA
   file). SUAVE depends on it; if PLANTA's preamble changes, SUAVE can break.
 
 ## Names

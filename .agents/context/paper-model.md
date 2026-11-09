@@ -74,14 +74,18 @@ paper. Edits to scientific content belong in the paper source, not the chapter.
 ### PLANTA (`pddl/`)
 
 - Paper repo: `~/ros_workspaces/planta_ws/src/planta_paper_overleaf/` (entry `main-acm.tex`).
-- `pddl/sync_from_paper.py [PAPER_DIR]` regenerates `pddl/sections/`, `pddl/config/`,
-  `pddl/figures/`, `pddl/tables/`, `pddl/navigation_experiment/`. It replaces those
-  directories on every run. **Never edit files there by hand.**
-- Mechanical transformations applied by the script: asset paths prefixed with
+- Since 2026-11-09 the thesis copy is frozen and thesis-owned: `pddl/sections/`,
+  `pddl/config/`, `pddl/figures/`, `pddl/tables/`, `pddl/navigation_experiment/` are
+  no longer regenerated. **Do not run `pddl/sync_from_paper.py`**; it would overwrite
+  thesis formatting work.
+- **Formatting-only edits are allowed there** to fit the thesis template (tables,
+  listings, equations, figures, floats, line breaks, LaTeX plumbing). Do not change
+  content (wording, numbers, results, claims, equation meaning, citations, labels).
+- Mechanical transformations the script applied when it last ran (still in place): asset paths prefixed with
   `pddl/`; every label/ref key prefixed with `planta:` (supplement labels become
   `planta:S-<key>`); citation keys renamed via `CITE_KEY_MAP` (e.g. `PlanSys2` to
   `plansys2`); supplement body written to `pddl/sections/supplement.tex`.
-- Hand-maintained: only `pddl/pddl.tex` (chapter title, abstract, footnote, `\input` list).
+- `pddl/pddl.tex` holds the chapter title, abstract, footnote and `\input` list.
 - Paper paths in `chapters/planta/` are already rewritten to thesis paths.
 
 ### Tactical Retreat (`cognitive_architecture/`)
