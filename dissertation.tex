@@ -5,17 +5,13 @@
 \usepackage{amsmath,amssymb,amsfonts}
 
 
-\hyphenation{TestRoots WatchDog proj-ect proj-ects Ec-lipse two-fold clie-nts Mo-cki-to wide-spread}
-\newcommand{\sparkline}[1]{$\vcenter{\hbox{\includegraphics[scale=0.04]{#1}}}$}
+%% Hyphenation points for names TeX's English patterns do not know.
+\hyphenation{Type-DB Type-QL Te-Mo-to Ardu-Sub Meta-con-trol TOMA-Sys Gaze-bo Plan-Sys}
 
 \makeglossaries
 
-\newcommand*{\origrightarrow}{}
-\let\oldarrow\textrightarrow
-\renewcommand*{\textrightarrow}{\fontfamily{cmr}\selectfont\origrightarrow}
 \loadglsentries[main]{glossary}
 
-\input{abbreviations}
 \addbibresource{dissertation.bib}
 
 \usepackage{caption}
@@ -62,60 +58,14 @@
 
 \newcommand\red[1]{{\color{red}#1}}
 
-\lstset{escapeinside={<@}{@>}}
-
-\lstdefinelanguage{PDDL}
-{
-  sensitive=false,    % not case-sensitive
-  morecomment=[l]{;}, % line comment
-  alsoletter={:,-,?},   % consider extra characters
-  keywords=[1]{
-    define,domain,problem,when,forall,exists,either,
-    :domain,:requirements,:types,:objects,:constants,
-    :predicates,:action,:parameters,:precondition,:effect,
-    :fluents,:primary-effect,:side-effect,:init,:goal,
-    :strips,:adl,:equality,:typing,:conditional-effects,
-    :negative-preconditions,:disjunctive-preconditions,
-    :existential-preconditions,:universal-preconditions,:quantified-preconditions,
-    :functions,assign,increase,decrease,scale-up,scale-down,
-    :metric,minimize,maximize,
-    :durative-actions,:duration-inequalities,:continuous-effects,
-    :durative-action,:duration,:condition,
-  }
-  keywordstyle=[1]\color{purple},
-  keywords=[2]{and, or, over,all, at, end, not},
-  keywordstyle=[2]\color{teal},
-  keywordsprefix=?
-}
-
-\lstdefinelanguage{TypeQL}
-{
-  sensitive=yes,    % not case-sensitive
-  morecomment=[l]{\#}, % line comment
-  alsoletter={:},   % consider extra characters
-  keywords=[1]{
-    entity, attribute, relation,
-  },
-  keywordstyle=[1]\color{teal},
-  keywords=[2]{@key},
-  keywordstyle=[2]\color{orange},
-  keywords=[3]{
-    sub, abstract, owns, value, relates, plays,
-    rule, when, not, has, then, isa, \},\{,
-    fetch, match, insert, define, :,
-  },
-  keywordstyle=[3]\color{purple},
-  morestring=[b]{'},
-  % morekeywords=[4]{\$}, % Treat $ as a standalone keyword
-  % keywordstyle=[4]\color{red},
-  keywordsprefix=\$
-}
 
 %% PDDL paper (pddl/config/ is copied verbatim from the paper, see pddl/sync_from_paper.py)
 \let\red\relax % redefined identically in pddl/config/macros
 \input{pddl/config/preamble}
 \input{pddl/config/macros}
 \input{pddl/navigation_experiment/plots/paper_support}
+
+\input{code-languages} % piton languages for PDDL and TypeQL
 \providecommand{\Description}[2][]{} % acmart figure descriptions (not typeset)
 
 % Let pages end where the text ends instead of stretching vertical space to fill them.
@@ -131,6 +81,13 @@
 %% the title page (in title/title.tex) and in the metadata of the final PDF.
 \title{Knowledge-based Self-adaptive Robotic Systems}
 \author{Gustavo}{Rezende Silva}
+%% PDF metadata (title and author are set by \title and \author above).
+\hypersetup{
+    pdfsubject  = {PhD thesis, Delft University of Technology},
+    pdfkeywords = {robot self-adaptation, task and architecture co-adaptation,
+                   knowledge representation and reasoning, ontologies,
+                   automated planning, PDDL, ROS 2, robotics software engineering}
+}
 
 %% Use Roman numerals for the page numbers of the title pages and table of
 %% contents.

@@ -1,0 +1,47 @@
+% chktex-file 26 -- PDDL keyword lists contain literal ":keyword" syntax
+%% Code languages for piton (see the piton setup in dissertation.cls).
+\NewPitonLanguage{PDDL}{
+    sensitive      = false,
+    morecomment    = [l]{;},
+    alsoletter     = :-?,  % piton: characters without braces or commas
+    keywordsprefix = ?,
+    morekeywords = [2]{and, or, over, all, at, end, not},
+    morekeywords = [3]{
+        define, domain, problem, when, forall, exists, either,
+        :domain, :requirements, :types, :objects, :constants,
+        :predicates, :action, :parameters, :precondition, :effect,
+        :fluents, :primary-effect, :side-effect, :init, :goal,
+        :strips, :adl, :equality, :typing, :conditional-effects,
+        :negative-preconditions, :disjunctive-preconditions,
+        :existential-preconditions, :universal-preconditions, :quantified-preconditions,
+        :functions, assign, increase, decrease, scale-up, scale-down,
+        :metric, minimize, maximize,
+        :durative-actions, :duration-inequalities, :continuous-effects,
+        :durative-action, :duration, :condition, :derived
+    },
+}
+\SetPitonStyle[PDDL]{
+    Keyword  = \color{orange!75!black},     % ?variables
+    Keyword2 = \color{\blueColor}\bfseries,  % and, or, not, over all, at end
+    Keyword3 = \color{\greenColor}\bfseries, % define, :action, :parameters, ...
+    Comment  = \color{gray},
+}
+\NewPitonLanguage{TypeQL}{
+    sensitive   = true,
+    morecomment = [l]{\#},
+    alsoletter  = :@,
+    morekeywords = {entity, attribute, relation},  % class 1: no [1] in piton
+    morekeywords = [2]{@key},
+    morekeywords = [3]{
+        sub, abstract, owns, value, relates, plays,
+        rule, when, not, has, then, isa, fetch, match, insert, define
+    },
+    morestring = [b]{'},
+}
+\SetPitonStyle[TypeQL]{
+    Keyword     = \color{teal}\bfseries,
+    Keyword2    = \color{orange!75!black},
+    Keyword3    = \color{purple}\bfseries,
+    String.Long = \color{olive},
+    Comment     = \color{gray},
+}

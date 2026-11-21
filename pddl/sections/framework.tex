@@ -37,24 +37,26 @@ where \pddlActParam contains variables occurring in the $\consequent$ and $\pddl
 \begin{figure}[tbp]
 \centering
 \begin{minipage}{0.6\linewidth}
+\captionsetup{type=listing}
 $\begin{aligned}
 &\FunctionTomasys(\varF) \wedge \FunctionDesign(\fdUnground) \\
 &\implies \solvesF(\fdUnground, \varF)
 \end{aligned}$
-\captionof{lstlisting}{SWRL rule}%
+\caption{SWRL rule}%
 \label{planta:lst:swrl_math}
 \end{minipage}
 
 \bigskip
 
 \begin{minipage}{0.6\linewidth}
-\begin{lstlisting}[language=PDDL,numbers=none]
+\captionsetup{type=listing}
+\begin{Piton}[language=PDDL]
 (:derived (solvesF ?fd_unground ?f)
   (and (= ?fd_unground fd_unground)
     (and (Function ?f)
       (FunctionDesign fd_unground))))
-\end{lstlisting}
-\captionof{lstlisting}{PDDL derived predicate}%
+\end{Piton}
+\caption{PDDL derived predicate}%
 \label{planta:lst:pddl_rule}
 \end{minipage}
 \caption{Transformation of a SWRL rule into its equivalent PDDL derived predicate.}%
@@ -80,20 +82,22 @@ Listing~\ref{planta:lst:search_pipeline_managed} shows the managed version, in w
 
 Additionally, the managed precondition requires that all functions not required by the action are inactive, preventing conflicts between components that serve different task actions. For example, the function used to follow the pipeline in \emph{A2}, $\fFollowPipeline$, must be inactive while \texttt{search\_pipeline} executes, as enforced by the trailing \texttt{(not (F\_active f\_follow\_pipeline \ldots{}))} condition in Listing~\ref{planta:lst:search_pipeline_managed}. This constraint ensures that only the architectural configuration appropriate for the current task action is active at any time. % chktex 26 -- literal PDDL syntax
 
-\begin{figure}[tbp]
-\begin{lstlisting}[language={PDDL},basicstyle=\sffamily\footnotesize, numbers=none,caption={Original \texttt{search\_pipeline} action},label={planta:lst:search_pipeline}]
+\begin{listing}[tbp]
+\begin{Piton}[language=PDDL]
 (:action search_pipeline
   :parameters (?p - pipeline ?r - robot)
   :precondition (and (robot_started ?r))
   :effect (and (pipeline_found ?p)))
-\end{lstlisting}
+\end{Piton}
+\caption{Original \texttt{search\_pipeline} action}%
+\label{planta:lst:search_pipeline}
 \Description{PDDL listing of the original search\_pipeline action. Its parameters are a pipeline and
 a robot. The precondition requires the robot to have started, and the effect marks the
 pipeline as found.}
-\end{figure}
+\end{listing}
 
-\begin{figure}[tbp]
-\begin{lstlisting}[language={PDDL},basicstyle=\sffamily\footnotesize,numbers=none,caption={Managed \texttt{search\_pipeline} action},label={planta:lst:search_pipeline_managed}]
+\begin{listing}[tbp]
+\begin{Piton}[language=PDDL]
 (:action search_pipeline
   :parameters (?p - pipeline ?r - robot)
   :precondition (and
@@ -120,13 +124,15 @@ pipeline as found.}
     ;; every functionality not required by A1 must be inactive. Here, f_follow_pipeline required by A2
     (not (F_active f_follow_pipeline true_boolean)))
   :effect (and (pipeline_found ?p)))
-\end{lstlisting}
+\end{Piton}
+\caption{Managed \texttt{search\_pipeline} action}%
+\label{planta:lst:search_pipeline_managed}
 \Description{PDDL listing of the managed search\_pipeline action. The original parameters and effect
 are retained. Additional existential preconditions require two distinct functions for
 the action, each active and grounded to a realizable FunctionDesign with no better
 realizable alternative. The follow-pipeline function, which is not required by this
 action, must be inactive.}
-\end{figure}
+\end{listing}
 
 Formally, the transformation of an action $a \in \pddlActions$ into a managed action
 $a_m \in \pddlActions_m$ is defined as follows. Let $\pddlActName_a$ denote the action name,

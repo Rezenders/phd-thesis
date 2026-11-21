@@ -444,7 +444,9 @@ To exemplify how the knowledge model is implemented, \Cref{lst:km} depicts how t
 
 % \begin{figure}
 % \vspace{-4ex}
-\begin{lstlisting}[caption=TypeQL query to define \relationship{functional-requirement} and \entity{Action}, label=lst:km, columns=fullflexible, language=TypeQL]
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\captionsetup{type=listing}
+\begin{Piton}[language=TypeQL, line-numbers={skip-empty-lines=false, label-empty-lines=false}]
 functional-requirement sub relation,
   relates action,
   relates required-function;
@@ -454,7 +456,10 @@ Action sub entity,
   owns action-status,
   plays functional-requirement:action,
   plays constraint:constrained;
-\end{lstlisting}
+\end{Piton}
+\caption{TypeQL query to define \relationship{functional-requirement} and \entity{Action}}%
+\label{lst:km}
+\end{minipage}\par\medskip
 % \end{figure}
 
 \Cref{lst:rules} exemplifies how the inference rules are implemented with TypeQL. The \entity{component-status-configuration-error} rule defines that a \entity{Component} has a `configuration error' status when it is required, it does not have an `unfeasible' or `failure' status, and it is in a \relationship{component-configuration} relationship that is selected and has an `unfeasible' status~(see \Cref{fig:component_status}).
@@ -462,7 +467,9 @@ Action sub entity,
 % \vspace{-2ex}
 % \begin{figure}
 % \vspace{-4ex}
-\begin{lstlisting}[caption=TypeQL rule to infer whether a component is in `configuration error', label=lst:rules, columns=fullflexible, language=TypeQL]
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\captionsetup{type=listing}
+\begin{Piton}[language=TypeQL, line-numbers={skip-empty-lines=false, label-empty-lines=false}]
 rule component-status-configuration-error:
  when {
   $c isa Component, has is-required true;
@@ -476,7 +483,10 @@ rule component-status-configuration-error:
  } then {
    $c has status 'configuration error';
  };
-\end{lstlisting}
+\end{Piton}
+\caption{TypeQL rule to infer whether a component is in `configuration error'}%
+\label{lst:rules}
+\end{minipage}\par\medskip
 % \vspace{-5ex}
 % \end{figure}
 
@@ -521,14 +531,16 @@ Monitor nodes &
 \end{tabular}
 \end{table}
 
-\begin{figure}
-\begin{lstlisting}[caption=TypeDB query to fetch selectable actions' names, label=lst:typedb_query, columns=fullflexible, language=TypeQL]
+\begin{listing}
+\begin{Piton}[language=TypeQL, line-numbers={skip-empty-lines=false, label-empty-lines=false}]
 match  $a isa Action, has name $name;
   not {$a has status 'unfeasible';};
   fetch $name;
-\end{lstlisting}
+\end{Piton}
+\caption{TypeDB query to fetch selectable actions' names}%
+\label{lst:typedb_query}
 % \vspace{-5ex}
-\end{figure}
+\end{listing}
 
 % \paragraph{Monitor}
 \subsubsection{Monitor}
@@ -561,7 +573,9 @@ This work maps the action status from ROSA's knowledge model to PDDL by
 capturing whether the action's status is feasible as a PDDL predicate of the form ``\emph{action\_feasible ?action}'' and using it as a precondition to select the respective action. An example can be seen in~\Cref{lst:task_interface_pddl} where the action \emph{my\_action} can only be selected when it does not have an `unfeasible' status in the KB.
 At runtime, if an action becomes unfeasible during execution, the plan executor triggers re-planning to generate a new action plan. This results in task execution adaptation and, if the newly selected actions require a different architectural configuration, also in architectural adaptation, i.e., TACA.
 
-\begin{lstlisting}[caption=PDDL formulation example for ROSA, label=lst:task_interface_pddl, columns=fullflexible, language=PDDL]
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\captionsetup{type=listing}
+\begin{Piton}[language=PDDL, line-numbers={skip-empty-lines=false, label-empty-lines=false}]
  (:durative-action my_action
    :parameters (?a - action ...)
    :duration (...)
@@ -572,7 +586,10 @@ At runtime, if an action becomes unfeasible during execution, the plan executor 
    )
    :effect (and ...)
  )
-\end{lstlisting}
+\end{Piton}
+\caption{PDDL formulation example for ROSA}%
+\label{lst:task_interface_pddl}
+\end{minipage}\par\medskip
 % \vspace{-5ex}
 % \end{figure}
 
@@ -660,7 +677,9 @@ To apply ROSA in simulation to the SUAVE exemplar, the knowledge model depicted 
 \end{figure}
 
 % \begin{figure}[h]
-\begin{lstlisting}[caption=Snippet of SUAVE's use case implementation in TypeDB, label=lst:suave, columns=fullflexible, language=TypeQL]
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\captionsetup{type=listing}
+\begin{Piton}[language=TypeQL, line-numbers={skip-empty-lines=false, label-empty-lines=false}]
 # Action search pipeline
 $a_search_pipeline isa Action, has action-name
     'search_pipeline';
@@ -673,11 +692,14 @@ $f_generate_search_path isa Function, has function-name
  required-function: $f_generate_search_path,
  required-function: $f_maintain_motion)
  isa functional-requirement;
-\end{lstlisting}
+\end{Piton}
+\caption{Snippet of SUAVE's use case implementation in TypeDB}%
+\label{lst:suave}
+\end{minipage}\par\medskip
 % \end{figure}
 
-\begin{figure}[h]
-\begin{lstlisting}[caption=Snippet of the PDDL domain formulation for SUAVE containing the search pipeline action definition., label=lst:suave_extended_pddl, columns=fullflexible, language=PDDL]
+\begin{listing}[h]
+\begin{Piton}[language=PDDL, line-numbers={skip-empty-lines=false, label-empty-lines=false}]
  (:durative-action search_pipeline
    :parameters (?a - action ?p - pipeline ?r - robot)
    :condition (and
@@ -690,9 +712,11 @@ $f_generate_search_path isa Function, has function-name
    )
  )
  ...
-\end{lstlisting}
+\end{Piton}
+\caption{Snippet of the PDDL domain formulation for SUAVE containing the search pipeline action definition.}%
+\label{lst:suave_extended_pddl}
 % \vspace{-5ex}
-\end{figure}
+\end{listing}
 
 \subsubsection{Result} During the mission execution, the AUV was able to overcome all uncertainties: adapting to thruster failures ($U_1$) with structural adaptation, to changing water visibility ($U_2$) with parameter adaptation, and to an unexpected drop in the battery level ($U_3$) with TACA, demonstrating the feasibility of using ROSA to enable runtime TACA in ROS 2-based robotic systems.
 

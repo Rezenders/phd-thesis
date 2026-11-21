@@ -1,0 +1,32 @@
+name: Build thesis
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # TeX Live scheme-full; "latest" tracks the current release (TL2026).
+    # There is no TL2026-historic tag until TL2027 is released.
+    container: texlive/texlive:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The TeX Live image may not ship GNU make
+      - name: Install make
+        run: apt-get update && apt-get install -y --no-install-recommends make
+
+      - name: Build PDFs
+        run: make build/dissertation.pdf build/propositions.pdf
+
+      - name: Upload PDFs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-pdf
+          path: |
+            build/dissertation.pdf
+            build/propositions.pdf
+          if-no-files-found: error

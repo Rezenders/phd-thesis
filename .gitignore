@@ -7,3 +7,4 @@ build/
 *.toc
 dissertation.pdf
 build-agent/
+dissertation-diff*.tex

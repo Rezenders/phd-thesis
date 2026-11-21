@@ -1,0 +1,2 @@
+# Code inside piton environments is verbatim: do not lint it.
+VerbEnvir { Piton }

@@ -29,7 +29,7 @@ With the addition of derived predicates, the evaluation algorithm is no longer l
 \begin{figure}[tbp]
 \centering
 \begin{minipage}[t]{0.49\linewidth}
-\begin{lstlisting}[language=PDDL, firstnumber=1, numbers=left, stepnumber=1, xleftmargin=2em]
+\begin{Piton}[language=PDDL, line-numbers]
 (:derived (inferredA ?x)
   (predicateA ?x))
 (:derived (inferredAA ?x)
@@ -42,11 +42,11 @@ With the addition of derived predicates, the evaluation algorithm is no longer l
 (:derived (inferredAB ?x)
   (or (inferredA ?x)
       (inferredB ?x)))
-\end{lstlisting}
+\end{Piton}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.49\linewidth}
-\begin{lstlisting}[language=PDDL, firstnumber=13, numbers=left, stepnumber=1, xleftmargin=2em]
+\begin{Piton}[language=PDDL, line-numbers={start=13}]
 (:action action1
   :parameters (?x)
   :precondition (and (exists (?y)
@@ -60,7 +60,7 @@ With the addition of derived predicates, the evaluation algorithm is no longer l
     (inferredB ?x)
     (inferredAB ?x))
   :effect (and (predicateC ?x)))
-\end{lstlisting}
+\end{Piton}
 \end{minipage}
 \caption{PDDL example with derived predicates and existential preconditions.}%
 \label{planta:lst:example_derived}

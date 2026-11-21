@@ -31,6 +31,7 @@
 \RequirePackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}
 \RequirePackage{lettrine}
+\RequirePackage{csquotes}
 \RequirePackage[backend=biber,style=numeric-comp,sorting=none,natbib=true,
     doi=true,url=false,isbn=false,eprint=false,maxbibnames=99]{biblatex}
 \AtEveryBibitem{\clearlist{language}}
@@ -78,28 +79,21 @@
 \definecolor{light-gray}{gray}{0.95}
 \definecolor{mgreen}{HTML}{009901}
 
-\RequirePackage{listings}
-
-\lstset{ %
-  backgroundcolor=\color{light-gray},   % choose the background color; you must add \RequirePackage{color} or \RequirePackage{xcolor}
-  %  keywordstyle=\color{blue},       % keyword style
-  language=C,                 % the language of the code
-  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
-  numbersep=5pt,                   % how far the line-numbers are from the code
-  %  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-  showspaces=false,                % show spaces everywhere adding particular underscores; it
-  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
-  numberstyle=\tiny,
-  breaklines        = true,
-  breakatwhitespace = true,
-  breakindent       = 2ex,
-  escapechar        = *,
-  basicstyle=\scriptsize\ttfamily
+%% Code listings with piton (LuaLaTeX). Captioned listings are "Example" floats
+%% (the listing environment, numbered per chapter), also usable with \captionof.
+\RequirePackage{piton}
+\PitonOptions{
+    font-command     = \ttfamily\footnotesize,
+    background-color = light-gray,
+    rounded-corners,
+    break-lines,
+    left-margin      = auto,
 }
-
-% Setup of cref/lstlisting
-\renewcommand{\lstlistingname}{Example}
-\crefname{lstlisting}{Example}{Examples}
+\RequirePackage{newfloat}
+\DeclareFloatingEnvironment[name=Example, listname={List of Examples},
+    fileext=lol, within=chapter, placement=tbp]{listing}
+\crefname{listing}{Example}{Examples}
+\Crefname{listing}{Example}{Examples}
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
@@ -521,4 +515,7 @@
         urlcolor   = tudelft-cyan!70!black  % \url, \href
     }
 \fi
+%% PDF metadata: document language, and show the title (not the file name) in
+%% the PDF viewer's window title.
+\hypersetup{pdflang=en-US, pdfdisplaydoctitle=true}
 
