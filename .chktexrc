@@ -1,2 +1,15 @@
 # Code inside piton environments is verbatim: do not lint it.
 VerbEnvir { Piton }
+
+# Macros defined with \xspace (see pddl/config/macros.tex): a space after them
+# is intended, so do not warn "Command terminated with space".
+Silent {
+  \runtimefont \pddlTask \pddlDomain \pddlInstance \pddlObjects \pddlInitial \pddlGoal \pddlState \pddlPredicates \pddlActions \pddlDerRules \pddlPredicatesC \pddlPredicatesR \pddlActParam \Ont \SwrlRule \N \NC \NR \NI \NRobject \NRdata \NIC \NIR \ALCI \owltopddl \planta \CamaraApproach \plansys \tomasys \pddltomasys \Uone \Utwo \Uthree \Sone \Stwo \Sthree \Sfour \Sfive
+}
+
+# Commands without arguments where the space after them has no effect:
+# algorithmic keywords (\State, \EndFor, ...), declarations (\raggedright,
+# \mainmatter, ...) and the colour/plot macros in pddl/config/macros.tex.
+Silent {
+  \makeglossaries \greenColor \blueColor \purpleColor \gridNodeLine \boxplot@datatable \raggedbottom \@title \@subtitle \cleardoublepage \mainmatter \thumbtrue \raggedright \State \EndFor \EndIf \EndProcedure \Repeat \Else \Return \thumbfalse \glsaddall
+}

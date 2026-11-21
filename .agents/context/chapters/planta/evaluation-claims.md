@@ -6,7 +6,7 @@ Use this file when drafting or auditing results summaries. It records what the c
 
 The evaluation is organized around three research questions (`pddl/sections/evaluation.tex`, opening list):
 
-- **RQ1 (Feasibility):** integration of `\acronym` into a ROS~2-based system for runtime TACA, and its mission performance against existing managing subsystems. Evidence: implementation and `\plansys` integration, SUAVE and extended SUAVE (`planta:sec:suave_exp`).
+- **RQ1 (Feasibility):** integration of `\planta` into a ROS~2-based system for runtime TACA, and its mission performance against existing managing subsystems. Evidence: implementation and `\plansys` integration, SUAVE and extended SUAVE (`planta:sec:suave_exp`).
 - **RQ2 (Performance efficiency):** planning time and peak memory against `\CamaraApproach`, plus plan quality (total path length, estimated remaining battery). Evidence: AGV scenario (`planta:sec:nav_exp`).
 - **RQ3 (Scalability):** planning time and plan length as mission and adaptation spaces grow, and the trade-off between optimal (A*) and satisficing (eager greedy) planning. Evidence: `\Sone`--`\Sfive` (`planta:sec:scale_exp`).
 
@@ -14,18 +14,18 @@ The evaluation is organized around three research questions (`pddl/sections/eval
 
 ### Supported
 
-- The SUAVE experiments support the feasibility of applying `\acronym` to ROS~2-based robotic adaptation.
+- The SUAVE experiments support the feasibility of applying `\planta` to ROS~2-based robotic adaptation.
 - The extended SUAVE scenario supports feasibility for task and architecture co-adaptation.
 - The SUAVE experiments reveal mission-performance limitations relative to other managing subsystems.
-- BT, Metacontrol, and ROSA each achieved significantly better results than `\acronym` on at least one metric in every experiment in which they were evaluated.
-- BT achieved lower pipeline search times and greater pipeline distances inspected than `\acronym` across the original and extended experiments.
-- `\acronym` performed significantly better than Random on both metrics in all original experiments.
-- `\acronym` performed better than the configuration without a managing subsystem in experiments 2 and 3, but worse in experiment 1.
+- BT, Metacontrol, and ROSA each achieved significantly better results than `\planta` on at least one metric in every experiment in which they were evaluated.
+- BT achieved lower pipeline search times and greater pipeline distances inspected than `\planta` across the original and extended experiments.
+- `\planta` performed significantly better than Random on both metrics in all original experiments.
+- `\planta` performed better than the configuration without a managing subsystem in experiments 2 and 3, but worse in experiment 1.
 - BT's shorter mean reaction times may partly explain BT's advantage. This explanation is scoped to BT, not to Metacontrol or ROSA.
 
 ### Not Supported
 
-- Do not claim that `\acronym` outperforms other SUAVE managing subsystems.
+- Do not claim that `\planta` outperforms other SUAVE managing subsystems.
 - Do not claim mission-performance superiority in SUAVE.
 - Do not claim that reaction time causally explains mission-performance differences; the manuscript only permits a cautious “may partly explain” formulation.
 
@@ -33,18 +33,18 @@ The evaluation is organized around three research questions (`pddl/sections/eval
 
 ### Supported
 
-- In the evaluated AGV/navigation use case, `\acronym` has lower median planning time and lower median peak memory usage than `\CamaraApproach`.
-- At the median, `\acronym` is 3.00 times faster (0.40 s vs 1.21 s) and its peak memory usage is 6.84 times smaller (67.39 MiB vs 461.09 MiB).
-- Run-to-run spread is much larger for `\CamaraApproach`: time IQR 0.403--0.404 s (`\acronym`) vs 1.21--2.52 s, memory IQR 66.5--67.9 MiB vs 190--1148 MiB.
-- Worst-time runs: `\acronym` wp16→wp25, 0.56 s, 66.88 MiB. `\CamaraApproach` wp52→wp24, 13.71 s, 4089.03 MiB.
-- Plan quality: median distance (59.892), move actions (6), and reconfiguration actions (1) are identical. Median remaining battery is 25219.5 (`\acronym`) vs 25480 (`\CamaraApproach`), a −1.02% difference.
-- Both approaches sometimes reconfigure more than once: `\acronym` in 11.85% of runs (up to 4), `\CamaraApproach` in 15.52% (up to 4).
-- The reported comparison likely underestimates `\acronym`'s computational-performance advantage because only the reproducible final step of `\CamaraApproach` is compared.
+- In the evaluated AGV/navigation use case, `\planta` has lower median planning time and lower median peak memory usage than `\CamaraApproach`.
+- At the median, `\planta` is 3.00 times faster (0.40 s vs 1.21 s) and its peak memory usage is 6.84 times smaller (67.39 MiB vs 461.09 MiB).
+- Run-to-run spread is much larger for `\CamaraApproach`: time IQR 0.403--0.404 s (`\planta`) vs 1.21--2.52 s, memory IQR 66.5--67.9 MiB vs 190--1148 MiB.
+- Worst-time runs: `\planta` wp16→wp25, 0.56 s, 66.88 MiB. `\CamaraApproach` wp52→wp24, 13.71 s, 4089.03 MiB.
+- Plan quality: median distance (59.892), move actions (6), and reconfiguration actions (1) are identical. Median remaining battery is 25219.5 (`\planta`) vs 25480 (`\CamaraApproach`), a −1.02% difference.
+- Both approaches sometimes reconfigure more than once: `\planta` in 11.85% of runs (up to 4), `\CamaraApproach` in 15.52% (up to 4).
+- The reported comparison likely underestimates `\planta`'s computational-performance advantage because only the reproducible final step of `\CamaraApproach` is compared.
 
 ### Data Source and Measurement
 
 - Authoritative data: `~/ros_workspaces/planta_ws/src/planta_paper_overleaf/navigation_experiment/` (exported 2026-10-24, see `manifest.json`; not copied into the thesis, which has only `pddl/navigation_experiment/{data,plots,tables}`). Key files: `summaries/camara_metrics.csv`, `camara_comparisons.csv`, `camara_worst_observations.csv`, `camara_reconfigurations.csv`.
-- The main comparison is eager greedy `\acronym` vs PRISM. The A* `\acronym` results are supplementary and practically identical (median 0.404 s, 67.11 MiB, 6.87×). Strategies are never pooled.
+- The main comparison is eager greedy `\planta` vs PRISM. The A* `\planta` results are supplementary and practically identical (median 0.404 s, 67.11 MiB, 6.87×). Strategies are never pooled.
 - n = 30,800 runs per method (3,080 init/goal pairs × 10 repetitions).
 - Memory is estimated peak aggregate RSS in MiB: the command plus all descendant processes, sampled every 50 ms. Planning times exclude OWL preprocessing.
 - Statistics: mean ± sample SD (ddof=1), type-7 quartiles, Tukey 1.5 IQR whiskers.

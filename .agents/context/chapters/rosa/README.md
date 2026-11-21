@@ -17,7 +17,7 @@
   "correct" the paper from current code.
 - Typesetting: uses the thesis macros `\entity`, `\relationship`, `\attribute`,
   `\instance`, `\runtime`, `\runtimefont`, and the TypeQL and PDDL listing languages
-  (`dissertation.tex`). Uses natbib `\citep`. Must not use `\acronym` (bound to PLANTA).
+  (`dissertation.tex`). Uses natbib `\citep`. Must not use `\planta` (bound to PLANTA).
 
 ## Files (bootstrapped 2026-11-06 from the chapter text, author-approved)
 

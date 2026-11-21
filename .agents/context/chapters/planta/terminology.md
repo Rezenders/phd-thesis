@@ -8,7 +8,7 @@ Always use these macros for canonical concepts in manuscript prose where applica
 
 | Concept | Macro | Renders as |
 |---|---|---|
-| Proposed system | `\acronym` | PLANTA |
+| Proposed system | `\planta` | PLANTA |
 | TOMASys ontology | `\tomasys` | TOMASys |
 | PlanSys2 framework | `\plansys` | PlanSys2 |
 | OWL-to-PDDL converter | `\owltopddl` | Owl2PDDL |
@@ -36,7 +36,7 @@ Always use these macros for canonical concepts in manuscript prose where applica
 
 ## System and Baseline Names
 
-- The proposed system is `\acronym`; avoid generic “the planner” or “the framework” unless the referent is unambiguous.
+- The proposed system is `\planta`; avoid generic “the planner” or “the framework” unless the referent is unambiguous.
 - Use `\plansys` for PlanSys2.
 - Use `\owltopddl` for the OWL-to-PDDL tool.
 - Use Cámara et al.~`\cite{CAMARASoftwareArchitectureTask2020}` or `\CamaraApproach` according to context.

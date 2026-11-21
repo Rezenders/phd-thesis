@@ -24,9 +24,9 @@ Terms shared across chapters. Chapter-specific terminology lives in
 
 Paper chapters bring their own macros into one shared preamble.
 
-- `\acronym` is defined in `pddl/config/macros.tex` as `PLANTA`. It is global.
-  Other chapters must not use `\acronym` for their own system names (the ROSA
-  paper historically used `\acronym` for ROSA; the ROSA chapter currently writes
+- `\planta` is defined in `pddl/config/macros.tex` as `PLANTA`. It is global.
+  Other chapters must not use `\planta` for their own system names (the ROSA
+  paper historically used `\planta` for ROSA; the ROSA chapter currently writes
   ROSA literally).
 - `\plansys`, `\tomasys` come from `pddl/config/macros.tex` and render PlanSys2 and TOMASys.
 - `\red` is redefined by `pddl/config/macros.tex` (`dissertation.tex` relaxes it first).

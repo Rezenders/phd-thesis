@@ -48,7 +48,7 @@ thesis-level `terminology.md`.
 - **BT managing system**: the baseline built for this paper (BT plus System Modes).
 - **Overhead**: number of modeled elements (ROSA: entities + relationships; BT:
   BT nodes + System Modes modes/parameters).
-- The chapter writes ROSA literally, never `\acronym`.
+- The chapter writes ROSA literally, never `\planta`.
 
 ## Metrics
 

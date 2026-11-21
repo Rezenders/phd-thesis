@@ -71,7 +71,15 @@
 % Let pages end where the text ends instead of stretching vertical space to fill them.
 \raggedbottom
 
-% \setlength{\emergencystretch}{1.5em}
+\setlength{\emergencystretch}{3em}
+
+% Allow line breaks after commas in inline math, e.g. $f(a, b)$, which TeX
+% otherwise never breaks. Uses the same penalty as a break after a binary
+% operator such as +. Set after unicode-math has fixed the math codes.
+\AtBeginDocument{%
+  \Umathcharnumdef\mathcomma=\Umathcodenum`\,\relax
+  \mathcode`\,=32768\relax}
+\begingroup\lccode`\~=`\,\lowercase{\endgroup\def~}{\mathcomma\penalty\binoppenalty\relax}
 
 \begin{document}
 

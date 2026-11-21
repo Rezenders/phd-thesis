@@ -27,6 +27,6 @@ four paper chapters. Start from `.agents/context/manuscript-context.md`.
   equation meaning, citations, labels. Content changes go to the author first.
 - **Build into `build-agent/`, never `build/`.** The author's VimTeX owns `build/`.
   Use `make BUILD=build-agent build-agent/dissertation.pdf`. Do not run `make clean`.
-- `\acronym` means PLANTA everywhere in the thesis.
+- `\planta` means PLANTA everywhere in the thesis.
 - Framing chapters must not summarize a chapter result more strongly than that
   chapter's `claim-ledger.md` and `do-not-say.md` allow.

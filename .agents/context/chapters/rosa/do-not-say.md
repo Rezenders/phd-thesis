@@ -9,5 +9,5 @@
 - Do not claim reusability, composability, or extensibility were quantitatively measured.
 - Do not say ROSA performs task planning itself; the task decision layer (BT or PlanSys2) chooses actions using ROSA's feasibility knowledge.
 - Do not describe PDDL integration with ROSA as future or ongoing work; the chapter already provides the PlanSys2 integration.
-- Do not use `\acronym` for ROSA; it renders PLANTA.
+- Do not use `\planta` for ROSA; it renders PLANTA.
 - Do not compare ROSA's 100-run numbers directly with SUAVE's 20-run table or PLANTA's runs without saying they are separate experiments.

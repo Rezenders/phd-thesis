@@ -21,7 +21,7 @@
 
 ## Files (ported 2026-11-05 from the paper repo, paths rewritten to thesis paths)
 
-- `terminology.md`: macros (`\acronym` = PLANTA, `\tomasys`, `\plansys`, `\owltopddl`,
+- `terminology.md`: macros (`\planta` = PLANTA, `\tomasys`, `\plansys`, `\owltopddl`,
   `\pddltomasys`, `\CamaraApproach`, `\Uone`..., `\Sone`...), RQ names, metrics.
 - `contributions.md`: the paper's three contributions and narrative.
 - `evaluation-claims.md`: supported and unsupported results for SUAVE, AGV/Cámara, scalability.
