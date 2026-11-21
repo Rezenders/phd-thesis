@@ -8,7 +8,7 @@ Facts below were confirmed from repository evidence on 2026-11-05.
 - Build working directory: repository root.
 - Entry point: `dissertation.tex` (class `dissertation.cls`, TU Delft template).
   `propositions.tex` (class `propositions.cls`) is a second, separate entry.
-- TeX engine: XeLaTeX (`latexmk -xelatex`). Fonts are bundled in `fonts/`.
+- TeX engine: LuaLaTeX (`latexmk -lualatex`). Fonts are bundled in `fonts/`.
 - Bibliography: BibTeX, single database `dissertation.bib`, style
   `\bibliographystyle{unsrt}` in `dissertation.tex`. `dissertation.bst` is present
   but is not the selected style.

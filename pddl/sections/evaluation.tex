@@ -44,13 +44,13 @@ To support the benchmarking of different adaptation approaches, the SUAVE system
 To apply \acronym to SUAVE, this work proposes a \pddltomasys model of the SUAVE exemplar based on the SUAVE \tomasys ontology. The main differences are the addition of new actions, utility rules, and a rule to handle uncertainty \Utwo~(water visibility). First, the actions \emph{search pipeline} and \emph{inspect pipeline}, as well as their functional requirements, are added to the SUAVE ontology. For the extended use case the \emph{recharge battery} action is also included. For example, $\requiresF$ relates \emph{search pipeline} to the functions \emph{maintain motion} and \emph{generate search path}. Then, rules are added to infer the $\FunctionsTomasys$ utility, for example, a rule that instantiates the generic (utility) rule of \Cref{planta:sec:tomasys_pddl} for the \emph{generate search path} function. Finally, the following rule is defined to infer whether the \emph{generate search path} function designs are realizable, given the measured water visibility:
 \begin{align*}
     &\FunctionDesign(?fd1) \wedge
-    \hasQAestimation(?fd1, ?eqa) \wedge
-    \isQAtype(?eqa, water\_visibility) \wedge \\
-    &\qaHasValue(?eqa, ?eqav) \wedge
-    \QAvalue(?mqa) \wedge
-    sameAs(?mqa, obs\_water\_visibility) \wedge \\
-    & \qaHasValue(?mqa, ?mqav) \wedge
-    \isQAtype(?mqa, water\_visibility) \wedge
+    \hasQAestimation(?fd1, ?eqa) \wedge \\
+    &\isQAtype(?eqa, water\_visibility) \wedge
+    \qaHasValue(?eqa, ?eqav) \wedge
+    \QAvalue(?mqa) \wedge \\
+    &sameAs(?mqa, obs\_water\_visibility) \wedge
+    \qaHasValue(?mqa, ?mqav) \wedge \\
+    &\isQAtype(?mqa, water\_visibility) \wedge
     lessThan(?mqav, ?eqav) \\
     &\implies \fdRealisability(?fd1, false)
 \end{align*}
@@ -102,6 +102,7 @@ p-values less than 0.05 indicate statistical significance in favor of the altern
 \centering
 \caption{Paired Wilcoxon signed-rank comparisons for experiment 3 and extended experiment 3. Each cell reports the unadjusted p-values for the comparison between the managing subsystem in the row and the one in the column for both the \emph{pipeline search time} and \emph{pipeline distance inspected} metrics. Cells with a green background indicate that the alternative hypothesis was favored, and cells with a blue background indicate that the null hypothesis cannot be rejected in favor of the alternative hypothesis. Values rounding to 0.000 are shown as $<0.001$. ``MC'' stands for Metacontrol.}%
 \label{planta:tab:wilcoxon}
+\captionsetup[subtable]{justification=centering,position=bottom}%
 \begin{subtable}{\textwidth}
 \centering
 \inputtablebody{pddl/tables/wilcoxon_analysis/exp3_wilcoxon.tex}
@@ -145,7 +146,6 @@ Despite the difference in planning time and memory usage, the two approaches pro
     \centering
     \hfill
     \begin{subfigure}[t]{0.45\linewidth}
-        \vspace{0pt} % Aligns top
         \centering
         \input{pddl/navigation_experiment/plots/camara_map_time}
         \caption{Planning time comparison between \acronym and \CamaraApproach.}%
@@ -153,9 +153,11 @@ Despite the difference in planning time and memory usage, the two approaches pro
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\linewidth}
-        \vspace{0pt} % Aligns top
         \centering
+        % Shorter y label than the generated one, so it does not extend below the axis.
+        \pgfplotsset{every axis post/.append style={ylabel={Peak RSS [MiB]}}}%
         \input{pddl/navigation_experiment/plots/camara_map_memory}
+        \captionsetup{justification=raggedright}%
         \caption{Peak RSS memory comparison between \acronym and \CamaraApproach.}%
         \label{planta:fig:memory_comparison}
     \end{subfigure}
@@ -185,7 +187,7 @@ For each scalability experiment, a map generator produces grid-like maps with th
 
 \begin{figure}[tbp]
     \centering
-    \resizebox{0.30\textwidth}{!}{
+    \resizebox{0.5\textwidth}{!}{
         \input{pddl/figures/grid-map}
     }
     \caption{Grid map example with $45$ retained nodes out of $50$ generated nodes.
@@ -237,7 +239,8 @@ Across the five scalability experiments, the number of mission-level PDDL action
     \centering
     % Compact legends for the generated plots, so that the legend of (a) does not cover its curves.
     \pgfplotsset{every axis post/.append style={legend style={inner sep=1pt,row sep=-2pt}}}%
-    \begin{subfigure}[t]{0.32\linewidth}
+    \captionsetup[subfigure]{justification=centering}%
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
         {% Generated plot: thin the x ticks so they do not overlap at this panel width.
         \pgfplotsset{every axis post/.append style={xtick={0,300,600,900}}}%
@@ -245,13 +248,15 @@ Across the five scalability experiments, the number of mission-level PDDL action
         \caption{\Sone: map size.}%
         \label{planta:plot:s1_planning_time}
     \end{subfigure}\hfill
-    \begin{subfigure}[t]{0.32\linewidth}
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
         \input{pddl/navigation_experiment/plots/s4_time_plot}
         \caption{\Sfour: mission-level actions.}%
         \label{planta:plot:s4_planning_time}
-    \end{subfigure}\hfill
-    \begin{subfigure}[t]{0.32\linewidth}
+    \end{subfigure}
+
+    \medskip
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
         \input{pddl/navigation_experiment/plots/s5_time_plot}
         \caption{\Sfive: combined stress test.}%

@@ -6,7 +6,7 @@ This section details the algorithms of the \plansys extensions described in \Cre
 
 To support the evaluation of existential preconditions and derived predicates in \plansys, this work proposes the evaluation algorithm described in \Cref{planta:S-alg:eval}. Lines~2-3 evaluate predicates by unifying their free parameters with all objects in $\pddlState$ that satisfy the predicate,  returning a set of dictionaries of the form $\{\{?x_1:o_1, \ldots{},?x_n:o_n\} \mid (p~o_1,\ldots{},o_n) \in S\}$. Lines 4-6 solve negated conditions by evaluating the condition and returning the complement of the evaluated set $E$ with respect to the current state $\pddlState$, with the form $\{\{?x_1:o_1,\ldots{},?x_n:o_n\} \mid (o_1, \ldots{}, o_n)  \in S \wedge  \{?x_1:o_1, \ldots{},?x_n:o_n\} \notin E\}$. Lines 7-13 evaluate conjunctions of conditions by individually evaluating each condition and joining the solution sets. Lines 14-17 evaluate disjunctions by evaluating each condition and merging the solution sets. Lines 18-20 evaluate existential preconditions by evaluating their body and returning a dictionary without free variables in the form $\{\{?x_1:o_1,\ldots{},?x_n:o_n\} \mid \{?x_1:o_1,\ldots{},?x_n:o_n,?x_{e_{1}}:o_{e_{1}},\ldots{}, ?x_{e_{k}}:o_{e_{k}}\} \in E\}$.
 
-\begin{algorithm}[tb]
+\begin{algorithm}[tbp]
     \caption{Evaluation algorithm}%
     \label{planta:S-alg:eval}
     \begin{algorithmic}[1] % The number tells where the line numbering should start
@@ -39,12 +39,15 @@ To solve derived predicates, this work introduces Algorithm~\ref{planta:S-alg:so
 
 Line~2 calls the $\texttt{GetDerivedSCCs}$ function, which computes the strongly connected components~(SCCs) of the subgraph formed by traversing all descendant nodes of the $\texttt{Roots}$ nodes in the resolution graph, using Tarjan's algorithm~\cite{doi:10.1137/0201010}. The function returns a vector of SCCs in topological order. Each SCC contains only derived predicates, explicitly excluding predicates, functions, and instances. For example, if $\texttt{Roots} = \{\texttt{predicateA}, \texttt{predicateB}\}$,
 \begin{equation*}
-\texttt{GetDerivedSCCs}(\texttt{Graph}, \texttt{Roots}) = \big\{ \{\texttt{inferredA}\},\, \{\texttt{inferredAA}\},\, \{\texttt{inferredB},\, \texttt{inferredAB}\},\, \{\texttt{inferredBB}\} \big\}.
+\begin{split}
+\texttt{GetDerivedSCCs}(\texttt{Graph}, \texttt{Roots}) = \big\{ &\{\texttt{inferredA}\},\, \{\texttt{inferredAA}\},\\
+&\{\texttt{inferredB},\, \texttt{inferredAB}\},\, \{\texttt{inferredBB}\} \big\}.
+\end{split}
 \end{equation*}
 
 Lines~4--15 solve the cyclic SCCs using a fixed-point iteration, while lines~17--22 handle each acyclic SCC by solving its single derived predicate. The $\texttt{Unground}$ function removes all existing assertions of $d$ and its descendants from the state $\pddlState$. The $\texttt{Evaluate}$ function evaluates the preconditions of the derived predicate $d$, storing all valid parameter bindings in the set $E$ (e.g., $\{?x = \texttt{instance1}\}$). The $\texttt{GroundPredicates}$ function grounds the derived predicate for each substitution in $E$ (e.g., $(\texttt{inferredA}~\texttt{instance1})$) and adds the resulting assertions to the state.
 
-\begin{algorithm}[tb]
+\begin{algorithm}[tbp]
 \caption{Derived Predicates Evaluation}%
 \label{planta:S-alg:solve_derived}
     \begin{algorithmic}[1]
@@ -79,7 +82,7 @@ Lines~4--15 solve the cyclic SCCs using a fixed-point iteration, while lines~17-
 
 \Cref{planta:S-alg:apply_new} defines the $\texttt{ApplyEffects}$ function. Its inputs are the current state $\algS$, the effects $\algEff$ of an action, the resolution graph $\algGraph$, the set $\algNodes$ of modified nodes, and a boolean $\algDerive$ that indicates whether derived predicates should be recomputed. Lines~2--4 add a predicate to the state, and lines~5--7 remove a negated predicate from it. In both cases the predicate is added to $\algNodes$. Lines~8--11 apply conjunctive effects recursively, with $\algDerive$ set to false so that derived predicates are not recomputed after each individual effect. If $\algDerive$ is true (line~13), the function calls $\texttt{SolveDerived}$ (\Cref{planta:S-alg:solve_derived}) with $\algNodes$ as root nodes, so only the derived predicates that depend on the modified predicates are re-evaluated. The function returns the updated state and the set of modified nodes.
 
-\begin{algorithm}[tb]
+\begin{algorithm}[tbp]
     \caption{Apply Action Effects and Selectively Re-evaluate Derived Predicates}%
     \label{planta:S-alg:apply_new}
     \begin{algorithmic}[1]
@@ -107,29 +110,23 @@ Lines~4--15 solve the cyclic SCCs using a fixed-point iteration, while lines~17-
 
 This section reports the paired Wilcoxon signed-rank comparisons for experiments 1 and 2 and extended experiments 1 and 2 of the SUAVE exemplar. The test setup and hypotheses are described in \Cref{planta:sec:suave_exp}, and the comparisons for experiment 3 and extended experiment 3 are reported in \Cref{planta:tab:wilcoxon}, whose caption also explains the layout and color legend of the tables below.
 
-\begin{table}[tb]
+\begin{table}[tbp]
 \centering
 \caption{Experiment 1: paired Wilcoxon signed-rank comparisons.}%
 \label{planta:S-tab:wilcoxon-exp1}
 \inputtablebody{pddl/tables/wilcoxon_analysis/exp1_wilcoxon.tex}
-\end{table}
 
-\begin{table}[tb]
-\centering
+\bigskip
 \caption{Experiment 2: paired Wilcoxon signed-rank comparisons.}%
 \label{planta:S-tab:wilcoxon-exp2}
 \inputtablebody{pddl/tables/wilcoxon_analysis/exp2_wilcoxon.tex}
-\end{table}
 
-\begin{table}[tb]
-\centering
+\bigskip
 \caption{Extended experiment 1: paired Wilcoxon signed-rank comparisons.}%
 \label{planta:S-tab:wilcoxon-extended-exp1}
 \inputtablebody{pddl/tables/wilcoxon_analysis/extended_exp1_wilcoxon.tex}
-\end{table}
 
-\begin{table}[tb]
-\centering
+\bigskip
 \caption{Extended experiment 2: paired Wilcoxon signed-rank comparisons.}%
 \label{planta:S-tab:wilcoxon-extended-exp2}
 \inputtablebody{pddl/tables/wilcoxon_analysis/extended_exp2_wilcoxon.tex}
@@ -139,7 +136,7 @@ This section reports the paired Wilcoxon signed-rank comparisons for experiments
 
 This section reports planning time and plan length for each scalability experiment of the navigation use case. The experimental design and setup are described in \Cref{planta:sec:scale_exp}, and the results are summarized in \Cref{planta:tab:scalability_summary} and \Cref{planta:fig:scalability_time}. In \Cref{planta:S-fig:s1_results,planta:S-fig:s4_results}, the no-adaptation curve reports A* search.
 
-\begin{figure}[tb]
+\begin{figure}[tbp]
     \centering
     \begin{subfigure}[t]{0.44\linewidth}
         \centering
@@ -162,7 +159,7 @@ plan-length curves, reaching 47.20 actions. The left panel also shows the faster
 no-adaptation baseline. Shaded bands indicate standard deviations.}
 \end{figure}
 
-\begin{figure}[tb]
+\begin{figure}[tbp]
     \centering
     \begin{subfigure}[t]{0.44\linewidth}
         \centering
@@ -185,7 +182,7 @@ greedy search. The plan-length curves overlap, reaching 20.70 actions at 15
 configurations. Shaded bands indicate standard deviations.}
 \end{figure}
 
-\begin{figure}[tb]
+\begin{figure}[tbp]
     \centering
     \begin{subfigure}[t]{0.44\linewidth}
         \centering
@@ -208,8 +205,9 @@ plan-length curves overlap, with means of 19.1 actions at two corridor types and
 four. Shaded bands indicate standard deviations.}
 \end{figure}
 
-\begin{figure}[tb]
+\begin{figure}[tbp]
     \centering
+    \captionsetup[subfigure]{justification=centering}%
     \begin{subfigure}[t]{0.44\linewidth}
         \centering
         \input{pddl/navigation_experiment/plots/s4_time_plot}
@@ -232,7 +230,7 @@ search strategies and remain similar, reaching 46.00 and 46.80 actions, respecti
 Shaded bands indicate standard deviations.}
 \end{figure}
 
-\begin{figure}[tb]
+\begin{figure}[tbp]
     \centering
     \begin{subfigure}[t]{0.44\linewidth}
         \centering

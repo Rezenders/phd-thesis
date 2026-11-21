@@ -19,11 +19,10 @@ figs/%.pdf: figs/%.svg
 	rsvg-convert -f pdf -o $@ $<
 
 $(BUILD)/dissertation.pdf: figs force-build | $(BUILD)
-	latexmk -xelatex -outdir=$(BUILD) dissertation
-	makeglossaries -d $(BUILD) dissertation
+	latexmk -lualatex -outdir=$(BUILD) dissertation
 
 $(BUILD)/propositions.pdf: force-build | $(BUILD)
-	latexmk -xelatex -outdir=$(BUILD) propositions
+	latexmk -lualatex -outdir=$(BUILD) propositions
 
 $(BUILD)/dissertation_print.pdf: $(BUILD)/dissertation.pdf
 	gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -dEmbedAllFonts=true -sOutputFile=$@ -f $<

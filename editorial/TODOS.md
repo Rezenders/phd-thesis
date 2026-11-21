@@ -1,7 +1,13 @@
 # TODOs
 
+- URLs in this thesis have been archived on Archive.org. Their link target in digital editions refers
+to this timestamped version.
+
 - Uncomment promotors name and commitee members
 - Check for repeated citations
+- Set float placement to `[tbp]` for all floats in the other chapters (done for
+  the PLANTA chapter). Always include `p` so large floats can go on a float page
+  instead of blocking the float queue; avoid `h`.
 
 Findings that need your input (from open-findings.md):
 

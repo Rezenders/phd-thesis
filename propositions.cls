@@ -2,8 +2,6 @@
 \ProvidesClass{propositions}[2018/11/13 v2.0 TU Delft dissertation class by MB]
 %% Changes over the 2013/07/08 v1.0 TU Delft dissertation class by Moritz Beller, moritzbeller -AT- gmx -DOT- de
 
-\newif\if@nativefonts
-\DeclareOption{nativefonts}{\@nativefontstrue}
 \newif\if@print
 \DeclareOption{print}{\@printtrue}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
@@ -11,11 +9,8 @@
 
 \LoadClass[10pt]{book}
 
-\RequirePackage{fontawesome}
+\RequirePackage{fontawesome7}
 \RequirePackage{amsmath}
-\RequirePackage{amssymb}
-\RequirePackage{txfonts}
-\RequirePackage{mathptmx}
 
 %% English is the default language, but Dutch is used for some sections.
 \RequirePackage[dutch,english]{babel}
@@ -25,83 +20,36 @@
 \RequirePackage{etaremune}
 \RequirePackage{fancyhdr}
 \RequirePackage[flushmargin,hang]{footmisc}
-\RequirePackage{ifpdf}
-\RequirePackage{ifxetex}
-\ifxetex
-    \RequirePackage[xetex]{geometry}
-    \RequirePackage[xetex,bookmarks=false,hidelinks]{hyperref}
-    \RequirePackage{fontspec}
-    \RequirePackage{xltxtra}
-    \defaultfontfeatures{Ligatures=TeX}
-\else
-    \ifpdf
-        \RequirePackage[pdftex]{geometry}
-        \RequirePackage[pdftex,bookmarks=false,hidelinks]{hyperref}
-    \else
-        \RequirePackage[dvips]{geometry}
-        \RequirePackage[hypertex,bookmarks=false,hidelinks]{hyperref}
-        \fi
-    \RequirePackage[utf8]{inputenc}
-\fi
-\RequirePackage{rotating}
-\RequirePackage{tablefootnote}
+%% The class is compiled with LuaLaTeX only.
+\RequirePackage{geometry}
+\RequirePackage[bookmarks=false,hidelinks]{hyperref}
+\RequirePackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
 \RequirePackage{lettrine}
-\RequirePackage{metalogo}
 \RequirePackage[sectionbib,numbers,sort&compress]{natbib}
 \RequirePackage[noindentafter]{titlesec}
 \RequirePackage{titletoc}
 %\RequirePackage[nottoc]{tocbibind}
-\RequirePackage[usenames,dvipsnames,svgnames,table,xcdraw]{xcolor}
+\RequirePackage[dvipsnames,svgnames,table,xcdraw]{xcolor}
 %\RequirePackage[table]{xcolor}
 \RequirePackage{tikz}
 
-%% If the document is not compiled with XeLaTeX, we need to use the native
-%% fonts.
-\ifxetex\else
-    \@nativefontstrue
-\fi
+%% Fonts from TeX Live: Libertinus (text and math) and Inconsolata (monospace).
+\RequirePackage{unicode-math}
 
-\if@nativefonts
-    %% The native font is Utopia Regular with Fourier math. We use Latin Modern
-%% as a fallback, since Utopia lacks support for sans-serif and monospace.
-
- \RequirePackage{libertine}
-    \RequirePackage{libertinust1math}
-    \RequirePackage[T1]{fontenc}
-    \RequirePackage[utf8]{inputenc}
-    
-    %% \RequirePackage{fourier}
-    %% The style for titles is small caps.
-    \def\titlefont{\rmfamily}
-    \def\titleshape{\scshape}
+\setmainfont{LibertinusSerif}[Extension=.otf, UprightFont=*-Regular, ItalicFont=*-Italic, BoldFont=*-Bold, BoldItalicFont=*-BoldItalic]
+\setsansfont{LibertinusSans}[Extension=.otf, UprightFont=*-Regular, ItalicFont=*-Italic, BoldFont=*-Bold]
+\setmathfont{LibertinusMath-Regular.otf}
+\setmonofont{Inconsolatazi4}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-Bold, Scale=MatchLowercase]
+%\renewcommand*\familydefault{\sfdefault}
+\def\titlefont{\rmfamily}
+\def\titleshape{}
+\if@print
     \def\titlestyle{\titlefont\titleshape\bfseries}
-    \if@print
-        \def\headerstyle{\titlefont\titleshape\bfseries}
-    \else
-        \def\headerstyle{\titlefont\titleshape}
-        \fi
 \else
-    %% The TU Delft house style fonts are Bookman Old Style (serif) for titles
-    %% and Tahoma (sans-serif) for text. Apart from these, we use Courier New
-    %% for monospace and Cambria for math.
-    \RequirePackage{unicode-math}
-
-    \setmainfont[Path = fonts/libertinus/, ItalicFont=libertinusserif-italic.otf, BoldFont=libertinusserif-bold.otf, BoldItalicFont=libertinusserif-bolditalic.otf]{libertinusserif-regular.otf}
-    \setsansfont[Path = fonts/libertinus/, BoldFont=libertinussans-bold.otf, ItalicFont=libertinussans-italic.otf]{libertinussans-regular.otf}
-    \setmathfont[Path = fonts/libertinus/]{libertinusmath-regular.otf}
-    \setmonofont[Scale=MatchLowercase, Path=fonts/inconsolata/]{Inconsolata-Regular.ttf}
-    %% The default style for text is Tahoma (sans-serif).
-    %\renewcommand*\familydefault{\sfdefault}
-    %% The default style for titles is Bookman Old Style (serif).
-    \def\titlefont{\rmfamily}
-    \def\titleshape{}
-    \if@print
-        \def\titlestyle{\titlefont\titleshape\bfseries}
-    \else
-        \def\titlestyle{\titlefont\titleshape}
-    \fi
-    \def\headerstyle{\titlestyle}
+    \def\titlestyle{\titlefont\titleshape}
 \fi
+\def\headerstyle{\titlestyle}
 
 %% Define the TU Delft house style colors.
 \definecolor{tudelft-cyan}{cmyk}{1,0,0,0}

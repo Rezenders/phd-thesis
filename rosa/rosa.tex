@@ -213,22 +213,22 @@ The architectural knowledge~(see \Cref{tab:elements_km_architectural}) captures 
   Action &
   ``Action is defined as an operation applied by an agent or team to affect a change in or maintain either an agent's state(s), the environment, or both.''\citep{ieep1872}. Where in the context of this paper the agent is the robot &
   An AUV can perform the \entity{Action} \instance{search pipeline}, and \instance{inspect pipeline} &
-  \attribute{name:String @key}  \attribute{\runtime{status:String}} \attribute{\runtime{is-required:Bool}} \\
+  \rosaattribute{name:String @key}  \rosaattribute{\runtime{status:String}} \rosaattribute{\runtime{is-required:Bool}} \\
  &
   Function &
   ``A function is defined by the transformation of input flows to output flows''~\citep{wiki:sebok}, i.e., a function represents what the system can do &
   An AUV can have several \entity{Functions}, like \instance{generate search path} and \instance{generate path to follow pipeline}. The \instance{generate search path} function can be considered a transformation of the AUV's current position (input) to a goal waypoint (output) &
-  \attribute{name:String  @key} \attribute{always-improve:Bool} \attribute{\runtime{status:String}} \attribute{\runtime{is-required:Bool}} \\
+  \rosaattribute{name:String  @key} \rosaattribute{always-improve:Bool} \rosaattribute{\runtime{status:String}} \rosaattribute{\runtime{is-required:Bool}} \\
  &
   Component &
   Hardware and software parts that compose the system &
   A \instance{thruster} is a hardware component, and a \instance{generate spiral search path node} is a software component &
-  \attribute{name:String @key} \attribute{always-improve:Bool} \attribute{\runtime{status:String}} \attribute{\runtime{is-required:Bool}} \attribute{\runtime{is-active:Bool}} \attribute{\runtime{pid:Integer}} \\
+  \rosaattribute{name:String @key} \rosaattribute{always-improve:Bool} \rosaattribute{\runtime{status:String}} \rosaattribute{\runtime{is-required:Bool}} \rosaattribute{\runtime{is-active:Bool}} \rosaattribute{\runtime{pid:Integer}} \\
  &
   Component \hspace{1cm} Parameter &
   A specific parameter configuration of a \entity{Component} &
   The \instance{generate spiral search path node} component can be configured with different search altitudes. Each search altitude is represented as a distinct \entity{Component Parameter} &
-  \attribute{key:String} \attribute{value:String} \\ \hline
+  \rosaattribute{key:String} \rosaattribute{value:String} \\ \hline
 \multirow{3}{*}{R} &
   funcional \hspace{1cm} requirement &
   Represents which \entity{Functions} a certain \entity{Action} requires to be performed &
@@ -238,12 +238,12 @@ The architectural knowledge~(see \Cref{tab:elements_km_architectural}) captures 
   function design  &
   Represents a solution for a \entity{Function} as a set of \entity{Components} \citep{hernandez2018self} &
   The \instance{generate search path} function can have multiple \relationship{function designs}, e.g., one using the \instance{generate spiral search path node} component, and another one using the \instance{generate lawnmower search path node} component &
-  \attribute{name:String @key} \attribute{priority:Integer} \attribute{\runtime{status:String}} \attribute{\runtime{is-selected:Bool}} \\
+  \rosaattribute{name:String @key} \rosaattribute{priority:Integer} \rosaattribute{\runtime{status:String}} \rosaattribute{\runtime{is-selected:Bool}} \\
  &
   component configuration &
   Represents a possible configuration of a \entity{Component} as a set of \entity{Component Parameters} &
   The \instance{generate spiral search path node} component can be configured in different ways by combining different values of its search altitude and speed parameters. Each combination is represented as an instance of a \relationship{component configuration} &
-  \attribute{name:String @key} \attribute{priority:Integer} \attribute{\runtime{status:String}} \\ \hline
+  \rosaattribute{name:String @key} \rosaattribute{priority:Integer} \rosaattribute{\runtime{status:String}} \\ \hline
 \end{tabular}%
 }
 \end{table}
@@ -275,36 +275,36 @@ This work considers that the robotic system might need to adapt due to changes i
   ``Measure is defined as a function over observations, state variables, and parameters.''\citep{ieep1872}
   &
   An AUV can have the \entity{Measures} \instance{battery level} or \instance{water visibility}&
-  \attribute{name:String @key} \\
+  \rosaattribute{name:String @key} \\
  &  Quality \hspace{1cm} Attribute &
   Quality Attribute is defined as a function over the system's state variables. Which, according to the Software Engineering Body of Knowledge~\citep{wiki:sebok}, can be considered as ``System functional and non-functional requirements used to evaluate the system performance'' &
   An AUV can have the \entity{Quality Attributes} \instance{battery level}, \instance{battery consumption}, and \instance{safety level} &
-  \attribute{name:String @key} \\
+  \rosaattribute{name:String @key} \\
  &
   Environmental Attribute &
   Environmental Attribute is defined as a function over observations of the environment. That is, it represents a metric of the environment with respect to a certain attribute &
   An underwater environment can have \instance{water visibility} as an \entity{Environmental Attribute} &
-  \attribute{name:String @key} \\ \hline
+  \rosaattribute{name:String @key} \\ \hline
 \multirow{4}{*}{R} &
   \runtime{required action} &
   Represents the \entity{Actions} required at runtime &
   The \instance{inspect pipeline} \entity{Action} can be required to be performed at runtime, leading ROSA to configure the AUV appropriately to carry out the inspection action &
-  \attribute{\runtime{start-time:Datetime}} \attribute{\runtime{end-time:Datetime}} \attribute{\runtime{result:String}} \\
+  \rosaattribute{\runtime{start-time:Datetime}} \rosaattribute{\runtime{end-time:Datetime}} \rosaattribute{\runtime{result:String}} \\
  &
   \runtime{measurement} &
   ``Measurement is defined as the act of evaluating the measures''~\citep{ieep1872} &
   The \instance{battery level} \entity{Quality Attributes} can have a measurement of 0.5 &
-  \attribute{\runtime{value:Double}} \attribute{\runtime{time:Datetime}} \\
+  \rosaattribute{\runtime{value:Double}} \rosaattribute{\runtime{time:Datetime}} \\
  &
   constraint &
   Represents \entity{Measure} constraints for performing a \entity{Action} or for selecting a \relationship{function design}, \entity{Component}, or \relationship{component configuration} &
   If the \instance{water visibility} environmental attribute is low, the \instance{high altitude} configuration for the \instance{generate spiral search path node} cannot be selected &
-  \attribute{operator:String} \attribute{value:Double} \attribute{\runtime{status:String}}  \\
+  \rosaattribute{operator:String} \rosaattribute{value:Double} \rosaattribute{\runtime{status:String}}  \\
  &
   estimation &
   Represents the estimated impact of a \relationship{function design}, \entity{Component}, or \relationship{component configuration} on a \entity{Measure} &
   A lamp \entity{Component} is expected to positively impact the \instance{water visibility} when turned on &
-  \attribute{value:Double} \attribute{type:String} \\ \hline
+  \rosaattribute{value:Double} \rosaattribute{type:String} \\ \hline
 \end{tabular}%
 }
 \end{table}
@@ -312,7 +312,7 @@ This work considers that the robotic system might need to adapt due to changes i
 The adaptation heuristic knowledge enables adaptation due to changes in the environment or the system's QAs with the \relationship{constraint} relationship by capturing constraints on the selection of \entity{Actions}, \entity{Components}, \relationship{function designs}, or \relationship{component configurations} in terms of measured values of \entity{Measures}.
 It enables adaptation due to component failures by capturing a \entity{Component}'s status as an attribute and adaptation due to changes in the robot's task execution by capturing what \entity{Actions} need to be performed with the \relationship{required action} relationship. At runtime, adaptation is triggered when a measurement violates a constraint, when a component has a failure status, or when required actions change.
 
-To capture the decision criteria on how to select an adaptation, the \attribute{priority} attribute can be used to express the order of priority for selecting each \relationship{function design} or \relationship{component configuration}. For more complex criteria, the \relationship{estimation} relationship can be used to capture the estimated impact of selecting a \relationship{function design}, \entity{Component}, or \relationship{component configuration} on the measured values of \entity{Measures}. Furthermore, a \relationship{required action} can relate to a \entity{Measure} to indicate the preferred \relationship{estimation} when selecting a configuration for that action. At runtime, the configuration planner component exploits this knowledge to decide which configuration to select.
+To capture the decision criteria on how to select an adaptation, the \rosaattribute{priority} attribute can be used to express the order of priority for selecting each \relationship{function design} or \relationship{component configuration}. For more complex criteria, the \relationship{estimation} relationship can be used to capture the estimated impact of selecting a \relationship{function design}, \entity{Component}, or \relationship{component configuration} on the measured values of \entity{Measures}. Furthermore, a \relationship{required action} can relate to a \entity{Measure} to indicate the preferred \relationship{estimation} when selecting a configuration for that action. At runtime, the configuration planner component exploits this knowledge to decide which configuration to select.
 
 
 \subsubsection{Reconfiguration plan knowledge}
@@ -337,7 +337,7 @@ The reconfiguration plan knowledge represents which component parameters must be
   \runtime{reconfiguration plan} &
   Represents the reconfiguration plan generated in the plan step & When the AUV completes the \instance{search pipeline} action and starts the \instance{inspect pipeline} action, the \relationship{reconfiguration plan} consists of deactivating the \instance{generate spiral search path node} and activating the \instance{follow pipeline node}
    &
-  \attribute{\runtime{start-time:Datetime}} \attribute{\runtime{end-time:Datetime}} \attribute{\runtime{result:String}} \\
+  \rosaattribute{\runtime{start-time:Datetime}} \rosaattribute{\runtime{end-time:Datetime}} \rosaattribute{\runtime{result:String}} \\
  &
   \runtime{component activation} &
   Represents the components that should be activated & When the AUV starts the \instance{inspect pipeline} action, the \relationship{component activation} relates to the \instance{follow pipeline node}
@@ -826,7 +826,7 @@ Every action requires one function that has only one configuration available con
 \end{assumption}
 
 \begin{assumption}\label{as:2}
-Every \entity{Component} is a \entity{ROSNode} containing one \attribute{package} and one \attribute{executable} attribute; every \entity{ROSNode} has one \relationship{component configuration} with one \entity{Component Parameter}; every \relationship{function design} and \relationship{component configuration} must be related to a \relationship{constraint} and contain a \attribute{priority} attribute; and a single \entity{Quality Attribute} is defined for the whole system.
+Every \entity{Component} is a \entity{ROSNode} containing one \rosaattribute{package} and one \rosaattribute{executable} attribute; every \entity{ROSNode} has one \relationship{component configuration} with one \entity{Component Parameter}; every \relationship{function design} and \relationship{component configuration} must be related to a \relationship{constraint} and contain a \rosaattribute{priority} attribute; and a single \entity{Quality Attribute} is defined for the whole system.
 \end{assumption}
 
 \begin{figure}

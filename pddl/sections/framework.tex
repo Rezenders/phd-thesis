@@ -13,10 +13,12 @@ To add the OWL axioms to the PDDL domain, one has to translate and incorporate a
 \centering
 \caption{Mapping between OWL ontology and PDDL concepts following the approach of~\cite{DBLP:conf/aaai/Borgwardt0KKNS22}.}%
 \label{planta:tab:owl_to_pddl_mapping}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}llll@{}}
 \toprule
-{\textbf{Concept}} & {\textbf{Concept}} & {\textbf{Example}} & {\textbf{Example}}  \\
-%\hline
+\multicolumn{2}{@{}l}{\textbf{Concept}} & \multicolumn{2}{l@{}}{\textbf{Example}} \\
+\cmidrule(r){1-2}\cmidrule(l){3-4}
 \textbf{OWL Ontology} & \textbf{PDDL} & \textbf{OWL Ontology} & \textbf{PDDL} \\
 \midrule
 Individual & Object & \texttt{f1} & \texttt{(f1 - object)} \\
@@ -34,35 +36,26 @@ where \pddlActParam contains variables occurring in the $\consequent$ and $\pddl
 
 \begin{figure}[tbp]
 \centering
-\begin{minipage}{0.41\textwidth}
-\[
-\begin{aligned}
+\begin{minipage}{0.6\linewidth}
+$\begin{aligned}
 &\FunctionTomasys(\varF) \wedge \FunctionDesign(\fdUnground) \\
 &\implies \solvesF(\fdUnground, \varF)
-\end{aligned}
-\]
+\end{aligned}$
+\captionof{lstlisting}{SWRL rule}%
+\label{planta:lst:swrl_math}
 \end{minipage}
-\hfill
-\begin{minipage}{0.57\textwidth}
 
+\bigskip
+
+\begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[language=PDDL,numbers=none]
 (:derived (solvesF ?fd_unground ?f)
   (and (= ?fd_unground fd_unground)
     (and (Function ?f)
       (FunctionDesign fd_unground))))
 \end{lstlisting}
-
-\end{minipage}
-
-\vspace{-0.5cm}
-
-\begin{minipage}[t]{0.41\textwidth}
-    \captionof{lstlisting}{SWRL rule}%
-    \label{planta:lst:swrl_math}
-\end{minipage}
-\begin{minipage}[t]{0.57\textwidth}
-    \captionof{lstlisting}{PDDL derived predicate}%
-    \label{planta:lst:pddl_rule}
+\captionof{lstlisting}{PDDL derived predicate}%
+\label{planta:lst:pddl_rule}
 \end{minipage}
 \caption{Transformation of a SWRL rule into its equivalent PDDL derived predicate.}%
 \label{planta:fig:swrl_to_pddl}
@@ -174,9 +167,9 @@ Quality requirements can be defined with the predicate $\bestFD(\instanceF, \ins
 \begin{align*}
     \bestFD(\instanceF, \instanceFD) =& \nexists \instanceFD'.\left(\begin{array}{l}
          \solvesF(\instanceFD', \instanceF)
-        \land \neg \fdRealisability(\instanceFD', \instanceFalse)
+        \land \neg \fdRealisability(\instanceFD', \instanceFalse) \\
         \land \fdBetterUtility(\instanceFD', \instanceFD)
-    \end{array} \right)\\
+    \end{array} \right)
 \end{align*}
 
 The two additional reconfiguration actions, $a_{r_1}$ and $a_{r_2}$, are responsible for selecting architectural configurations by grounding $\FunctionDesigns$ to their corresponding $\FunctionsTomasys$. This is achieved by inserting predicates of the form $\functionGrounding(\instanceF, \instanceFD)$ into the state. Specifically, $a_{r_1}$ is applied when a $\functionGrounding(\instanceF, \instanceFD)$ already exists for function $\instanceF$, whereas $a_{r_2}$ is applied when the function is not grounded.
@@ -185,7 +178,7 @@ Both reconfiguration actions have similar parameters: a target $\FunctionTomasys
 
 \vspace{-0.5cm}
 \begin{center}
-\begin{minipage}[t]{0.38\linewidth}
+\begin{minipage}[t]{0.5\linewidth}
 \begin{align*}
     \pddlActName_1 =& \text{reconfigure1} \\
     \pddlActParam_1 =& (\instanceF, \instanceFD_\text{new}, \instanceFD_\text{old})\\
@@ -199,7 +192,7 @@ Both reconfiguration actions have similar parameters: a target $\FunctionTomasys
 \end{align*}
 \end{minipage}%
 % \hfill
-\begin{minipage}[t]{0.38\linewidth}
+\begin{minipage}[t]{0.5\linewidth}
 \begin{align*}
     \pddlActName_2 =& \text{reconfigure2} \\
     \pddlActParam_2 =& (\instanceF, \instanceFD_\text{new})\\

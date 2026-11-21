@@ -26,7 +26,6 @@ These differences call for a modeling strategy that diverges from \tomasys in th
 \end{array}\right\rbrace
 \]
 
-
 \[
 \NRdata = \left\lbrace\begin{array}{l}
 	\fActive, \fdUtility, \fdRealisability, \\
@@ -43,19 +42,19 @@ To support the inference of the most suitable $\FunctionDesign$ based on utility
 To represent that a $\FunctionTomasys$ should be deactivated, the base ABox includes one additional individual, $\fdUnground$, asserted to be a $\FunctionDesign$ through $\FunctionDesign(\fdUnground)$. Grounding a $\FunctionTomasys$ with $\fdUnground$ denotes that no configuration is currently active for it. The relations $\solvesF(\fdUnground, \varF)$ that let $\fdUnground$ ground any $\FunctionTomasys$ $\varF$ are inferred by the SWRL rule $\FunctionTomasys(\varF) \wedge \FunctionDesign(\fdUnground) \implies \solvesF(\fdUnground, \varF)$ rather than asserted in the ABox. To deactivate a $\FunctionTomasys$ $\varF$, \acronym asserts $\functionGrounding(\varF, \fdUnground)$, e.g., $\functionGrounding(\fGenerateSearchPath, \fdUnground)$.
 
 \paragraph{SWRL rules}
-To infer the system status, the following SWRL rules are added to the ontology.\footnote{OWL data properties are binary, relating a class individual to a typed literal value. For example, \texttt{fd\_realisability(?fd, false)} asserts that the \texttt{fd\_realisability} of \texttt{?fd} is \texttt{false}.} % chktex 36 -- literal SWRL predicate syntax
+To infer the system status, the following SWRL rules are added to the ontology.\footnote{\raggedright OWL data properties are binary, relating a class individual to a typed literal value. For example, \texttt{fd\_realisability(?fd, false)} asserts that the \texttt{fd\_realisability} of \texttt{?fd} is \texttt{false}.} % chktex 36 -- literal SWRL predicate syntax
 They infer, in order, that a $\FunctionDesign$ $\varFD$ is not realizable when a required component fails, that a $\FunctionTomasys$ $\varF$ is active when it is grounded with a $\FunctionDesign$ other than $\fdUnground$, which of two $\FunctionDesigns$ solving the same $\FunctionTomasys$ has the better utility, and the utility of a $\FunctionDesign$ from its performance QA estimation. The last rule is generic and can be replaced by application-specific rules.
 
 \begin{align*}
     &\FunctionDesign(\varFD) \wedge \Component(\varC) \wedge \requiresC(\varFD, \varC) \wedge \cStatus(\varC, \text{ERROR}) \\
-    &\quad \implies \fdRealisability(\varFD, \text{false}) \tag*{(realizability)} \\[1.5ex]
+    &\quad \implies \fdRealisability(\varFD, \text{false}) \tag*{(realizability)} \displaybreak[0] \\[1.5ex]
     &\FunctionTomasys(\varF) \wedge \FunctionDesign(\varFD) \wedge \solvesF(\varFD, \varF) \wedge {} \\
     &\quad \functionGrounding(\varF, \varFD) \wedge (\varFD \neq \fdUnground) \\
-    &\quad \implies \fActive(\varF, \text{true}) \tag*{(activation)} \\[1.5ex]
+    &\quad \implies \fActive(\varF, \text{true}) \tag*{(activation)} \displaybreak[0] \\[1.5ex]
     &\FunctionDesign(\varFD) \wedge \FunctionDesign(\varFDtwo) \wedge \FunctionTomasys(\varF) \wedge {} \\
     &\quad \solvesF(\varFD, \varF) \wedge \solvesF(\varFDtwo, \varF) \wedge {} \\
     &\quad \fdUtility(\varFD, \varU) \wedge \fdUtility(\varFDtwo, \varUtwo) \wedge (\varU < \varUtwo) \\
-    &\quad \implies \fdBetterUtility(\varFDtwo, \varFD) \tag*{(better utility)} \\[1.5ex]
+    &\quad \implies \fdBetterUtility(\varFDtwo, \varFD) \tag*{(better utility)} \displaybreak[0] \\[1.5ex]
     &\FunctionTomasys(\varF) \wedge \FunctionDesign(\varFD) \wedge \solvesF(\varFD, \varF) \wedge \hasQAestimation(\varFD, \varQA) \wedge {} \\
     &\quad \isQAtype(\varQA, \text{performance}) \wedge \qaHasValue(\varQA, \varQAvalue) \\
     &\quad \implies \fdUtility(\varFD, \varQAvalue) \tag*{(utility)}

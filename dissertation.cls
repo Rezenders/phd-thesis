@@ -2,8 +2,6 @@
 \ProvidesClass{dissertation}[2018/11/13 v2.0 TU Delft dissertation class by MB]
 %% Changes over the 2013/07/08 v1.0 TU Delft dissertation class by Moritz Beller, moritzbeller -AT- gmx -DOT- de
 
-\newif\if@nativefonts
-\DeclareOption{nativefonts}{\@nativefontstrue}
 \newif\if@print
 \DeclareOption{print}{\@printtrue}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
@@ -12,11 +10,11 @@
 \LoadClass[10pt]{book}
 
 %% Import packages
-\RequirePackage{fontawesome}
+\RequirePackage{fontawesome7}
 \RequirePackage{amsmath}
+%% amssymb before unicode-math: later loads (e.g. pddl/config/preamble.tex) are then
+%% no-ops instead of clashing with unicode-math symbols such as \eth.
 \RequirePackage{amssymb}
-\RequirePackage{txfonts}
-\RequirePackage{mathptmx}
 
 %% English is the default language, but Dutch is used for some sections.
 \RequirePackage[dutch,english]{babel}
@@ -25,119 +23,54 @@
 %\RequirePackage{chapterbib}
 \RequirePackage{etaremune}
 \RequirePackage{fancyhdr}
-\RequirePackage[flushmargin,hang]{footmisc}
-\RequirePackage{ifpdf}
-\RequirePackage{ifxetex}
-\ifxetex
-    \RequirePackage[xetex]{geometry}
-    %\RequirePackage[xetex]{graphicx}
-    %\usepackage[bookmarks=false,hidelinks]{hyperref}
-    \RequirePackage[xetex,bookmarksnumbered]{hyperref}
-    \RequirePackage{bookmark}
-    \RequirePackage{fontspec}
-    \RequirePackage{xltxtra}
-    \defaultfontfeatures{Ligatures=TeX}
-\else
-    \ifpdf
-        \RequirePackage[pdftex]{geometry}
-        %\RequirePackage[pdftex]{graphicx}
-        \RequirePackage[pdftex,bookmarksnumbered]{hyperref}
-        \RequirePackage{bookmark}
-    \else
-        \RequirePackage[dvips]{geometry}
-        %\RequirePackage[dvips]{graphicx}
-        \RequirePackage[hypertex,bookmarksnumbered]{hyperref}
-        \RequirePackage{bookmark}
-        \fi
-    \RequirePackage[utf8]{inputenc}
-\fi
-\RequirePackage{rotating}
-\RequirePackage{tablefootnote}
+\RequirePackage[flushmargin,hang,bottom]{footmisc}
+%% The class is compiled with LuaLaTeX only.
+\RequirePackage{geometry}
+\RequirePackage[bookmarksnumbered]{hyperref}
+\RequirePackage{bookmark}
+\RequirePackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
 \RequirePackage{lettrine}
-\RequirePackage{metalogo}
 \RequirePackage[backend=biber,style=numeric-comp,sorting=none,natbib=true,
     doi=true,url=false,isbn=false,eprint=false,maxbibnames=99]{biblatex}
 \AtEveryBibitem{\clearlist{language}}
 \RequirePackage[noindentafter]{titlesec}
 \RequirePackage{titletoc}
 %\RequirePackage[nottoc]{tocbibind}
-\RequirePackage[usenames,dvipsnames,svgnames,table,xcdraw]{xcolor}
+\RequirePackage[dvipsnames,svgnames,table,xcdraw]{xcolor}
 %\RequirePackage[table]{xcolor}
 \RequirePackage{tikz}
 
-%% If the document is not compiled with XeLaTeX, we need to use the native
-%% fonts.
-\ifxetex\else
-    \@nativefontstrue
-\fi
+%% Fonts from TeX Live: Libertinus (text and math) and Inconsolata (monospace).
+\RequirePackage{unicode-math}
 
-\if@nativefonts
-    %% The native font is Utopia Regular with Fourier math. We use Latin Modern
-%% as a fallback, since Utopia lacks support for sans-serif and monospace.
-
- \RequirePackage{libertine}
-    \RequirePackage{libertinust1math}
-    \RequirePackage[T1]{fontenc}
-    \RequirePackage[utf8]{inputenc}
-    
-    %% \RequirePackage{fourier}
-    %% The style for titles is small caps.
-    \def\titlefont{\rmfamily}
-    \def\titleshape{\scshape}
-    \def\titlestyle{\titlefont\titleshape\bfseries}
-    \if@print
-        \def\headerstyle{\titlefont\titleshape}
-        %\def\headerstyle{\titlefont\titleshape\bfseries}
-    \else
-        \def\headerstyle{\titlefont\titleshape}
-        \fi
+\setmainfont{LibertinusSerif}[Extension=.otf, UprightFont=*-Regular, ItalicFont=*-Italic, BoldFont=*-Bold, BoldItalicFont=*-BoldItalic]
+\setsansfont{LibertinusSans}[Extension=.otf, UprightFont=*-Regular, ItalicFont=*-Italic, BoldFont=*-Bold]
+\setmathfont{LibertinusMath-Regular.otf}
+\setmonofont{Inconsolatazi4}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-Bold, Scale=MatchLowercase]
+%\renewcommand*\familydefault{\sfdefault}
+\def\titlefont{\rmfamily}
+\def\titleshape{}
+\if@print
+    \def\titlestyle{\titlefont\titleshape}
+    %\def\titlestyle{\titlefont\titleshape\bfseries}
 \else
-    %% The TU Delft house style fonts are Bookman Old Style (serif) for titles
-    %% and Tahoma (sans-serif) for text. Apart from these, we use Courier New
-    %% for monospace and Cambria for math.
-    \RequirePackage{unicode-math}
-
-    \setmainfont[Path = fonts/libertinus/, ItalicFont=libertinusserif-italic.otf, BoldFont=libertinusserif-bold.otf, BoldItalicFont=libertinusserif-bolditalic.otf]{libertinusserif-regular.otf}
-    \setsansfont[Path = fonts/libertinus/, BoldFont=libertinussans-bold.otf, ItalicFont=libertinussans-italic.otf]{libertinussans-regular.otf}
-    \setmathfont[Path = fonts/libertinus/]{libertinusmath-regular.otf}
-    \setmonofont[Scale=MatchLowercase, Path=fonts/inconsolata/]{Inconsolata-Regular.ttf}
-    %% The default style for text is Tahoma (sans-serif).
-    %\renewcommand*\familydefault{\sfdefault}
-    %% The default style for titles is Bookman Old Style (serif).
-    \def\titlefont{\rmfamily}
-    \def\titleshape{}
-    \if@print
-        \def\titlestyle{\titlefont\titleshape}
-        %\def\titlestyle{\titlefont\titleshape\bfseries}
-    \else
-        \def\titlestyle{\titlefont\titleshape}
-    \fi
-    \def\headerstyle{\titlestyle}
+    \def\titlestyle{\titlefont\titleshape}
 \fi
+\def\headerstyle{\titlestyle}
 
-\RequirePackage{paralist}
 \RequirePackage[noabbrev]{cleveref}
 \Crefname{enumi}{Step}{Steps}
 \crefname{enumi}{step}{steps}
 
-\RequirePackage{pbox}
 \RequirePackage{tabularx}
-\RequirePackage{soul}
 
 \RequirePackage{array}
 
-\RequirePackage{wrapfig}
-
-\RequirePackage{pifont}
-
-\RequirePackage{textcomp}
-\RequirePackage{slashbox}
 
 
-\RequirePackage{mdframed}
-\mdfsetup{skipbelow=3pt,skipabove=3pt,innerleftmargin=2.5pt,innerrightmargin=2.5pt,innertopmargin=2.5pt,innerbottommargin=2.5pt}
-\let\oldmdframed\mdframed
-\def\mdframed{\oldmdframed\noindent\ignorespaces}
+
+
 
 \RequirePackage{microtype}
 \RequirePackage{multirow}
@@ -170,14 +103,11 @@
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
-\RequirePackage{subfig}
-%% Make figures appear in the same section (to avoid a bunch of figures at the end of a section)
-\RequirePackage[section]{placeins}
-% declare the path(s) where your graphic files are
-\graphicspath{{figs/},{asats/figs/},{last-line/figs/},{travis-analysis/figs/},{watchdog-tse/figs/},{debugging/figs/},{debugging/img/}}
-% and their extensions so you won't have to specify these with
-% every instance of \includegraphics
-% \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\RequirePackage{placeins}
+%% Float-only pages: stack floats from the top with normal gaps instead of spreading
+%% them over the whole page (the LaTeX default stretches \@fptop and \@fpsep).
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{12pt plus 4pt}
 
 
 \RequirePackage{enumitem}
@@ -196,27 +126,15 @@
   nolistsep,leftmargin=1.65cm,rightmargin=0.9cm
 }
 
-\RequirePackage{framed}
-\let\oldframed\framed
-\def\framed{\oldframed\noindent\ignorespaces}
 
 \RequirePackage{booktabs}
+\RequirePackage{tcolorbox}
 
-\RequirePackage{relsize}
 \renewcommand*{\UrlFont}{\ttfamily\relax}
 
-\RequirePackage{wasysym}
-\RequirePackage{amssymb}
-\RequirePackage{mathptmx}
 
-% number circles. They go well together with my favorite way of
-% labeling stuff in pictures.
-\RequirePackage{tikz}
 
-\RequirePackage{marvosym}
-\RequirePackage{pbox}
 
-\RequirePackage{multicol}
 
 \RequirePackage{algorithm}
 \RequirePackage{algpseudocode}
@@ -227,10 +145,10 @@
 % labeling stuff in pictures.
 \newcommand\circled[1]{\raisebox{1.2pt}{\textcircled{\hspace{0.33pt}\scriptsize{\raisebox{-.1pt}{#1}}}}}
 
-\RequirePackage[outdir=./img/]{epstopdf}
-\RequirePackage[export]{adjustbox}
 
-\RequirePackage[nomain,acronym,nonumberlist,style=list]{glossaries} % nomain, if you define glossaries in a file, and you use \include{INP-00-glossary}
+\RequirePackage[nomain,acronym,nonumberlist,style=list,postdot]{glossaries-extra} % nomain, if you define glossaries in a file, and you use \include{INP-00-glossary}
+%% Keep the glossaries package behaviour for \newacronym: "long (short)" on first use.
+\setabbreviationstyle[acronym]{long-short}
 
 %% Stop importing packages
 
@@ -284,6 +202,8 @@
 \geometry{hscale=0.75,vscale=0.8}
 
 \geometry{textwidth=127.4818mm}
+%% Room for the two-line running header (fancyhdr asks for at least 17pt).
+\geometry{headheight=17pt}
 
 %% Redefine the title command to accept an optional subtitle.
 \renewcommand*\title[2][]{%

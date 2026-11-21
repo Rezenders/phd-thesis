@@ -21,9 +21,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \captionsetup{compatibility=false}
-\usepackage{subfig}
 \usepackage{xspace}
-\usepackage{tcolorbox}
 
 \definecolor{runtimecolor}{HTML}{8A3F80}
 \definecolor{entitycolor}{HTML}{5B78A1}
@@ -58,7 +56,7 @@
 \newcommand\entity[1]{\texttt{{\small{#1}}}}
 \newcommand\instance[1]{\textit{{#1}}}
 \newcommand\relationship[1]{\texttt{{\small{#1}}}}
-\newcommand\attribute[1]{\texttt{{\small{#1}}}}
+\newcommand\rosaattribute[1]{\texttt{{\small{#1}}}}
 
 \newtheorem{assumption}{Assumption}
 
@@ -119,136 +117,11 @@
 \input{pddl/config/macros}
 \input{pddl/navigation_experiment/plots/paper_support}
 \providecommand{\Description}[2][]{} % acmart figure descriptions (not typeset)
-% dissertation.cls loads subfig before subcaption, so subcaption does not define
-% the subfigure/subtable environments and caption rejects subfig's counters.
-% Register those counters as caption subtypes and define the environments as
-% subcaption blocks.
-\makeatletter
-\caption@l@addto@list\caption@subtypelist{subfigure}
-\caption@l@addto@list\caption@subtypelist{subtable}
-\@ifundefined{subfigure}{\newenvironment{subfigure}{\subcaptionblock}{\endsubcaptionblock}}{}
-\@ifundefined{subtable}{\newenvironment{subtable}{\subcaptionblock}{\endsubcaptionblock}}{}
-\makeatother
-% \newcommand{\RQ}[1]{\textbf{RQ#1}}
 
-% \newcommand\owltopddl{Owl2PDDL\xspace}
-% \newcommand\acronym{\red{APPROACH}\xspace}
-% \newcommand\plansys{PlanSys2\xspace}
-% \newcommand\tomasys{TOMASys\xspace}
-% \newcommand\pddltomasys{\red{PDDL-TOMASys}\xspace}
+% Let pages end where the text ends instead of stretching vertical space to fill them.
+\raggedbottom
 
-% % vocabulary of PDDL
-% \newcommand{\pddlTask}{\ensuremath{\Pi}\xspace}
-% \newcommand{\pddlDomain}{\ensuremath{\mathcal{D}}\xspace}
-% \newcommand{\pddlInstance}{\ensuremath{\mathcal{I}}\xspace}
-% \newcommand{\pddlObjects}{\ensuremath{O}\xspace}
-% \newcommand{\pddlInitial}{\ensuremath{I}\xspace}
-% \newcommand{\pddlGoal}{\ensuremath{G}\xspace}
-
-% \newcommand{\pddlPredicates}{\ensuremath{\mathsf{N}_\mathsf{P}}\xspace}
-% \newcommand{\pddlActions}{\ensuremath{A}\xspace}
-% \newcommand{\pddlDerRules}{\ensuremath{\text{Der}}\xspace}
-
-% \newcommand{\pddlPredicatesC}{\ensuremath{P_C}\xspace}
-% \newcommand{\pddlPredicatesR}{\ensuremath{P_R}\xspace}
-
-
-
-% \newcommand{\pddlActParam}{\ensuremath{\vec{x}}\xspace}
-% \DeclareMathOperator{\pddlActPre}{pre}
-% \DeclareMathOperator{\pddlActAdd}{add}
-% \DeclareMathOperator{\pddlActDel}{del}
-
-% % vocabulary of ontology
-% \newcommand{\Ont}{\ensuremath{\mathcal{O}}\xspace}
-% \newcommand{\SwrlRule}{\ensuremath{s}\xspace}
-
-% \newcommand{\N}{\ensuremath{\mathsf{N}}\xspace}
-% \newcommand{\NC}{\ensuremath{\mathsf{N}_\mathsf{C}}\xspace}
-% \newcommand{\NR}{\ensuremath{\mathsf{N_R}}\xspace}
-% \newcommand{\NI}{\ensuremath{\mathsf{N_I}}\xspace}
-
-% \newcommand{\NRobject}{\ensuremath{\mathsf{N_R^{object}}}\xspace}
-% \newcommand{\NRdata}{\ensuremath{\mathsf{N_R^{data}}}\xspace}
-
-% \newcommand{\NIC}{\ensuremath{\mathsf{N_I^{C}}}\xspace}
-% \newcommand{\NIR}{\ensuremath{\mathsf{N_I^{R}}}\xspace}
-
-% \newcommand{\ALCI}{\ensuremath{\mathcal{ALCI}}\xspace}
-
-% \DeclareMathOperator{\antecedent}{antecedent}
-% \DeclareMathOperator{\consequent}{consequent}
-
-
-% % vocabulary of TOMASys
-% \DeclareMathOperator{\FunctionTomasys}{Function}
-% \DeclareMathOperator{\FunctionsTomasys}{Functions}
-% \DeclareMathOperator{\FunctionDesign}{FunctionDesign}
-% \DeclareMathOperator{\FunctionDesigns}{FunctionDesigns}
-% \DeclareMathOperator{\Component}{Component}
-% \DeclareMathOperator{\QAtype}{QAtype}
-% \DeclareMathOperator{\QAvalue}{QAvalue}
-% \DeclareMathOperator{\Objective}{Objective}
-% \DeclareMathOperator{\Objectives}{Objectives}
-% \DeclareMathOperator{\FunctionGrounding}{FunctionGrounding}
-% \DeclareMathOperator{\FunctionGroundings}{FunctionGroundings}
-% \DeclareMathOperator{\solvesF}{solvesF}
-% \DeclareMathOperator{\requiredBy}{requiredBy}
-% \DeclareMathOperator{\isQAtype}{isQAtype}
-% \DeclareMathOperator{\hasQAestimation}{hasQAestimation}
-% \DeclareMathOperator{\hasNFR}{hasNFR}
-% \DeclareMathOperator{\typeF}{typeF}
-% \DeclareMathOperator{\typedFD}{typedFD}
-% \DeclareMathOperator{\solvesO}{solvesO}
-% \DeclareMathOperator{\typeFD}{typeFD}
-% \DeclareMathOperator{\hasQAvalue}{hasQAvalue}
-% \DeclareMathOperator{\requiresO}{requiresO}
-% \DeclareMathOperator{\cStatus}{c\_status}
-
-% \DeclareMathOperator{\fdRealisability}{fd\_realisability}
-
-% \DeclareMathOperator{\hasValue}{hasValue}
-% \DeclareMathOperator{\qaComparisonOperator}{qa\_comparison\_operator}
-% \DeclareMathOperator{\qaCritical}{qa\_critical}
-% \DeclareMathOperator{\fdEfficacy}{fd\_efficacy}
-% \DeclareMathOperator{\fgStatus}{fg\_status}
-% \DeclareMathOperator{\oImprove}{o\_always\_improve}
-% \DeclareMathOperator{\oStatus}{o\_status}
-% \DeclareMathOperator{\oUpdatable}{o\_updatable}
-% \DeclareMathOperator{\fdSpiralHigh}{fd\_spiral\_high}
-% \DeclareMathOperator{\fGenerateSearchPath}{f\_generate\_search\_path}
-
-% %vocabulary new tomasys
-% \DeclareMathOperator{\Action}{Action}
-% \DeclareMathOperator{\fdBetterUtility}{fdBetterUtility}
-% \DeclareMathOperator{\functionGrounding}{functionGrounding}
-% \DeclareMathOperator{\requiresC}{requiresC}
-% \DeclareMathOperator{\requiresF}{requiresF}
-% \DeclareMathOperator{\fActive}{f\_active}
-% \DeclareMathOperator{\fdUtility}{fd\_utility}
-
-
-% \DeclareMathOperator{\Domain}{Domain}
-% \DeclareMathOperator{\Range}{Range}
-
-% \DeclareMathOperator{\varC}{?c}
-% \DeclareMathOperator{\varFD}{?fd}
-% \DeclareMathOperator{\varFDtwo}{?fd2}
-% \DeclareMathOperator{\varFDbetter}{?fd\_better}
-% \DeclareMathOperator{\varF}{?f}
-% \DeclareMathOperator{\varU}{?u}
-% \DeclareMathOperator{\varUtwo}{?u2}
-% \DeclareMathOperator{\varUbetter}{?u\_better}
-% \DeclareMathOperator{\varQA}{?qa}
-% \DeclareMathOperator{\varQAvalue}{?qav}
-
-% \DeclareMathOperator{\fdUnground}{fd\_unground}
-
-
-% % vocabulary for TACA transformation
-% \DeclareMathOperator{\bestFD}{bestFD}
-% \DeclareMathOperator{\validAndBest}{valid}
-% %%%%
+% \setlength{\emergencystretch}{1.5em}
 
 \begin{document}
 
@@ -285,7 +158,6 @@
 \include{suave/suave}
 \include{rosa/rosa}
 \include{pddl/pddl}
-% \include{type/type}
 \include{cognitive_architecture/cognitive_architecture}
 \include{conclusion/conclusion}
 

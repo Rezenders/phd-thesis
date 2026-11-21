@@ -2,16 +2,9 @@
 local root = vim.fs.dirname(debug.getinfo(1, "S").source:sub(2))
 root = vim.fn.fnamemodify(root, ":p"):gsub("/$", "")
 
--- VimTeX owns interactive compilation and PDF navigation; Texlab does not build.
--- XeLaTeX matches the Makefile; dissertation.cls loads the bundled Libertinus
--- OpenType fonts only under XeLaTeX. VimTeX appends the engine flag after
--- `options` (default `-pdf`, which latexmk would honour last), so set it here.
-vim.g.vimtex_view_method = "zathura"
-vim.g.vimtex_compiler_latexmk_engines = { _ = "-xelatex" }
-vim.g.vimtex_compiler_latexmk = {
-  out_dir = "build",
-  options = { "-synctex=1", "-file-line-error", "-interaction=nonstopmode" },
-}
+-- VimTeX: build directory and LuaLaTeX come from .latexmkrc ($out_dir, $pdf_mode;
+-- dissertation.cls and propositions.cls are LuaLaTeX-only). The viewer
+-- (zathura_simple, for Wayland) comes from the global Neovim config.
 
 local spell_dir = root .. "/.nvim/spell"
 vim.fn.mkdir(spell_dir, "p")
@@ -39,19 +32,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.spell = false
     vim.keymap.set("n", "<localleader>ld", vim.diagnostic.open_float,
       { buffer = args.buf, desc = "LaTeX: diagnostic details" })
-  end,
-})
-
--- Configure the project's LSP diagnostic namespaces, not global diagnostics.
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = group,
-  callback = function(args)
-    local path = vim.api.nvim_buf_get_name(args.buf)
-    if path:sub(1, #root + 1) ~= root .. "/" then return end
-    for _, pull in ipairs({ false, true }) do
-      local ns = vim.lsp.diagnostic.get_namespace(args.data.client_id, pull)
-      vim.diagnostic.config({ virtual_text = false, virtual_lines = false }, ns)
-    end
   end,
 })
 
