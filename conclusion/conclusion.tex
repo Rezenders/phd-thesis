@@ -1,18 +1,42 @@
-\chapter{Conclusion}
-\label{conclusion}
+\chapter{Conclusion}\label{conclusion}
+
+\begin{abstract}
+  This chapter provides a discussion on ...
+\end{abstract}
+
+\newpage
 
 This thesis investigated how knowledge representation techniques can be used to design self-adaptive robotic systems that promote reusability, composability, and extensibility. Furthermore, this work evaluated how different methods for robot self-adaption compare and showed that the main method proposed in this work, ROSA, can be applied to different use cases.
 
-% \subsection{Conclusions}
+\section{Conclusions}
+
+\paragraph{Model-based solutions for self-adaptive robotic systems:}
+
+
+\paragraph{Evaluating self-adaptive robotic systems:}
+
+
+
+\section{Discussion}
+
+\red{If I really want to go into the rabbit hole of writing about a generic formulation for self-adaptive robotic systems, it should go here. I'm not sure though that I should do this. Might be a shot in my foot.}
+
+\red{I MUST discuss the advantages and disadvantages of the different modeling approaches used in the thesis, i.e., OWL (metacontrol), TypeQL (ROSA), PDDL (PLANTA), DSLs (Tactical Retreat). I should include a comparision between the models themselves but also a comparsion between the runtime reasoning over these models, i.e., the inference rules in metacontrol and ROSA, the derivate predicates in PLANTA and the ``programming'' logic in Tactical Retreat. I should also explain the problems we encountered trying to use TypeDB for tactical Retreat, and I should try to explain why TypeDB rules were inneficient for Tactical Retreat. Like, identify the class/type of reasoning we were performing and why typedb was not suitable to solve them. Identifying these "types/class" of reasoning problems would be a very good discussion point.}
+
+
+\red{I need to write something about SUAVE. I'm not sure whether as part of conclusions, discussion, or future works. I could check the papers that cite SUAVE to verify how they extend it and what they point as limitations of SUAVE. I addition, I could write about the limitations we are already aware: it doesn't really evaluate anything, it just validates.}
+
+
+\red{Tradeoff between optimal and satisficing solutions. Make the distinction between optimality in the mission and configuration levels}
 
 \section{Future works}
 
-% \emph{Future works:} 
+% \emph{Future works:}
 We envision multiple different directions to further improve and extend ROSA, some of the possible directions are:
 \begin{itemize}
     \item Self-adaptation aspects: ROSA can be extended to cover more aspects required for self-adaptive robotic systems, such as task and configuration repair, transitions between adaptations, pro-active adaptation, and self-reflection;
     \item Task planning: ROSA's knowledge model can be extended to capture additional knowledge relevant to task planning, such as action's preconditions, effects, and duration. This would allow for more elaborated task planning algorithms to be used for TACA. Furthermore, ROSA implementation can be extended to provide interfaces for additional deliberation techniques commonly used in robotics.
-    % , such as planning. 
+    % , such as planning.
     % Currently, we have ongoing work on integrating ROSA with PDDL planning~\cite{fox2003pddl2} with the PlanSys2 package~\cite{plansys2};
     \item Learning: ROSA can be extended with learning techniques to learn and update at runtime the \entity{Quality Attribute} and \entity{Environmental Attribute} estimations and constraints \rosaattribute{values}. A more elaborated possibility is learning that constraints and estimations exist without prior knowledge, i.e., learning that the relationship itself should be modeled. The proposed implementation of ROSA provides interfaces to manipulate the captured knowledge at runtime, which could be exploited for this end;
     \item Formal verification: The proposed knowledge model can be formalized to enable the use of formal methods techniques to verify properties of the modeled scenarios;
